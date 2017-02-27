@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new OneFragment(), "환율");
         adapter.addFragment(new TwoFragment(), "계산");
         adapter.addFragment(new ThreeFragment(), "세번째");
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
     }
 

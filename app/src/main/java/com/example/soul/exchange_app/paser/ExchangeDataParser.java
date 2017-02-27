@@ -54,7 +54,7 @@ public class ExchangeDataParser {
         return perConutryList;
     }
 
-    public List<String[]> getPerserList(){
+    public List<String[]> getPerserArrList(){
         perCountryArrList = new ArrayList<>();
 
         Document doc = getParserDoc();

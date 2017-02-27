@@ -25,7 +25,6 @@ public class OneFragment extends Fragment {
     private TextView reaserchTxt;
 
     // data
-    private ExchangeDataParser exchangeDataParser;
     private OneFragmentManager oneFragmentManager;
 
 
@@ -35,6 +34,9 @@ public class OneFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // data initialization
+        oneFragmentManager = new OneFragmentManager();
     }
 
     @Nullable
@@ -45,8 +47,7 @@ public class OneFragment extends Fragment {
         parserBtn       = (Button)view.findViewById(R.id.parser_btn);
         reaserchTxt     = (TextView)view.findViewById(R.id.reaserch_text);
 
-        // data initialization
-        exchangeDataParser = new ExchangeDataParser();
+        oneFragmentManager.excuteDataAsync(reaserchTxt, view);
 
         parserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
