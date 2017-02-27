@@ -39,7 +39,7 @@ public class OneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_one, container, false);
+        final View view = inflater.inflate(R.layout.fragment_one, container, false);
         parserBtn       = (Button)view.findViewById(R.id.parser_btn);
         reaserchTxt     = (TextView)view.findViewById(R.id.reaserch_text);
 
@@ -49,13 +49,10 @@ public class OneFragment extends Fragment {
         parserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "data update", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
                 if(reaserchTxt != null && !reaserchTxt.getText().equals("")){
                     reaserchTxt.setText("");
                 }
-                exchangeDataParser.excuteDataAsync(reaserchTxt);
+                exchangeDataParser.excuteDataAsync(reaserchTxt, view);
 //                reaserchTxt.setText(exchangeDataParser.getParserString());
 //                List<String> perCountryList = paser.getParserList();
 //                for(int i=0; i<perCountryList.size(); i++){

@@ -1,7 +1,9 @@
 package com.example.soul.exchange_app.paser;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -68,18 +70,21 @@ public class ExchangeDataParser {
         return builder.toString();
     }
 
-    public void excuteDataAsync(TextView textView){
+    public void excuteDataAsync(TextView textExchange, View viewExchange){
         dataAsync = new DataAsync();
-        dataAsync.setTextView(textView);
+        dataAsync.setInit(textExchange, viewExchange);
         dataAsync.execute();
     }
 
     private class DataAsync extends AsyncTask<String, Void, String>{
 
-        private TextView textView;
+        private TextView textExchange;
+        private View viewExchange;
 
-        public void setTextView(TextView textView){
-            this.textView = textView;
+
+        public void setInit(TextView textExchange, View viewExchange){
+            this.textExchange = textExchange;
+            this.viewExchange = viewExchange;
         }
 
 
@@ -90,7 +95,9 @@ public class ExchangeDataParser {
 
         @Override
         protected void onPostExecute(String s) {
-            textView.setText(s);
+            textExchange.setText(s);
+            Snackbar.make(viewExchange, "data update", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 }
