@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.paser.ExchangeDataParser;
 
 /**
@@ -25,6 +26,7 @@ public class OneFragment extends Fragment {
 
     // data
     private ExchangeDataParser exchangeDataParser;
+    private OneFragmentManager oneFragmentManager;
 
 
     public OneFragment() {
@@ -52,7 +54,7 @@ public class OneFragment extends Fragment {
                 if(reaserchTxt != null && !reaserchTxt.getText().equals("")){
                     reaserchTxt.setText("");
                 }
-                exchangeDataParser.excuteDataAsync(reaserchTxt, view);
+                oneFragmentManager.excuteDataAsync(reaserchTxt, view);
 //                reaserchTxt.setText(exchangeDataParser.getParserString());
 //                List<String> perCountryList = paser.getParserList();
 //                for(int i=0; i<perCountryList.size(); i++){
