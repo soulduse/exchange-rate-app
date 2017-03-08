@@ -15,7 +15,7 @@ import java.util.List;
  * Created by soul on 2017. 2. 21..
  */
 
-public class ExchangeDataParser {
+public class ExchangeParser {
 
     private String TAG = this.getClass().getSimpleName();
     private Document doc;
@@ -25,7 +25,7 @@ public class ExchangeDataParser {
 
     private Document getParserDoc(){
         try{
-            doc = Jsoup.connect(ExchangeDataInfo.BASE_URL).get();
+            doc = Jsoup.connect(ExchangeInfo.BASE_URL).get();
         }catch (IOException ioe){
             ioe.printStackTrace();
         }

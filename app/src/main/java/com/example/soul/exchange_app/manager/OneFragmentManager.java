@@ -6,7 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.soul.exchange_app.paser.ExchangeDataParser;
+import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.paser.ExchangeParser;
 
 import java.util.List;
 
@@ -18,10 +19,9 @@ public class OneFragmentManager {
 
     private final String TAG = getClass().getSimpleName();
     private DataAsync dataAsync;
-    private ExchangeDataParser exchangeDataParser;
+    private ExchangeParser exchangeParser;
     private List<String[]> exchangeArrList;
-
-
+    private List<ExchangeData> exchangeDataList;
 
     public void excuteDataAsync(TextView textExchange, View viewExchange){
         dataAsync = new DataAsync();
@@ -38,9 +38,9 @@ public class OneFragmentManager {
         public void setInit(TextView textExchange, View viewExchange){
             this.textExchange = textExchange;
             this.viewExchange = viewExchange;
-            Log.d(TAG, "Is exchangeDataParser null? >> "+(exchangeDataParser == null));
-            if(exchangeDataParser == null){
-                exchangeDataParser = new ExchangeDataParser();
+            Log.d(TAG, "Is exchangeParser null? >> "+(exchangeParser == null));
+            if(exchangeParser == null){
+                exchangeParser = new ExchangeParser();
             }
         }
 
@@ -48,7 +48,7 @@ public class OneFragmentManager {
         @Override
         protected String doInBackground(String... params) {
 
-            exchangeArrList = exchangeDataParser.getPerserArrList();
+            exchangeArrList = exchangeParser.getPerserArrList();
             for(int i=0; i<exchangeArrList.size(); i++){
                 Log.d(TAG, "Item Size : "+exchangeArrList.get(i).length+
                         " \n Item 0 : "+exchangeArrList.get(i)[0]+
@@ -62,7 +62,7 @@ public class OneFragmentManager {
             }
 
 
-            return exchangeDataParser.getParserString();
+            return exchangeParser.getParserString();
         }
 
         @Override

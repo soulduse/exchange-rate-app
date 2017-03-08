@@ -10,16 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.example.soul.exchange_app.paser.ExchangeDataParser;
 import com.example.soul.exchange_app.view.OneFragment;
 import com.example.soul.exchange_app.view.ThreeFragment;
 import com.example.soul.exchange_app.view.TwoFragment;
 import com.example.soul.exchange_app.view.ViewPagerAdapter;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
