@@ -2,6 +2,8 @@ package com.example.soul.exchange_app.paser;
 
 import android.util.Log;
 
+import com.example.soul.exchange_app.data.ExchangeData;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,14 +15,21 @@ import java.util.List;
 
 /**
  * Created by soul on 2017. 2. 21..
+ *
+ *
+ * 추가해야될 항목 2017. 03. 09
+    - 예외처리 : 네트워크가 끊어졌을 경우 AsyncTask 부분에서 예외처리 추가 필요 ( )
+ *
  */
 
-public class ExchangeParser {
+public class ExchangeParser implements ExchangeInfo{
 
     private String TAG = this.getClass().getSimpleName();
     private Document doc;
     private List<String> perConutryList;
     private List<String[]> perCountryArrList;
+    private List<ExchangeData> perCountDats;
+    private List<String[]> exchangeArrList;
     private StringBuilder builder;
 
     private Document getParserDoc(){
@@ -70,6 +79,27 @@ public class ExchangeParser {
         return perCountryArrList;
     }
 
+    public List<ExchangeData> getParserDatas(){
+        perCountDats = new ArrayList<>();
+        ExchangeData exchangeData;
+
+        exchangeArrList = getPerserArrList();
+        for(int i=0; i<exchangeArrList.size(); i++) {
+            exchangeData = new ExchangeData();
+            exchangeData.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
+            exchangeData.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
+            exchangeData.setPriceBase(Float.parseFloat(exchangeArrList.get(i)[PRICE_BASE]));
+            exchangeData.setPriceBuy(Float.parseFloat(exchangeArrList.get(i)[PRICE_BUY]));
+            exchangeData.setPriceSell(Float.parseFloat(exchangeArrList.get(i)[PRICE_SELL]));
+            exchangeData.setPriceSend(Float.parseFloat(exchangeArrList.get(i)[PRICE_SEND]));
+            exchangeData.setPriceReceive(Float.parseFloat(exchangeArrList.get(i)[PRICE_RECEIVE]));
+            exchangeData.setPriceusExchange(Float.parseFloat(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+            perCountDats.add(exchangeData);
+        }
+
+        return perCountDats;
+    }
+
     public String getParserString(){
         Document doc = getParserDoc();
         builder = new StringBuilder();
@@ -80,5 +110,6 @@ public class ExchangeParser {
         }
         return builder.toString();
     }
-
 }
+
+

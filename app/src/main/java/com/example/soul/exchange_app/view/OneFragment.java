@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
+import com.example.soul.exchange_app.paser.ExchangeParser;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -32,7 +33,7 @@ public class OneFragment extends Fragment {
 
     // data
     private OneFragmentManager oneFragmentManager;
-    private CardAdapter adapter;
+    private ExchangeParser exchangeParser;
 
 
     public OneFragment() {
@@ -45,6 +46,7 @@ public class OneFragment extends Fragment {
 
         // data initialization
         oneFragmentManager = new OneFragmentManager();
+        exchangeParser = new ExchangeParser();
     }
 
     @Nullable
@@ -53,18 +55,18 @@ public class OneFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_one, container, false);
         parserBtn       = (Button)view.findViewById(R.id.parser_btn);
-        reaserchTxt     = (TextView)view.findViewById(R.id.reaserch_text);
+//        reaserchTxt     = (TextView)view.findViewById(R.id.reaserch_text);
         recyclerView    = (RecyclerView)view.findViewById(R.id.recycler_view_frag_one);
 
-        adapter = new CardAdapter(getContext(), )
+
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter();
+//        recyclerView.setAdapter(adapter);
 
-        oneFragmentManager.excuteDataAsync(reaserchTxt, view);
+        oneFragmentManager.excuteDataAsync(recyclerView, view);
 
         parserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +74,7 @@ public class OneFragment extends Fragment {
                 if(reaserchTxt != null && !reaserchTxt.getText().equals("")){
                     reaserchTxt.setText("");
                 }
-                oneFragmentManager.excuteDataAsync(reaserchTxt, view);
+                oneFragmentManager.excuteDataAsync(recyclerView, view);
 //                reaserchTxt.setText(exchangeDataParser.getParserString());
 //                List<String> perCountryList = paser.getParserList();
 //                for(int i=0; i<perCountryList.size(); i++){
