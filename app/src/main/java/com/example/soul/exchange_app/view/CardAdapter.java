@@ -25,8 +25,9 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> {
 
-    private Context mContext;
-    private List<ExchangeData> exchangeDataList;
+    private Context             mContext;
+    private List<ExchangeData>  exchangeDataList;
+    private ExchangeData        exchangeData;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
@@ -57,7 +58,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        ExchangeData exchangeData = exchangeDataList.get(position);
         exchangeData = exchangeDataList.get(position);
         holder.title.setText(exchangeData.getPriceBase()+"");
 //        holder.count.setText(exchangeData.getNumOfSongs() + " songs");

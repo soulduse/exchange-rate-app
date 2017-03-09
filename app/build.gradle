@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.example.soul.exchange_app"
         minSdkVersion 21
@@ -26,7 +26,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    testCompile 'junit:junit:4.12'
 
     // jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
@@ -39,4 +38,10 @@ dependencies {
 
     // Glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
