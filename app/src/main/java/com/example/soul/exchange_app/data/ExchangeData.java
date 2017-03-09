@@ -6,8 +6,8 @@ package com.example.soul.exchange_app.data;
 
 public class ExchangeData {
 
-    private float countryName;
-    private float countryAbbr;
+    private String countryName;
+    private String countryAbbr;
     private float priceBase;
     private float priceBuy;
     private float priceSell;
@@ -18,7 +18,7 @@ public class ExchangeData {
     public ExchangeData() {
     }
 
-    public ExchangeData(float countryName, float countryAbbr, float priceBase, float priceBuy, float priceSell, float priceSend, float priceReceive, float priceusExchange) {
+    public ExchangeData(String countryName, String countryAbbr, float priceBase, float priceBuy, float priceSell, float priceSend, float priceReceive, float priceusExchange) {
         this.countryName = countryName;
         this.countryAbbr = countryAbbr;
         this.priceBase = priceBase;
@@ -29,19 +29,19 @@ public class ExchangeData {
         this.priceusExchange = priceusExchange;
     }
 
-    public float getCountryName() {
+    public String getCountryName() {
         return countryName;
     }
 
-    public void setCountryName(float countryName) {
+    public void setCountryName(String countryName) {
         this.countryName = countryName;
     }
 
-    public float getCountryAbbr() {
+    public String getCountryAbbr() {
         return countryAbbr;
     }
 
-    public void setCountryAbbr(float countryAbbr) {
+    public void setCountryAbbr(String countryAbbr) {
         this.countryAbbr = countryAbbr;
     }
 

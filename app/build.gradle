@@ -27,6 +27,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
 
+    // retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+
     // jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
 
