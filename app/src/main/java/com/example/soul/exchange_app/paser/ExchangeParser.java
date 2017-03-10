@@ -128,7 +128,7 @@ public class ExchangeParser implements ExchangeInfo{
         return builder.toString();
     }
 
-    // 예외처리 - 네이버 HTML 파싱시 특정 나라의 값이 일정하게 들어오지 않음. 따라서 별도의 예외처리가 필요.
+    // 예외처리 - HTML 파싱시 특정 나라의 값이 일정하게 들어오지 않음. 따라서 별도의 예외처리가 필요.
     private String[] errorCheckAndRemoveArray(String[] arr){
         String [] copyArr;
         String [] resultArr;
