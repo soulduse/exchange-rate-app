@@ -8,12 +8,12 @@ public class ExchangeData {
 
     private String countryName;
     private String countryAbbr;
-    private float priceBase;
-    private float priceBuy;
-    private float priceSell;
-    private float priceSend;
-    private float priceReceive;
-    private float priceusExchange;
+    private double priceBase;
+    private double priceBuy;
+    private double priceSell;
+    private double priceSend;
+    private double priceReceive;
+    private double priceusExchange;
 
     public ExchangeData() {
     }
@@ -45,51 +45,51 @@ public class ExchangeData {
         this.countryAbbr = countryAbbr;
     }
 
-    public float getPriceBase() {
+    public double getPriceBase() {
         return priceBase;
     }
 
-    public void setPriceBase(float priceBase) {
+    public void setPriceBase(double priceBase) {
         this.priceBase = priceBase;
     }
 
-    public float getPriceBuy() {
+    public double getPriceBuy() {
         return priceBuy;
     }
 
-    public void setPriceBuy(float priceBuy) {
+    public void setPriceBuy(double priceBuy) {
         this.priceBuy = priceBuy;
     }
 
-    public float getPriceSell() {
+    public double getPriceSell() {
         return priceSell;
     }
 
-    public void setPriceSell(float priceSell) {
+    public void setPriceSell(double priceSell) {
         this.priceSell = priceSell;
     }
 
-    public float getPriceSend() {
+    public double getPriceSend() {
         return priceSend;
     }
 
-    public void setPriceSend(float priceSend) {
+    public void setPriceSend(double priceSend) {
         this.priceSend = priceSend;
     }
 
-    public float getPriceReceive() {
+    public double getPriceReceive() {
         return priceReceive;
     }
 
-    public void setPriceReceive(float priceReceive) {
+    public void setPriceReceive(double priceReceive) {
         this.priceReceive = priceReceive;
     }
 
-    public float getPriceusExchange() {
+    public double getPriceusExchange() {
         return priceusExchange;
     }
 
-    public void setPriceusExchange(float priceusExchange) {
+    public void setPriceusExchange(double priceusExchange) {
         this.priceusExchange = priceusExchange;
     }
 }
