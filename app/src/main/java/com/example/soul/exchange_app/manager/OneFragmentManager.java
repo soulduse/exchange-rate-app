@@ -39,6 +39,7 @@ public class OneFragmentManager implements ExchangeInfo {
 
 
         public void setInit(RecyclerView recyclerView, View viewExchange){
+            this.recyclerView = recyclerView;
             this.viewExchange = viewExchange;
             Log.d(TAG, "Is exchangeParser null? >> "+(exchangeParser == null));
             if(exchangeParser == null){
@@ -60,7 +61,7 @@ public class OneFragmentManager implements ExchangeInfo {
 
         @Override
         protected void onPostExecute(List<ExchangeData> mExchangeDatas) {
-            adapter = new CardAdapter(viewExchange.getContext(), exchangeParser.getParserDatas());
+            adapter = new CardAdapter(viewExchange.getContext(), mExchangeDatas);
             recyclerView.setAdapter(adapter);
             Snackbar.make(viewExchange, "data update", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();

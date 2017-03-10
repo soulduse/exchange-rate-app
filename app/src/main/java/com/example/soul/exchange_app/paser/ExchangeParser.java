@@ -74,7 +74,8 @@ public class ExchangeParser implements ExchangeInfo{
 
         Log.d(TAG, ""+titleLinks);
         for(Element link : links){
-            perCountryArrList.add(link.text().split(" "));
+            String [] parserArr = errorCheckAndRemoveArray(link.text().split(" "));
+            perCountryArrList.add(parserArr);
         }
 
         return perCountryArrList;
@@ -95,6 +96,21 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeData.setPriceSend((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
             exchangeData.setPriceReceive((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
             exchangeData.setPriceusExchange((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+
+
+            Log.w(
+                    TAG,
+                    "COUNTRY_NAME       : "+exchangeArrList.get(i)[COUNTRY_NAME]+" :: length : "+exchangeArrList.get(i).length+"\n"+
+                    "COUNTRY_ABBR       : "+exchangeArrList.get(i)[COUNTRY_ABBR]+"\n"+
+                    "PRICE_BASE         : "+exchangeArrList.get(i)[PRICE_BASE]+"\n"+
+                    "PRICE_BUY          : "+exchangeArrList.get(i)[PRICE_BUY]+"\n"+
+                    "PRICE_SELL         : "+exchangeArrList.get(i)[PRICE_SELL]+"\n"+
+                    "PRICE_SEND         : "+exchangeArrList.get(i)[PRICE_SEND]+"\n"+
+                    "PRICE_RECEIVE      : "+exchangeArrList.get(i)[PRICE_RECEIVE]+"\n"+
+                    "PRICE_US_EXCHANGE  : "+exchangeArrList.get(i)[PRICE_US_EXCHANGE]
+            );
+
+
             perCountDats.add(exchangeData);
         }
 
@@ -110,6 +126,34 @@ public class ExchangeParser implements ExchangeInfo{
             builder.append(link.text()).append("\n").toString();
         }
         return builder.toString();
+    }
+
+    // 예외처리 - 네이버 HTML 파싱시 특정 나라의 값이 일정하게 들어오지 않음. 따라서 별도의 예외처리가 필요.
+    private String[] errorCheckAndRemoveArray(String[] arr){
+        String [] copyArr;
+        String [] resultArr;
+
+        if(arr.length >= 9){
+            Log.d(TAG, "errorCheckAndRemoveArray >> 비정상");
+            copyArr = java.util.Arrays.copyOf(arr, arr.length);
+
+            for(int i=2; i<copyArr.length-1; i++){
+                copyArr[i] = copyArr[i+1];
+            }
+
+            resultArr = new String[copyArr.length-1];
+            for(int i=0; i<copyArr.length-1; i++){
+                resultArr[i] = copyArr[i];
+                Log.e(TAG, "resultArr["+i+"] : "+resultArr[i]);
+            }
+            return resultArr;
+
+        }else{
+            Log.d(TAG, "errorCheckAndRemoveArray >> 정상");
+            return arr;
+        }
+
+
     }
 }
 

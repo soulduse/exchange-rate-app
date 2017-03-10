@@ -27,6 +27,7 @@
         android:id="@+id/recycler_view_frag_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
         android:clipToPadding="false"
         android:scrollbars="vertical"
         />
