@@ -14,6 +14,7 @@ public class ExchangeData {
     private double priceSend;
     private double priceReceive;
     private double priceusExchange;
+    private String thumbnail;
 
     public ExchangeData() {
     }
@@ -91,5 +92,13 @@ public class ExchangeData {
 
     public void setPriceusExchange(double priceusExchange) {
         this.priceusExchange = priceusExchange;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
