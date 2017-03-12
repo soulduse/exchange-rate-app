@@ -7,29 +7,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="105dp"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/parser_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="parsing"
-            />
+
         <TextView
-            android:id="@+id/reaserch_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/text_view_update_date"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:text="update date : 0000-00-00 00:00:00"
             />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_frag_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            />
+
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_frag_one"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        />
+
 
 </RelativeLayout>

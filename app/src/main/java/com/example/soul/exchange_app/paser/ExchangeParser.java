@@ -96,7 +96,7 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeData.setPriceSend((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
             exchangeData.setPriceReceive((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
             exchangeData.setPriceusExchange((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
-
+            exchangeData.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
             Log.w(
                     TAG,
@@ -132,6 +132,8 @@ public class ExchangeParser implements ExchangeInfo{
     private String[] errorCheckAndRemoveArray(String[] arr){
         String [] copyArr;
         String [] resultArr;
+        final String exceptionStr1 = "공화국";
+        final String exceptionStr2 = "ZAR";
 
         if(arr.length >= 9){
             Log.d(TAG, "errorCheckAndRemoveArray >> 비정상");
@@ -139,6 +141,10 @@ public class ExchangeParser implements ExchangeInfo{
 
             for(int i=2; i<copyArr.length-1; i++){
                 copyArr[i] = copyArr[i+1];
+                if(copyArr[1].equals(exceptionStr1)){
+                    copyArr[0] = copyArr[0]+" "+exceptionStr1;
+                    copyArr[1] = exceptionStr2;
+                }
             }
 
             resultArr = new String[copyArr.length-1];
@@ -152,8 +158,13 @@ public class ExchangeParser implements ExchangeInfo{
             Log.d(TAG, "errorCheckAndRemoveArray >> 정상");
             return arr;
         }
+    }
 
+    private String combineThumbnailUrl(String flag){
+        String preUrl = FLAG_IMG_URL.substring(0,FLAG_IMG_URL.length()-4);
+        String sufUrl = FLAG_IMG_URL.substring(FLAG_IMG_URL.length()-4, FLAG_IMG_URL.length());
 
+        return preUrl+flag+sufUrl;
     }
 }
 
