@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,9 @@ import android.widget.TextView;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.util.DateUtil;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -27,12 +31,15 @@ import com.example.soul.exchange_app.paser.ExchangeParser;
 public class OneFragment extends Fragment {
 
     // view
-    private Button parserBtn;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
+    private TextView dateUpdateText;
+
 
     // data
     private OneFragmentManager oneFragmentManager;
     private ExchangeParser exchangeParser;
+    private DateUtil dateUtil;
 
 
     public OneFragment() {
@@ -42,10 +49,10 @@ public class OneFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         // data initialization
         oneFragmentManager = new OneFragmentManager();
         exchangeParser = new ExchangeParser();
+        dateUtil = new DateUtil(getContext());
     }
 
     @Nullable
@@ -54,14 +61,28 @@ public class OneFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_one, container, false);
         recyclerView    = (RecyclerView)view.findViewById(R.id.recycler_view_frag_one);
-
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_layout);
+        dateUpdateText = (TextView)view.findViewById(R.id.text_view_update_date);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        oneFragmentManager.excuteDataAsync(recyclerView, view);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3);
+
+        oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+
+            @Override
+            public void onRefresh() {
+                oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout);
+                dateUpdateText.setText(dateUtil.getDate());
+            }
+        });
 
         return view;
     }

@@ -1,21 +1,17 @@
 package com.example.soul.exchange_app.view;
 
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.data.ExchangeData;
-import com.example.soul.exchange_app.util.MoneyCommas;
+import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
 
@@ -60,7 +56,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         exchangeData = exchangeDataList.get(position);
         holder.title.setText(exchangeData.getCountryAbbr()+" "+exchangeData.getCountryName());
-        holder.price.setText(MoneyCommas.addCommas(exchangeData.getPriceBase()));
+        holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
 
 
         // loading flag cover using Glide library

@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="viewBg">#f1f5f8</color>
     <color name="exchange_title">#4c4c4c</color>
+    <color name="refresh_progress_1">@color/colorPrimary</color>
+    <color name="refresh_progress_2">@color/colorAccent</color>
+    <color name="refresh_progress_3">@color/exchange_title</color>
 </resources>

@@ -4,30 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="105dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text_view_update_date"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:text="update date : 0000-00-00 00:00:00"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_frag_one"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"
-            />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/text_view_update_date"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:text="update date : 0000-00-00 00:00:00"
+                />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_frag_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                />
 
-
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>
