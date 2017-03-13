@@ -3,7 +3,7 @@ package com.example.soul.exchange_app.paser;
 import android.util.Log;
 
 import com.example.soul.exchange_app.data.ExchangeData;
-import com.example.soul.exchange_app.util.MoneyCommas;
+import com.example.soul.exchange_app.util.MoneyUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -90,12 +90,12 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeData = new ExchangeData();
             exchangeData.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
             exchangeData.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
-            exchangeData.setPriceBase((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
-            exchangeData.setPriceBuy((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
-            exchangeData.setPriceSell((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
-            exchangeData.setPriceSend((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
-            exchangeData.setPriceReceive((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
-            exchangeData.setPriceusExchange((Double)MoneyCommas.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+            exchangeData.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
+            exchangeData.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
+            exchangeData.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
+            exchangeData.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
+            exchangeData.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
+            exchangeData.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
             exchangeData.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
             Log.w(
