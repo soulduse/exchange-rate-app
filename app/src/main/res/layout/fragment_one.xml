@@ -18,8 +18,8 @@
                 android:id="@+id/text_view_update_date"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_gravity="center"
-                android:text="update date : 0000-00-00 00:00:00"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/update_date_top_margin"
                 />
 
             <android.support.v7.widget.RecyclerView

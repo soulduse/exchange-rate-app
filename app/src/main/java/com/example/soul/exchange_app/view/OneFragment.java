@@ -39,7 +39,6 @@ public class OneFragment extends Fragment {
     // data
     private OneFragmentManager oneFragmentManager;
     private ExchangeParser exchangeParser;
-    private DateUtil dateUtil;
 
 
     public OneFragment() {
@@ -52,7 +51,6 @@ public class OneFragment extends Fragment {
         // data initialization
         oneFragmentManager = new OneFragmentManager();
         exchangeParser = new ExchangeParser();
-        dateUtil = new DateUtil(getContext());
     }
 
     @Nullable
@@ -73,14 +71,13 @@ public class OneFragment extends Fragment {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
-        oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout);
+        oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
 
             @Override
             public void onRefresh() {
-                oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout);
-                dateUpdateText.setText(dateUtil.getDate());
+                oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
             }
         });
 
