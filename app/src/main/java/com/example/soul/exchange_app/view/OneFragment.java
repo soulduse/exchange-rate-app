@@ -35,10 +35,8 @@ public class OneFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView dateUpdateText;
 
-
     // data
     private OneFragmentManager oneFragmentManager;
-    private ExchangeParser exchangeParser;
 
 
     public OneFragment() {
@@ -50,7 +48,6 @@ public class OneFragment extends Fragment {
 
         // data initialization
         oneFragmentManager = new OneFragmentManager();
-        exchangeParser = new ExchangeParser();
     }
 
     @Nullable

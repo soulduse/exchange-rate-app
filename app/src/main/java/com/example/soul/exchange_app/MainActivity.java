@@ -49,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager){
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "환율");
-        adapter.addFragment(new TwoFragment(), "계산");
-        adapter.addFragment(new ThreeFragment(), "세번째");
+        adapter.addFragment(new OneFragment(), getResources().getString(R.string.viewpager_tap_name_1));
+        adapter.addFragment(new TwoFragment(), getResources().getString(R.string.viewpager_tap_name_2));
+        adapter.addFragment(new ThreeFragment(), getResources().getString(R.string.viewpager_tap_name_3));
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
     }
