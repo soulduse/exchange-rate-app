@@ -1,4 +1,4 @@
-package com.example.soul.exchange_app.view;
+package com.example.soul.exchange_app.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

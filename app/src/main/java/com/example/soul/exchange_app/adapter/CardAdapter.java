@@ -1,7 +1,8 @@
-package com.example.soul.exchange_app.view;
+package com.example.soul.exchange_app.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private Context             mContext;
     private List<ExchangeData>  exchangeDataList;
     private ExchangeData        exchangeData;
+    private int                 mExpandedPosition;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price;
@@ -57,6 +59,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         exchangeData = exchangeDataList.get(position);
         holder.title.setText(exchangeData.getCountryAbbr()+" "+exchangeData.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
+
+
+        // http://stackoverflow.com/questions/32427889/checkbox-in-recyclerview-keeps-on-checking-different-items
+        /*
+        final boolean isExpanded = position==mExpandedPosition;
+        holder.details.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.itemView.setActivated(isExpanded);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExpandedPosition = isExpanded ? -1:position;
+                TransitionManager.beginDelayedTransition(recyclerView);
+                notifyDataSetChanged();
+            }
+        });
+        */
 
 
         // loading flag cover using Glide library

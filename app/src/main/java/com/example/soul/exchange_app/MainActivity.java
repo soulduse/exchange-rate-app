@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import com.example.soul.exchange_app.view.OneFragment;
 import com.example.soul.exchange_app.view.ThreeFragment;
 import com.example.soul.exchange_app.view.TwoFragment;
-import com.example.soul.exchange_app.view.ViewPagerAdapter;
+import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

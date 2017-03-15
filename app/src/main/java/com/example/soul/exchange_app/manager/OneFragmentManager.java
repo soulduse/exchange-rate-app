@@ -12,7 +12,7 @@ import com.example.soul.exchange_app.data.ExchangeData;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.util.DateUtil;
-import com.example.soul.exchange_app.view.CardAdapter;
+import com.example.soul.exchange_app.adapter.CardAdapter;
 
 import java.util.List;
 
