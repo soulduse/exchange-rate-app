@@ -4,4 +4,6 @@
     <string name="viewpager_tap_name_1">관심환율</string>
     <string name="viewpager_tap_name_2">계산기</string>
     <string name="viewpager_tap_name_3">환율알림</string>
+    <string name="cash">현금</string>
+    <string name="send">송금</string>
 </resources>

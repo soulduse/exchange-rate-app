@@ -26,7 +26,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private Context             mContext;
     private List<ExchangeData>  exchangeDataList;
     private ExchangeData        exchangeData;
-    private int                 mExpandedPosition;
+    private int                 mExpandedPosition = -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price;
@@ -61,7 +61,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
 
 
-        // http://stackoverflow.com/questions/32427889/checkbox-in-recyclerview-keeps-on-checking-different-items
+        // http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         /*
         final boolean isExpanded = position==mExpandedPosition;
         holder.details.setVisibility(isExpanded?View.VISIBLE:View.GONE);
@@ -74,7 +74,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                 notifyDataSetChanged();
             }
         });
-        */
+        //*/
 
 
         // loading flag cover using Glide library
