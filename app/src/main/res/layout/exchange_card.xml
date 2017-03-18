@@ -80,8 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textStyle="bold"
-                        android:textSize="@dimen/text_size"
-                        android:text="살때 : "/>
+                        android:textSize="@dimen/text_size"/>
 
                     <TextView
                         android:id="@+id/sell_cash"
@@ -89,8 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textStyle="bold"
-                        android:textSize="@dimen/text_size"
-                        android:text="팔때 : "/>
+                        android:textSize="@dimen/text_size"/>
                 </LinearLayout>
 
                 <TextView
@@ -111,17 +109,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textStyle="bold"
-                        android:textSize="@dimen/text_size"
-                        android:text="보낼때 : "/>
+                        android:textSize="@dimen/text_size"/>
 
                     <TextView
-                        android:id="@+id/get_cash"
+                        android:id="@+id/receive_cash"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textStyle="bold"
-                        android:textSize="@dimen/text_size"
-                        android:text="받을때 : "/>
+                        android:textSize="@dimen/text_size"/>
                 </LinearLayout>
 
             </LinearLayout>

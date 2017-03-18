@@ -6,4 +6,8 @@
     <string name="viewpager_tap_name_3">환율알림</string>
     <string name="cash">현금</string>
     <string name="send">송금</string>
+    <string name="sell_text">살때 : </string>
+    <string name="buy_text">팔때 : </string>
+    <string name="send_text">보낼때 : </string>
+    <string name="receive_text">받을때 : </string>
 </resources>

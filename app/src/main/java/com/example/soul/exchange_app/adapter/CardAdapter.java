@@ -29,13 +29,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private int                 mExpandedPosition = -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, price;
+        public TextView title, price, buy, sell, send, receive;
         public ImageView thumbnail;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            price = (TextView) view.findViewById(R.id.price);
+            title   = (TextView) view.findViewById(R.id.title);
+            price   = (TextView) view.findViewById(R.id.price);
+            buy     = (TextView) view.findViewById(R.id.buy_cash);
+            sell    = (TextView) view.findViewById(R.id.sell_cash);
+            send    = (TextView) view.findViewById(R.id.send_cash);
+            receive = (TextView) view.findViewById(R.id.receive_cash);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
         }
     }
@@ -59,7 +63,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         exchangeData = exchangeDataList.get(position);
         holder.title.setText(exchangeData.getCountryAbbr()+" "+exchangeData.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
-
+        holder.buy.setText(mContext.getResources().getString(R.string.buy_text)+MoneyUtil.addCommas(exchangeData.getPriceBuy()));
+        holder.sell.setText(mContext.getResources().getString(R.string.sell_text)+MoneyUtil.addCommas(exchangeData.getPriceSell()));
+        holder.send.setText(mContext.getResources().getString(R.string.send_text)+MoneyUtil.addCommas(exchangeData.getPriceSend()));
+        holder.receive.setText(mContext.getResources().getString(R.string.receive_text)+MoneyUtil.addCommas(exchangeData.getPriceReceive()));
 
         // http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         /*
