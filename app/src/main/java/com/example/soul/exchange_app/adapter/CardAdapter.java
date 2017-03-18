@@ -3,10 +3,12 @@ package com.example.soul.exchange_app.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,10 +29,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private List<ExchangeData>  exchangeDataList;
     private ExchangeData        exchangeData;
     private int                 mExpandedPosition = -1;
+    private final String TAG    = getClass().getSimpleName();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price, buy, sell, send, receive;
         public ImageView thumbnail;
+        public LinearLayout details;
 
         public MyViewHolder(View view) {
             super(view);
@@ -41,6 +45,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
             send    = (TextView) view.findViewById(R.id.send_cash);
             receive = (TextView) view.findViewById(R.id.receive_cash);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            details = (LinearLayout)view.findViewById(R.id.detail_card);
         }
     }
 
@@ -59,7 +64,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         exchangeData = exchangeDataList.get(position);
         holder.title.setText(exchangeData.getCountryAbbr()+" "+exchangeData.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
@@ -68,31 +73,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         holder.send.setText(mContext.getResources().getString(R.string.send_text)+MoneyUtil.addCommas(exchangeData.getPriceSend()));
         holder.receive.setText(mContext.getResources().getString(R.string.receive_text)+MoneyUtil.addCommas(exchangeData.getPriceReceive()));
 
-        // http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
-        /*
-        final boolean isExpanded = position==mExpandedPosition;
+        // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
+        final boolean isExpanded = position == mExpandedPosition;
         holder.details.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
-                TransitionManager.beginDelayedTransition(recyclerView);
+                mExpandedPosition = isExpanded ? -1: position;
+                TransitionManager.beginDelayedTransition(holder.details);
                 notifyDataSetChanged();
+                Log.d(TAG, "Clicked >> mExpandedPosition : "+mExpandedPosition+" / position : "+position);
             }
         });
-        //*/
-
 
         // loading flag cover using Glide library
         Glide.with(mContext).load(exchangeData.getThumbnail()).into(holder.thumbnail);
 
-//        holder.overflow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                showPopupMenu(holder.overflow);
-//            }
-//        });
     }
 
     /**

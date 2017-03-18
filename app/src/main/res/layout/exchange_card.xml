@@ -37,9 +37,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/card_title_padding"
+                    android:layout_toEndOf="@+id/thumbnail"
                     android:textColor="@color/exchange_title"
                     android:textSize="@dimen/text_size"
-                    android:layout_toEndOf="@+id/thumbnail"
                     android:textStyle="bold"
                     android:layout_marginStart="16dp" />
 
@@ -49,10 +49,42 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/card_title_padding"
                     android:textSize="@dimen/text_size"
-                    android:layout_alignBottom="@+id/title"
                     android:layout_alignParentRight="true"
                     android:textStyle="bold"/>
 
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/alram_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/link_text_size"
+                    android:layout_marginStart="16dp"
+                    android:text="계산하기"
+                    android:layout_margin="@dimen/sub_text_margin"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/calcu_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/link_text_size"
+                    android:text="알람추가"
+                    android:textStyle="bold"
+                    android:layout_margin="@dimen/sub_text_margin"
+                    android:layout_toEndOf="@+id/alram_text" />
+
+                <ImageView
+                    android:id="@+id/detail_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/sub_text_margin"
+                    android:layout_marginBottom="@dimen/sub_text_margin"
+                    android:background="@android:drawable/arrow_down_float"/>
             </RelativeLayout>
 
 
