@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.data.ExchangeData;
 import com.example.soul.exchange_app.util.MoneyUtil;
+import com.example.soul.exchange_app.util.SlideInItemAnimator;
 
 import java.util.List;
 
@@ -29,6 +32,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private List<ExchangeData>  exchangeDataList;
     private ExchangeData        exchangeData;
     private int                 mExpandedPosition = -1;
+    private CommentAnimator     commentAnimator;
     private final String TAG    = getClass().getSimpleName();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -53,6 +57,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     public CardAdapter(Context mContext, List<ExchangeData> exchangeDataList) {
         this.mContext = mContext;
         this.exchangeDataList = exchangeDataList;
+        commentAnimator = new CommentAnimator();
     }
 
     @Override
@@ -89,6 +94,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
         // loading flag cover using Glide library
         Glide.with(mContext).load(exchangeData.getThumbnail()).into(holder.thumbnail);
+
+
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.rotate);
+                holder.thumbnail.startAnimation(animation);
+            }
+        });
 
     }
 
@@ -130,5 +144,37 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
         return exchangeDataList.size();
+    }
+
+
+    /**
+     * A {@link RecyclerView.ItemAnimator} which allows disabling move animations. RecyclerView
+     * does not like animating item height changes. {@link android.transition.ChangeBounds} allows
+     * this but in order to simultaneously collapse one item and expand another, we need to run the
+     * Transition on the entire RecyclerView. As such it attempts to move views around. This
+     * custom item animator allows us to stop RecyclerView from trying to handle this for us while
+     * the transition is running.
+     */
+    static class CommentAnimator extends SlideInItemAnimator {
+
+        private boolean animateMoves = false;
+
+        CommentAnimator() {
+            super();
+        }
+
+        void setAnimateMoves(boolean animateMoves) {
+            this.animateMoves = animateMoves;
+        }
+
+        @Override
+        public boolean animateMove(
+                RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+            if (!animateMoves) {
+                dispatchMoveFinished(holder);
+                return false;
+            }
+            return super.animateMove(holder, fromX, fromY, toX, toY);
+        }
     }
 }
