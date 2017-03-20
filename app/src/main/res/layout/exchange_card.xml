@@ -78,7 +78,7 @@
                     android:layout_toEndOf="@+id/alram_text" />
 
                 <ImageView
-                    android:id="@+id/detail_image"
+                    android:id="@+id/arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -92,7 +92,10 @@
                 android:id="@+id/detail_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"
+                android:stateListAnimator="@animator/comment_selection"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"

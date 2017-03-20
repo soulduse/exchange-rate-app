@@ -17,5 +17,5 @@
     <dimen name="sub_text_margin">20dp</dimen>
     <dimen name="update_date_top_margin">10dp</dimen>
 
-    <dimen name="z_card">200dp</dimen>
+    <dimen name="z_card">2dp</dimen>
 </resources>

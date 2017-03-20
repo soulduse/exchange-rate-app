@@ -73,7 +73,7 @@ public class OneFragmentManager implements ExchangeInfo {
 
         @Override
         protected void onPostExecute(List<ExchangeData> mExchangeDatas) {
-            adapter = new CardAdapter(viewExchange.getContext(), mExchangeDatas);
+            adapter = new CardAdapter(viewExchange.getContext(), mExchangeDatas, recyclerView);
             recyclerView.setAdapter(adapter);
             dateUpdateText.setText(dateUtil.getDate());
             mSwipeRefreshLayout.setRefreshing(false);
