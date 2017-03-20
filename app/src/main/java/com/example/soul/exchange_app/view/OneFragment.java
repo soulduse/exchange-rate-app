@@ -34,6 +34,7 @@ public class OneFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
     private TextView dateUpdateText;
+    private View view;
 
     // data
     private OneFragmentManager oneFragmentManager;
@@ -54,7 +55,13 @@ public class OneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_one, container, false);
+        if (view != null)
+        {
+            ViewGroup parent = (ViewGroup)view.getParent();
+            parent.removeView(view);
+        } else {
+            view = inflater.inflate(R.layout.fragment_one, container, false);
+        }
         recyclerView    = (RecyclerView)view.findViewById(R.id.recycler_view_frag_one);
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_layout);
         dateUpdateText = (TextView)view.findViewById(R.id.text_view_update_date);
