@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,15 +13,10 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
-import com.example.soul.exchange_app.paser.ExchangeParser;
-import com.example.soul.exchange_app.util.DateUtil;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -51,6 +45,8 @@ public class OneFragment extends Fragment {
         oneFragmentManager = new OneFragmentManager();
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +63,7 @@ public class OneFragment extends Fragment {
         dateUpdateText = (TextView)view.findViewById(R.id.text_view_update_date);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
+        mLayoutManager.supportsPredictiveItemAnimations();
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

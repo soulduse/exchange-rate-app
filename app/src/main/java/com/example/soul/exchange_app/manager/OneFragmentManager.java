@@ -8,11 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.data.ExchangeData;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.util.DateUtil;
-import com.example.soul.exchange_app.adapter.CardAdapter;
 
 import java.util.List;
 
@@ -70,10 +70,17 @@ public class OneFragmentManager implements ExchangeInfo {
         }
 
 
+        /**
+         * @param mExchangeDatas
+         *
+         * soution about animation reference is :
+         * http://stackoverflow.com/questions/27300811/recyclerview-adapter-notifydatasetchanged-stops-fancy-animation
+         */
 
         @Override
         protected void onPostExecute(List<ExchangeData> mExchangeDatas) {
             adapter = new CardAdapter(viewExchange.getContext(), mExchangeDatas, recyclerView);
+            adapter.setHasStableIds(true);
             recyclerView.setAdapter(adapter);
             dateUpdateText.setText(dateUtil.getDate());
             mSwipeRefreshLayout.setRefreshing(false);
