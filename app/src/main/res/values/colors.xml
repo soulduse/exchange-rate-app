@@ -9,6 +9,6 @@
     <color name="refresh_progress_1">@color/colorPrimary</color>
     <color name="refresh_progress_2">@color/colorAccent</color>
     <color name="refresh_progress_3">@color/exchange_title</color>
-    <color name="selected_comment_background">@color/viewBg</color>
-    <color name="comment_background">@color/viewBg</color>
+    <color name="selected_comment_background">@color/exchange_title</color>
+    <color name="comment_background">@color/exchange_title</color>
 </resources>
