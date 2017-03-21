@@ -1,11 +1,16 @@
 package com.example.soul.exchange_app.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by soul on 2017. 2. 27..
  */
 
-public class ExchangeRate {
+public class ExchangeRate extends RealmObject{
 
+    @PrimaryKey
+    private int id;
     private String countryName;
     private String countryAbbr;
     private double priceBase;
@@ -16,18 +21,12 @@ public class ExchangeRate {
     private double priceusExchange;
     private String thumbnail;
 
-    public ExchangeRate() {
+    public int getId() {
+        return id;
     }
 
-    public ExchangeRate(String countryName, String countryAbbr, float priceBase, float priceBuy, float priceSell, float priceSend, float priceReceive, float priceusExchange) {
-        this.countryName = countryName;
-        this.countryAbbr = countryAbbr;
-        this.priceBase = priceBase;
-        this.priceBuy = priceBuy;
-        this.priceSell = priceSell;
-        this.priceSend = priceSend;
-        this.priceReceive = priceReceive;
-        this.priceusExchange = priceusExchange;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCountryName() {

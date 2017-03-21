@@ -43,8 +43,8 @@ dependencies {
     // Glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    // Realm
-    compile 'io.realm:android-adapters:2.0.0'
+    // realm
+    apply plugin: 'realm-android'
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
