@@ -41,14 +41,12 @@ public class OneFragment extends Fragment {
     // data
     private OneFragmentManager oneFragmentManager;
 
-
     public OneFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // data initialization
         oneFragmentManager = new OneFragmentManager();
     }
