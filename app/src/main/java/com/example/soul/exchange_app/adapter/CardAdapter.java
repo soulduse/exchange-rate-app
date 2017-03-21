@@ -89,6 +89,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         final boolean isExpanded = position == mExpandedPosition;
 
         holder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        changeArrow(isExpanded, holder.arrow);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +97,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                 mExpandedPosition = isExpanded ? -1 : position;
                 Log.w(TAG, "recyclerView.getChildCount() : "+holder.recyclerView.getChildCount());
 //                    TransitionManager.beginDelayedTransition(holder.recyclerView);
-                changeArrow(isExpanded, holder.arrow);
                 notifyDataSetChanged();
                 Log.d(TAG, "Clicked >> mExpandedPosition : " + mExpandedPosition + " / position : " + position);
             }
