@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<ExchangeData> exchangeDataList;
-    private ExchangeData exchangeData;
+    private List<ExchangeRate> exchangeRateList;
+    private ExchangeRate exchangeRate;
     private RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
     private final String TAG = getClass().getSimpleName();
@@ -56,9 +56,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     }
 
 
-    public CardAdapter(Context mContext, List<ExchangeData> exchangeDataList, RecyclerView mRecyclerView) {
+    public CardAdapter(Context mContext, List<ExchangeRate> exchangeRateList, RecyclerView mRecyclerView) {
         this.mContext = mContext;
-        this.exchangeDataList = exchangeDataList;
+        this.exchangeRateList = exchangeRateList;
         this.mRecyclerView = mRecyclerView;
     }
 
@@ -75,13 +75,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        exchangeData = exchangeDataList.get(position);
-        holder.title.setText(exchangeData.getCountryAbbr() + " " + exchangeData.getCountryName());
-        holder.price.setText(MoneyUtil.addCommas(exchangeData.getPriceBase()));
-        holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(exchangeData.getPriceBuy()));
-        holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(exchangeData.getPriceSell()));
-        holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(exchangeData.getPriceSend()));
-        holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(exchangeData.getPriceReceive()));
+        exchangeRate = exchangeRateList.get(position);
+        holder.title.setText(exchangeRate.getCountryAbbr() + " " + exchangeRate.getCountryName());
+        holder.price.setText(MoneyUtil.addCommas(exchangeRate.getPriceBase()));
+        holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(exchangeRate.getPriceBuy()));
+        holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(exchangeRate.getPriceSell()));
+        holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(exchangeRate.getPriceSend()));
+        holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(exchangeRate.getPriceReceive()));
 
         // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         final boolean isExpanded = position == mExpandedPosition;
@@ -101,7 +101,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         });
 
         // loading flag cover using Glide library
-        Glide.with(mContext).load(exchangeData.getThumbnail()).into(holder.thumbnail);
+        Glide.with(mContext).load(exchangeRate.getThumbnail()).into(holder.thumbnail);
 
     }
 
@@ -117,11 +117,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return exchangeDataList.size();
+        return exchangeRateList.size();
     }
 
     @Override
     public long getItemId(int position) {
-        return exchangeDataList.get(position).hashCode();
+        return exchangeRateList.get(position).hashCode();
     }
 }

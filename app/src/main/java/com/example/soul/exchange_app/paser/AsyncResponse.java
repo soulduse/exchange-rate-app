@@ -1,6 +1,6 @@
 package com.example.soul.exchange_app.paser;
 
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface AsyncResponse {
-    void processFinish(List<ExchangeData> mExchangeDatas);
+    void processFinish(List<ExchangeRate> mExchangeRates);
 }

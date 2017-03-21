@@ -1,11 +1,9 @@
-package com.example.soul.exchange_app.view;
+package com.example.soul.exchange_app.activity;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,17 +17,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
-import com.example.soul.exchange_app.paser.AsyncResponse;
+import com.example.soul.exchange_app.paser.ExchangeParser;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by soul on 2017. 2. 24..
  */
 
-public class OneFragment extends Fragment implements AsyncResponse {
+public class OneFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -91,23 +90,51 @@ public class OneFragment extends Fragment implements AsyncResponse {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
-        oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
+        load();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
+                load();
             }
         });
 
         return view;
     }
 
-    @Override
-    public void processFinish(List<ExchangeData> mExchangeDatas) {
-        Log.d(TAG, "processFinish 들어온다 : "+mExchangeDatas.size());
+    public void load() {
+        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
+        Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
+            @Override
+            public List<ExchangeRate> call() throws Exception {
+                return new ExchangeParser().getParserDatas();
+            }
+        };
+
+        oneFragmentManager.getAsyncExecutor()
+                .setInit(recyclerView, view, mSwipeRefreshLayout, dateUpdateText)
+                .setCallable(callable)
+                .setCallback(callback)
+                .execute();
     }
 
+    // 비동기로 실행된 결과를 받아 처리하는 코드
+    private OneFragmentManager.AsyncCallback<List<ExchangeRate>> callback = new OneFragmentManager.AsyncCallback<List<ExchangeRate>>() {
+        @Override
+        public void onResult(List<ExchangeRate> result) {
+            Log.d(TAG, "result size : "+result.size());
+        }
+
+        @Override
+        public void exceptionOccured(Exception e) {
+            Log.d(TAG, "exceptionOccured : "+e.getMessage());
+        }
+
+        @Override
+        public void cancelled() {
+            Log.d(TAG, "cancelled");
+        }
+    };
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
         private int spanCount;

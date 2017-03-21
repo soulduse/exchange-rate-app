@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ import java.util.List;
 
 public class SetCountryAdapter extends RecyclerView.Adapter<SetCountryAdapter.SetCountryViewHolder>{
 
-    private List<ExchangeData>  exchangeDataList;
-    private ExchangeData        exchangeData;
+    private List<ExchangeRate> exchangeRateList;
+    private ExchangeRate exchangeRate;
     private Context             mContext;
     private final String TAG = getClass().getSimpleName();
 
-    public SetCountryAdapter(Context mContext, List<ExchangeData> exchangeDataList) {
+    public SetCountryAdapter(Context mContext, List<ExchangeRate> exchangeRateList) {
         this.mContext = mContext;
-        this.exchangeDataList = exchangeDataList;
+        this.exchangeRateList = exchangeRateList;
     }
 
     public class SetCountryViewHolder extends RecyclerView.ViewHolder {
@@ -53,14 +53,14 @@ public class SetCountryAdapter extends RecyclerView.Adapter<SetCountryAdapter.Se
 
     @Override
     public void onBindViewHolder(SetCountryViewHolder holder, int position) {
-        exchangeData = exchangeDataList.get(position);
-        Glide.with(mContext).load(exchangeData.getThumbnail()).into(holder.thumbnail);
-        holder.title.setText(exchangeData.getCountryAbbr() + " " + exchangeData.getCountryName());
+        exchangeRate = exchangeRateList.get(position);
+        Glide.with(mContext).load(exchangeRate.getThumbnail()).into(holder.thumbnail);
+        holder.title.setText(exchangeRate.getCountryAbbr() + " " + exchangeRate.getCountryName());
     }
 
     @Override
     public int getItemCount() {
-        return exchangeDataList.size();
+        return exchangeRateList.size();
     }
 
 

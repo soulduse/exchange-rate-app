@@ -1,4 +1,4 @@
-package com.example.soul.exchange_app;
+package com.example.soul.exchange_app.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.AsyncResponse;
-import com.example.soul.exchange_app.view.OneFragment;
-import com.example.soul.exchange_app.view.SetCountryActivity;
-import com.example.soul.exchange_app.view.ThreeFragment;
-import com.example.soul.exchange_app.view.TwoFragment;
 
 import java.util.List;
 
@@ -135,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     @Override
-    public void processFinish(List<ExchangeData> mExchangeDatas) {
-        Log.d("MainActivity", "Data 들어와라"+mExchangeDatas.isEmpty());
+    public void processFinish(List<ExchangeRate> mExchangeRates) {
+        Log.d("MainActivity", "Data 들어와라"+ mExchangeRates.isEmpty());
     }
 }

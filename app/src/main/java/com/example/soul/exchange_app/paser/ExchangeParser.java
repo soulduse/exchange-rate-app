@@ -2,7 +2,7 @@ package com.example.soul.exchange_app.paser;
 
 import android.util.Log;
 
-import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import org.jsoup.Jsoup;
@@ -29,7 +29,7 @@ public class ExchangeParser implements ExchangeInfo{
     private Document doc;
     private List<String> perConutryList;
     private List<String[]> perCountryArrList;
-    private List<ExchangeData> perCountDats;
+    private List<ExchangeRate> perCountDats;
     private List<String[]> exchangeArrList;
     private StringBuilder builder;
 
@@ -81,22 +81,22 @@ public class ExchangeParser implements ExchangeInfo{
         return perCountryArrList;
     }
 
-    public List<ExchangeData> getParserDatas(){
+    public List<ExchangeRate> getParserDatas(){
         perCountDats = new ArrayList<>();
-        ExchangeData exchangeData;
+        ExchangeRate exchangeRate;
 
         exchangeArrList = getPerserArrList();
         for(int i=0; i<exchangeArrList.size(); i++) {
-            exchangeData = new ExchangeData();
-            exchangeData.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
-            exchangeData.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
-            exchangeData.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
-            exchangeData.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
-            exchangeData.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
-            exchangeData.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
-            exchangeData.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
-            exchangeData.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
-            exchangeData.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
+            exchangeRate = new ExchangeRate();
+            exchangeRate.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
+            exchangeRate.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
+            exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
+            exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
+            exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
+            exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
+            exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
+            exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+            exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
             Log.w(
                     TAG,
@@ -111,7 +111,7 @@ public class ExchangeParser implements ExchangeInfo{
             );
 
 
-            perCountDats.add(exchangeData);
+            perCountDats.add(exchangeRate);
         }
 
         return perCountDats;

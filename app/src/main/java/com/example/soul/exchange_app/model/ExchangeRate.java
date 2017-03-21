@@ -1,10 +1,10 @@
-package com.example.soul.exchange_app.data;
+package com.example.soul.exchange_app.model;
 
 /**
  * Created by soul on 2017. 2. 27..
  */
 
-public class ExchangeData {
+public class ExchangeRate {
 
     private String countryName;
     private String countryAbbr;
@@ -16,10 +16,10 @@ public class ExchangeData {
     private double priceusExchange;
     private String thumbnail;
 
-    public ExchangeData() {
+    public ExchangeRate() {
     }
 
-    public ExchangeData(String countryName, String countryAbbr, float priceBase, float priceBuy, float priceSell, float priceSend, float priceReceive, float priceusExchange) {
+    public ExchangeRate(String countryName, String countryAbbr, float priceBase, float priceBuy, float priceSell, float priceSend, float priceReceive, float priceusExchange) {
         this.countryName = countryName;
         this.countryAbbr = countryAbbr;
         this.priceBase = priceBase;

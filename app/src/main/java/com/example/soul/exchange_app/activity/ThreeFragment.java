@@ -1,4 +1,4 @@
-package com.example.soul.exchange_app.view;
+package com.example.soul.exchange_app.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
