@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.adapter;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -23,6 +24,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
+        switch (position){
+            case 0:
+
+        }
         return mFragmentList.get(position);
     }
 
@@ -30,6 +35,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     public int getCount() {
         return mFragmentList.size();
     }
+
+
 
     public void addFragment(Fragment fragment, String title){
         mFragmentList.add(fragment);

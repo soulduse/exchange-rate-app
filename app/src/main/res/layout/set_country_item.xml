@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <CheckBox
+        android:id="@+id/check_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/image_set_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="@android:color/black"
+        android:src="@drawable/ic_add_white_24dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/check_country" />
+
+    <TextView
+        android:id="@+id/text_country_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="country"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:layout_alignBottom="@+id/image_set_flag"
+        android:layout_toEndOf="@+id/image_set_flag"
+        android:layout_marginStart="24dp" />
+
+</RelativeLayout>

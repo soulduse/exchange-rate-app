@@ -4,11 +4,14 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +19,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.data.ExchangeData;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
+import com.example.soul.exchange_app.paser.AsyncResponse;
+
+import java.util.List;
 
 /**
  * Created by soul on 2017. 2. 24..
  */
 
-public class OneFragment extends Fragment {
+public class OneFragment extends Fragment implements AsyncResponse {
+
+    private final String TAG = getClass().getSimpleName();
 
     // view
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -67,6 +76,16 @@ public class OneFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
@@ -75,7 +94,6 @@ public class OneFragment extends Fragment {
         oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-
             @Override
             public void onRefresh() {
                 oneFragmentManager.excuteDataAsync(recyclerView, view, mSwipeRefreshLayout, dateUpdateText);
@@ -83,6 +101,11 @@ public class OneFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void processFinish(List<ExchangeData> mExchangeDatas) {
+        Log.d(TAG, "processFinish 들어온다 : "+mExchangeDatas.size());
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,20 +8,27 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
+import com.example.soul.exchange_app.data.ExchangeData;
+import com.example.soul.exchange_app.paser.AsyncResponse;
 import com.example.soul.exchange_app.view.OneFragment;
+import com.example.soul.exchange_app.view.SetCountryActivity;
 import com.example.soul.exchange_app.view.ThreeFragment;
 import com.example.soul.exchange_app.view.TwoFragment;
-import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     // view
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton fab;
 
     @Override
 
@@ -38,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -55,7 +65,51 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new TwoFragment(), getResources().getString(R.string.viewpager_tap_name_2));
         adapter.addFragment(new ThreeFragment(), getResources().getString(R.string.viewpager_tap_name_3));
         viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        fab.show();
+                        moveNextActivityFAB(position);
+                        break;
+                    case 1:
+                        fab.hide();
+                        break;
+                    case 2:
+                        fab.show();
+                        moveNextActivityFAB(position);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         viewPager.setAdapter(adapter);
+    }
+
+    private void moveNextActivityFAB(final int position){
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(position == 0){
+                    Snackbar.make(view, "First Page!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    Intent intent = new Intent(getApplicationContext(), SetCountryActivity.class);
+                }else if(position == 2){
+                    Snackbar.make(view, "Third Page!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -78,5 +132,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void processFinish(List<ExchangeData> mExchangeDatas) {
+        Log.d("MainActivity", "Data 들어와라"+mExchangeDatas.isEmpty());
     }
 }

@@ -1,7 +1,6 @@
 package com.example.soul.exchange_app.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,15 +31,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private int mExpandedPosition = -1;
     private final String TAG = getClass().getSimpleName();
 
-    private static final int ANIMATION_DURATION = 300;
-    private static final int ROTATE_180_DEGREE = 180;
+    private static final int ROTATE_0_DEGREE    = 0;
+    private static final int ROTATE_180_DEGREE  = 180;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price, buy, sell, send, receive;
         public ImageView thumbnail, arrow;
         public LinearLayout details;
         public RecyclerView recyclerView;
-        public CardView cardView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -107,11 +105,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
     }
 
+    // https://github.com/mikepenz/MaterialDrawer/issues/1158
     private void changeArrow(boolean isExpanded, final View view){
         if(isExpanded){
-            view.animate().rotation(0).start();
-        }else{
             view.animate().rotation(ROTATE_180_DEGREE).start();
+        }else{
+            view.animate().rotation(ROTATE_0_DEGREE).start();
         }
     }
 
