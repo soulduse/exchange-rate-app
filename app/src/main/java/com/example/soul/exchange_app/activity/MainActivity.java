@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
                     Snackbar.make(view, "First Page!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     Intent intent = new Intent(getApplicationContext(), SetCountryActivity.class);
+                    startActivity(intent);
                 }else if(position == 2){
                     Snackbar.make(view, "Third Page!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
