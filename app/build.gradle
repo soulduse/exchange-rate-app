@@ -45,8 +45,10 @@ dependencies {
 
     // realm
     apply plugin: 'realm-android'
+    compile 'io.realm:android-adapters:2.0.0'
 
-    // Required -- JUnit 4 framework
+
+// Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
 
     // Optional -- Mockito framework
