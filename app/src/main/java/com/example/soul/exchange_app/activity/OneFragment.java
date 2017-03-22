@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 
 import java.util.List;
