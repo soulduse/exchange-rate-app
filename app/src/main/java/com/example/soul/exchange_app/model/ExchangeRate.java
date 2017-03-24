@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class ExchangeRate extends RealmObject{
 
     @PrimaryKey
-    private int id;
+    private long id;
     private String countryName;
     private String countryAbbr;
     private double priceBase;
@@ -21,11 +21,11 @@ public class ExchangeRate extends RealmObject{
     private double priceusExchange;
     private String thumbnail;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
