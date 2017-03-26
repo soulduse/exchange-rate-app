@@ -13,9 +13,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.model.SetExchangeRate;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by soul on 2017. 2. 27..
@@ -30,6 +35,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     private RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
     private final String TAG = getClass().getSimpleName();
+    private Realm realm;
 
     private static final int ROTATE_0_DEGREE    = 0;
     private static final int ROTATE_180_DEGREE  = 180;
@@ -60,6 +66,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         this.mContext = mContext;
         this.exchangeRateList = exchangeRateList;
         this.mRecyclerView = mRecyclerView;
+
+        setRealmDatas();
+    }
+
+    private void setRealmDatas(){
+
+        RealmController.getInstance().clearAll(ExchangeRate.class);
+        realm = RealmController.getInstance().getRealm();
+
+        Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
+        for(ExchangeRate datas : exchangeRateList){
+            long idx = RealmController.getInstance().getNextKey(ExchangeRate.class);
+            datas.setId(idx);
+            RealmResults<ExchangeRate> results =
+                    RealmController.getInstance().checkExchangeRate(idx, datas.getCountryAbbr());
+
+            if(results.isValid()){
+                realm.beginTransaction();
+                realm.copyToRealm(datas);
+                realm.commitTransaction();
+            }
+        }
+
+
+
     }
 
     @Override
