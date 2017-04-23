@@ -67,7 +67,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         this.exchangeRateList = exchangeRateList;
         this.mRecyclerView = mRecyclerView;
 
-        setRealmDatas();
+//        setRealmDatas();
     }
 
     private void setRealmDatas(){

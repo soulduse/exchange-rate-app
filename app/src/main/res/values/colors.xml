@@ -11,4 +11,9 @@
     <color name="refresh_progress_3">@color/exchange_title</color>
     <color name="selected_comment_background">@color/exchange_title</color>
     <color name="comment_background">@color/exchange_title</color>
+
+    <!-- Customize your theme here. -->
+    <color name="calColorPrimary">#009688</color>
+    <color name="calColorPrimaryDark">#00796B</color>
+    <color name="calColorAccent">#FF4081</color>
 </resources>
