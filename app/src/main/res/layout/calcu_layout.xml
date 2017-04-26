@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
 
     <TextView
-        android:id="@+id/btn_seven"
+        android:id="@+id/button_seven"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -16,13 +17,14 @@
         android:text="7"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_eight"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_marginTop="190dp" />
 
     <TextView
-        android:id="@+id/btn_eight"
+        android:id="@+id/button_eight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -31,14 +33,12 @@
         android:text="8"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_seven"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/button_seven"
+        app:layout_constraintEnd_toStartOf="@+id/button_nine"
+        app:layout_constraintBaseline_toBaselineOf="@id/button_seven"/>
 
     <TextView
-        android:id="@+id/btn_nine"
+        android:id="@+id/button_nine"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -47,14 +47,12 @@
         android:text="9"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_eight"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/button_eight"
+        app:layout_constraintEnd_toStartOf="@+id/button_A"
+        app:layout_constraintBaseline_toBaselineOf="@id/button_seven" />
 
     <ImageView
-        android:id="@+id/btn_clear"
+        android:id="@+id/button_A"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
@@ -64,14 +62,14 @@
         android:scaleType="center"
         android:src="@drawable/ic_keyboard_arrow_down_grey_900_24dp"
         android:textColor="@color/calColorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_nine"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/button_nine"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/button_seven" />
+
 
     <TextView
-        android:id="@+id/btn_four"
+        android:id="@+id/button_four"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -80,14 +78,16 @@
         android:text="4"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_two"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toBottomOf="@+id/btn_seven"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_seven"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
-        android:id="@+id/btn_five"
+        android:id="@+id/button_five"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -96,15 +96,15 @@
         android:text="5"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_six"
+        app:layout_constraintStart_toEndOf="@id/button_four"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_four"
-        app:layout_constraintTop_toBottomOf="@+id/btn_eight"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_eight"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/btn_six"
+        android:id="@+id/button_six"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -113,15 +113,15 @@
         android:text="6"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_B"
+        app:layout_constraintStart_toEndOf="@id/button_five"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_five"
-        app:layout_constraintTop_toBottomOf="@+id/btn_nine"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_nine" />
 
     <ImageView
-        android:id="@+id/btn_save"
+        android:id="@+id/button_B"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
@@ -131,15 +131,16 @@
         android:scaleType="center"
         android:src="@drawable/ic_keyboard_arrow_down_grey_900_24dp"
         android:textColor="@color/calColorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_six"
+        app:layout_constraintLeft_toLeftOf="@+id/button_four"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_six"
-        app:layout_constraintTop_toBottomOf="@+id/btn_clear"
+        app:layout_constraintTop_toBottomOf="@+id/button_A"
         app:layout_constraintVertical_bias="0.0" />
 
+
     <TextView
-        android:id="@+id/btn_one"
+        android:id="@+id/button_one"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -148,14 +149,15 @@
         android:text="1"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_two"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toBottomOf="@+id/btn_four"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_four"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/btn_two"
+        android:id="@+id/button_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -164,15 +166,15 @@
         android:text="2"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_six"
+        app:layout_constraintStart_toEndOf="@id/button_four"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_one"
-        app:layout_constraintTop_toBottomOf="@+id/btn_five"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_five"
+        app:layout_constraintVertical_bias="0.0"/>
 
     <TextView
-        android:id="@+id/btn_three"
+        android:id="@+id/button_three"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -181,15 +183,15 @@
         android:text="3"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_B"
+        app:layout_constraintStart_toEndOf="@id/button_two"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_two"
-        app:layout_constraintTop_toBottomOf="@+id/btn_six"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_six" />
 
     <ImageView
-        android:id="@+id/btn_screenshoot"
+        android:id="@+id/button_C"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
@@ -199,15 +201,17 @@
         android:scaleType="center"
         android:src="@drawable/ic_keyboard_arrow_down_grey_900_24dp"
         android:textColor="@color/calColorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_six"
+        app:layout_constraintLeft_toLeftOf="@+id/button_four"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_three"
-        app:layout_constraintTop_toBottomOf="@+id/btn_save"
+        app:layout_constraintTop_toBottomOf="@+id/button_B"
         app:layout_constraintVertical_bias="0.0" />
 
+
+
     <TextView
-        android:id="@+id/btn_double_one"
+        android:id="@+id/button_double_zero"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -216,14 +220,14 @@
         android:text="00"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/button_zero"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toBottomOf="@+id/btn_one"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/button_one"
+        app:layout_constraintVertical_bias="0.831"/>
 
     <TextView
-        android:id="@+id/btn_zero"
+        android:id="@+id/button_zero"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -232,16 +236,14 @@
         android:text="0"
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintStart_toEndOf="@id/button_double_zero"
+        app:layout_constraintEnd_toStartOf="@+id/button_dot"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_double_one"
-        app:layout_constraintTop_toBottomOf="@+id/btn_two"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginLeft="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/button_two"
+        app:layout_constraintVertical_bias="0.831"/>
 
     <TextView
-        android:id="@+id/btn_dot"
+        android:id="@+id/button_dot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#ddd"
@@ -250,15 +252,14 @@
         android:text="."
         android:textColor="#333"
         android:textSize="@dimen/cal_button_text_size"
+        app:layout_constraintStart_toEndOf="@id/button_zero"
+        app:layout_constraintEnd_toStartOf="@+id/button_D"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_zero"
-        app:layout_constraintTop_toBottomOf="@+id/btn_three"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.831"
+        app:layout_constraintTop_toBottomOf="@+id/button_three" />
 
     <ImageView
-        android:id="@+id/btn_back"
+        android:id="@+id/button_D"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
@@ -268,14 +269,11 @@
         android:scaleType="center"
         android:src="@drawable/ic_keyboard_arrow_down_grey_900_24dp"
         android:textColor="@color/calColorPrimaryDark"
+        app:layout_constraintLeft_toLeftOf="@+id/button_four"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/btn_dot"
-        app:layout_constraintTop_toBottomOf="@+id/btn_screenshoot"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginLeft="-194dp" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/button_C"
+        app:layout_constraintStart_toEndOf="@id/button_dot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.831" />
 
 </android.support.constraint.ConstraintLayout>
