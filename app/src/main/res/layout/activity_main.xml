@@ -51,11 +51,11 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_margin="@dimen/fab_right_margin"
             app:rippleColor="@color/colorPrimary"
             app:srcCompat="@drawable/ic_add_white_24dp"
             app:layout_anchor="@id/viewpager"
-            app:paddingStart="@dimen/fab_margin"
+            app:paddingStart="@dimen/fab_right_margin"
             app:layout_anchorGravity="bottom|end"
             android:elevation="5dp"/>
 
