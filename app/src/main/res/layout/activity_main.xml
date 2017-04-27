@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -11,10 +11,11 @@
 
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/coordinator"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/adView"
+        android:layout_above="@+id/adView1"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
@@ -39,8 +40,6 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
-
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
@@ -52,8 +51,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="68dp"
+            android:layout_marginRight="@dimen/fab_margin"
             app:rippleColor="@color/colorPrimary"
             app:srcCompat="@drawable/ic_add_white_24dp"
             app:layout_anchor="@id/viewpager"
@@ -65,15 +63,17 @@
         <!--<include layout="@layout/content_main" />-->
     </android.support.design.widget.CoordinatorLayout>
 
+
     <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+        android:id="@+id/adView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center|bottom"
+        app:adSize="SMART_BANNER"/>
 
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
 
 
 
