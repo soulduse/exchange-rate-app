@@ -56,4 +56,5 @@ dependencies {
 
     // constraint-layout
     compile 'com.android.support.constraint:constraint-layout:1.0.0'
+    compile 'com.google.android.gms:play-services-ads:10.2.1'
 }
