@@ -20,6 +20,7 @@ import com.example.soul.exchange_app.util.MoneyUtil;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -67,30 +68,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
         this.exchangeRateList = exchangeRateList;
         this.mRecyclerView = mRecyclerView;
 
-//        setRealmDatas();
+        setRealmDatas();
     }
 
     private void setRealmDatas(){
-
-        RealmController.getInstance().clearAll(ExchangeRate.class);
-        realm = RealmController.getInstance().getRealm();
-
-        Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
+        RealmController.with(mContext).clearAll(ExchangeRate.class);
+        realm = RealmController.with(mContext).getRealm();
         for(ExchangeRate datas : exchangeRateList){
-            long idx = RealmController.getInstance().getNextKey(ExchangeRate.class);
-            datas.setId(idx);
-            RealmResults<ExchangeRate> results =
-                    RealmController.getInstance().checkExchangeRate(idx, datas.getCountryAbbr());
-
-            if(results.isValid()){
-                realm.beginTransaction();
-                realm.copyToRealm(datas);
-                realm.commitTransaction();
+            realm.beginTransaction();
+            // add object
+            Number currentIdNum = realm.where(ExchangeRate.class).max("id");
+            int nextId;
+            if(currentIdNum == null) {
+                nextId = 1;
+            } else {
+                nextId = currentIdNum.intValue() + 1;
             }
+            Log.d(TAG, "getId Value : "+ nextId);
+            datas.setId(nextId);
+            realm.copyToRealm(datas);
+            realm.commitTransaction();
         }
-
-
-
     }
 
     @Override
