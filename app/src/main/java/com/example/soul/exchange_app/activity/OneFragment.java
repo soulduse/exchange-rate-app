@@ -20,6 +20,7 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -105,7 +106,7 @@ public class OneFragment extends Fragment {
         Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
             @Override
             public List<ExchangeRate> call() throws Exception {
-                return new ExchangeParser().getParserDatas();
+                return getParserDataList();
             }
         };
 
@@ -114,6 +115,22 @@ public class OneFragment extends Fragment {
                 .setCallable(callable)
                 .setCallback(callback)
                 .execute();
+    }
+
+    /**
+        네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
+        - network connect       : parsing data를 가져온다.
+        - network disconnect    : Realm DB에서 내용을 가져온다.
+     */
+    private List<ExchangeRate> getParserDataList(){
+
+        if(NetworkUtil.isNetworkConnected(getContext())){ // connected network
+
+            return new ExchangeParser().getParserDatas();
+        }else{                                            // disconnected network
+            
+            return new ExchangeParser().getParserDatas();
+        }
     }
 
     // 비동기로 실행된 결과를 받아 처리하는 코드

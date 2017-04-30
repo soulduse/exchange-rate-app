@@ -109,8 +109,6 @@ public class ExchangeParser implements ExchangeInfo{
                     "PRICE_RECEIVE      : "+exchangeArrList.get(i)[PRICE_RECEIVE]+"\n"+
                     "PRICE_US_EXCHANGE  : "+exchangeArrList.get(i)[PRICE_US_EXCHANGE]
             );
-
-
             perCountDats.add(exchangeRate);
         }
 

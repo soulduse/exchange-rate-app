@@ -26,14 +26,11 @@ public class OneFragmentManager implements ExchangeInfo {
 
     private final String TAG = getClass().getSimpleName();
     private ExchangeParser exchangeParser;
-    private List<ExchangeRate> exchangeRateList;
     private CardAdapter adapter;
 
     public AsyncExecutor getAsyncExecutor(){
         return new AsyncExecutor();
     }
-
-
 
     public interface AsyncCallback<T> {
         void onResult(T result);
@@ -135,6 +132,7 @@ public class OneFragmentManager implements ExchangeInfo {
          * http://stackoverflow.com/questions/27300811/recyclerview-adapter-notifydatasetchanged-stops-fancy-animation
          */
         private void notifyResult(T result) {
+            Log.d(TAG, "entered notifyResult!");
             adapter = new CardAdapter(viewExchange.getContext(), (List<ExchangeRate>)result, recyclerView);
             adapter.setHasStableIds(true);
             recyclerView.setAdapter(adapter);
@@ -145,10 +143,5 @@ public class OneFragmentManager implements ExchangeInfo {
             if (callback != null)
                 callback.onResult(result);
         }
-
     }
-
-
-
-
 }
