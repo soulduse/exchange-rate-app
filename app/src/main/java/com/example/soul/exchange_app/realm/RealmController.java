@@ -3,6 +3,7 @@ package com.example.soul.exchange_app.realm;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Fragment;
+import android.content.Context;
 
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.model.SetExchangeRate;
@@ -23,14 +24,21 @@ public class RealmController {
 
 
 
-    public RealmController(Application application){
-        Realm.init(application);
+    public RealmController(Context context){
+        Realm.init(context);
         realm = Realm.getDefaultInstance();
+    }
+
+    public static RealmController with(Context context){
+        if(instance == null){
+            instance = new RealmController(context);
+        }
+        return instance;
     }
 
     public static RealmController with(Fragment fragment){
         if(instance == null){
-            instance = new RealmController(fragment.getActivity().getApplication());
+            instance = new RealmController(fragment.getActivity());
         }
         return instance;
     }
