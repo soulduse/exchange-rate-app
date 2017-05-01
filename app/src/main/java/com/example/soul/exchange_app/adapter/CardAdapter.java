@@ -13,15 +13,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
-import java.util.List;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
-import io.realm.RealmResults;
 
 /**
  * Created by soul on 2017. 2. 27..
@@ -29,12 +26,8 @@ import io.realm.RealmResults;
 
 
 public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdapter.MyViewHolder> {
-//public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
 
     private Context mContext;
-    private List<ExchangeRate> exchangeRateList;
-
-    private RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
     private final String TAG = getClass().getSimpleName();
     private Realm realm;
@@ -59,80 +52,14 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             details = (LinearLayout) view.findViewById(R.id.detail_card);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             arrow = (ImageView) view.findViewById(R.id.arrow);
-            recyclerView = mRecyclerView;
         }
     }
 
-    public CardAdapter(OrderedRealmCollection<ExchangeRate> data) {
+    public CardAdapter(OrderedRealmCollection<ExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);
+        this.mContext = context;
     }
-
-//
-//    public CardAdapter(Context context){
-//        this.mContext = context;
-//    }
-//
-//    public CardAdapter(Context mContext, List<ExchangeRate> exchangeRateList, RecyclerView mRecyclerView) {
-//        this.mContext = mContext;
-//        this.exchangeRateList = exchangeRateList;
-//        this.mRecyclerView = mRecyclerView;
-//
-//    }
-
-    /*
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.exchange_card, parent, false);
-
-        // create a new view
-        Log.d(TAG, "onCreateViewHolder");
-
-        return new MyViewHolder(itemView);
-    }
-
-
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        realm = RealmController.getInstance().getRealm();
-        final ExchangeRate exchangeRate = getItem(position);
-
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        exchangeRate = exchangeRateList.get(position);
-        holder.title.setText(exchangeRate.getCountryAbbr() + " " + exchangeRate.getCountryName());
-        holder.price.setText(MoneyUtil.addCommas(exchangeRate.getPriceBase()));
-        holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(exchangeRate.getPriceBuy()));
-        holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(exchangeRate.getPriceSell()));
-        holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(exchangeRate.getPriceSend()));
-        holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(exchangeRate.getPriceReceive()));
-
-        // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
-        final boolean isExpanded = position == mExpandedPosition;
-
-        holder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        changeArrow(isExpanded, holder.arrow);
-        holder.itemView.setActivated(isExpanded);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : position;
-                Log.w(TAG, "recyclerView.getChildCount() : "+holder.recyclerView.getChildCount());
-//                    TransitionManager.beginDelayedTransition(holder.recyclerView);
-                notifyDataSetChanged();
-                Log.d(TAG, "Clicked >> mExpandedPosition : " + mExpandedPosition + " / position : " + position);
-            }
-        });
-
-        // loading flag cover using Glide library
-        Glide.with(mContext).load(exchangeRate.getThumbnail()).into(holder.thumbnail);
-
-    }
-    */
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -146,7 +73,8 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final ExchangeRate obj = getItem(position);
+        ExchangeRate obj = getItem(position);
+
 
         holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(obj.getPriceBase()));

@@ -1,6 +1,7 @@
 package com.example.soul.exchange_app.activity;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
@@ -30,10 +32,7 @@ import com.example.soul.exchange_app.util.NetworkUtil;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -58,7 +57,6 @@ public class OneFragment extends Fragment {
     // Realm
     private Realm realm;
     private RealmController realmController;
-    private RealmResults<ExchangeRate> copyRealmResults;
 
     public OneFragment() {
     }
@@ -76,6 +74,9 @@ public class OneFragment extends Fragment {
         oneFragmentManager  = new OneFragmentManager();
         dataManager = new DataManager();
         dateUtil    = new DateUtil(getContext());
+
+        realmController = RealmController.with(getContext());
+        realm = realmController.getRealm();
     }
 
 
@@ -84,13 +85,8 @@ public class OneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if (view != null)
-        {
-            ViewGroup parent = (ViewGroup)view.getParent();
-            parent.removeView(view);
-        } else {
-            view = inflater.inflate(R.layout.fragment_one, container, false);
-        }
+        view = inflater.inflate(R.layout.fragment_one, container, false);
+
         recyclerView    = (RecyclerView)view.findViewById(R.id.recycler_view_frag_one);
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_layout);
         dateUpdateText = (TextView)view.findViewById(R.id.text_view_update_date);
@@ -101,23 +97,10 @@ public class OneFragment extends Fragment {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
-
-
-//        realmController = RealmController.with(getContext());
-//        this.realm = realmController.getRealm();
 
         load();
 
@@ -139,24 +122,38 @@ public class OneFragment extends Fragment {
     }
 
     public void load() {
-        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
-        Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
-            @Override
-            public List<ExchangeRate> call() throws Exception {
-                return getParserDataList();
+
+        if(NetworkUtil.isNetworkConnected(getContext())){
+            Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
+                @Override
+                public List<ExchangeRate> call() throws Exception {
+                    return getParserDataList();
+                }
+            };
+
+            dataManager.getAsyncExecutor()
+                    .setCallable(callable)
+                    .setCallback(callback)
+                    .execute();
+        }else{
+            // Realm 데이터가 존재하는 경우
+            if(realmController.getExchangeRate().size()>0){
+                setCardAdapter();
+                showSnackBar();
+            }else{
+                showSnackBar();
             }
-        };
+        }
+        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
+    }
 
-//        oneFragmentManager.getAsyncExecutor()
-//                .setInit(recyclerView, view, mSwipeRefreshLayout, dateUpdateText)
-//                .setCallable(callable)
-//                .setCallback(callback)
-//                .execute();
-
-        dataManager.getAsyncExecutor()
-                .setCallable(callable)
-                .setCallback(callback)
-                .execute();
+    private void showSnackBar(){
+        Snackbar snackbar = Snackbar
+                .make(getActivity().findViewById(android.R.id.content), "No internet connection!", Snackbar.LENGTH_LONG)
+        .setAction("Action", null);
+        // Changing message text color
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
     }
 
     /**
@@ -165,22 +162,7 @@ public class OneFragment extends Fragment {
         - network disconnect    : Realm DB에서 내용을 가져온다.
      */
     private List<ExchangeRate> getParserDataList(){
-        realmController = RealmController.with(getContext());
-        realm = realmController.getRealm();
-        List<ExchangeRate> exchangeRateList = null;
-
-        if(NetworkUtil.isNetworkConnected(getContext())){
-            // connected network    - getData from parsing
-            realmController.setRealmDatas(new ExchangeParser().getParserDatas());
-        }            // disconnected network - getData from realmDB
-        try{
-            exchangeRateList = realmController.getExchangeRate();
-            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
-        }catch (NullPointerException ne){
-            Snackbar.make(view, "네트워크 연결을 체크 해주세요.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-        return exchangeRateList;
+        return new ExchangeParser().getParserDatas();
     }
 
 
@@ -189,14 +171,11 @@ public class OneFragment extends Fragment {
     private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
         @Override
         public void onResult(List<ExchangeRate> result) {
-            adapter = new CardAdapter(copyRealmResults);
-            adapter.setHasStableIds(true);
-            recyclerView.setAdapter(adapter);
-            dateUpdateText.setText(dateUtil.getDate());
-            mSwipeRefreshLayout.setRefreshing(false);
-            Snackbar.make(view, "Update Data", Snackbar.LENGTH_LONG)
+            realmController.setRealmDatas(result);
+            Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
+            setCardAdapter();
+            Snackbar.make(view, "Update success!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-
         }
 
         @Override
@@ -209,6 +188,14 @@ public class OneFragment extends Fragment {
             Log.d(TAG, "cancelled");
         }
     };
+
+    private void setCardAdapter(){
+        adapter = new CardAdapter(realmController.getExchangeRate(), getContext());
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
+        dateUpdateText.setText(dateUtil.getDate());
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
         private int spanCount;
