@@ -93,7 +93,6 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1 : position;
-                Log.w(TAG, "recyclerView.getChildCount() : "+holder.recyclerView.getChildCount());
 //                    TransitionManager.beginDelayedTransition(holder.recyclerView);
                 notifyDataSetChanged();
                 Log.d(TAG, "Clicked >> mExpandedPosition : " + mExpandedPosition + " / position : " + position);
