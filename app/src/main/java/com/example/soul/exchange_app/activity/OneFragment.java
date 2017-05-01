@@ -58,6 +58,7 @@ public class OneFragment extends Fragment {
     // Realm
     private Realm realm;
     private RealmController realmController;
+    private RealmResults<ExchangeRate> copyRealmResults;
 
     public OneFragment() {
     }
@@ -115,14 +116,10 @@ public class OneFragment extends Fragment {
                 R.color.refresh_progress_3);
 
 
-        realmController = RealmController.with(getContext());
-        this.realm = realmController.getRealm();
+//        realmController = RealmController.with(getContext());
+//        this.realm = realmController.getRealm();
 
         load();
-
-
-
-        setUpRecyclerView();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
@@ -168,19 +165,41 @@ public class OneFragment extends Fragment {
         - network disconnect    : Realm DB에서 내용을 가져온다.
      */
     private List<ExchangeRate> getParserDataList(){
+        realmController = RealmController.with(getContext());
+        realm = realmController.getRealm();
         List<ExchangeRate> exchangeRateList = null;
 
+        /*
         if(NetworkUtil.isNetworkConnected(getContext())){
             // connected network    - getData from parsing
-            exchangeRateList = new ExchangeParser().getParserDatas();
-            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
+//            exchangeRateList = new ExchangeParser().getParserDatas();
 
             // if network is connected, realm database will change datas
-            realmController.setRealmDatas(exchangeRateList);
+            realmController.setRealmDatas(new ExchangeParser().getParserDatas());
+            exchangeRateList = realmController.getExchangeRate();
+            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
         }else{
             // disconnected network - getData from realmDB
-            exchangeRateList = realmController.getExchangeRate().subList(0, realmController.getExchangeRate().size());
-            Log.d(TAG, "exchangeRateList Realm Data Size : "+exchangeRateList.size());
+            try{
+//                exchangeRateList = realmController.getExchangeRate().subList(0, realmController.getExchangeRate().size());
+                exchangeRateList = realmController.getExchangeRate();
+                Log.d(TAG, "exchangeRateList Realm Data Size : "+exchangeRateList.size());
+            }catch (NullPointerException ne){
+                Snackbar.make(view, "네트워크 연결을 체크 해주세요.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+        */
+        if(NetworkUtil.isNetworkConnected(getContext())){
+            // connected network    - getData from parsing
+            realmController.setRealmDatas(new ExchangeParser().getParserDatas());
+        }            // disconnected network - getData from realmDB
+        try{
+            exchangeRateList = realmController.getExchangeRate();
+            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
+        }catch (NullPointerException ne){
+            Snackbar.make(view, "네트워크 연결을 체크 해주세요.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
         return exchangeRateList;
     }
@@ -191,7 +210,13 @@ public class OneFragment extends Fragment {
     private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
         @Override
         public void onResult(List<ExchangeRate> result) {
-
+            adapter = new CardAdapter(copyRealmResults);
+            adapter.setHasStableIds(true);
+            recyclerView.setAdapter(adapter);
+            dateUpdateText.setText(dateUtil.getDate());
+            mSwipeRefreshLayout.setRefreshing(false);
+            Snackbar.make(view, "Update Data", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
         }
 
@@ -244,67 +269,6 @@ public class OneFragment extends Fragment {
     private int dpToPx(int dp){
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-
-    private void setUpRecyclerView() {
-        realm = Realm.getDefaultInstance();
-        adapter = new CardAdapter(realm.where(ExchangeRate.class).findAll());
-        adapter.setHasStableIds(true);
-        recyclerView.setAdapter(adapter);
-        dateUpdateText.setText(dateUtil.getDate());
-        mSwipeRefreshLayout.setRefreshing(false);
-//        Snackbar.make(view, "Update Data", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
-    }
-
-    public void setRealmAdapter(RealmResults<ExchangeRate> ExchangeRates) {
-
-        RealmBooksAdapter realmAdapter = new RealmBooksAdapter(this.getApplicationContext(), books, true);
-        // Set the data and tell the RecyclerView to draw
-        adapter.setRealmAdapter(realmAdapter);
-        adapter.notifyDataSetChanged();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // ... 간결함을 위해 여러 코드를 생략합니다
-        realm = Realm.getDefaultInstance();
-        // 전체 고객을 가져옵니다
-        RealmResults<ExchangeRate> exchangeRates = realm.where(ExchangeRate.class).findAllAsync();
-        // ... 리스트 어댑터를 만들고 이것을 ListView, RecyclerView 등에 추가합니다
-
-        // Realm 변경 리스너를 설정합니다
-        RealmChangeListener changeListener = new RealmChangeListener() {
-            @Override
-            public void onChange(Object element) {
-                // 어떤 스레드에서 Realm 데이터베이스가 변경되면 이 메서드가 실행됩니다.
-                // 변경 리스너는 오로지 루퍼 스레드에서만 돈다는 것을 주의하세요.
-                // 비 루퍼 스레드에는 대신에 Realm.waitForChange()를 사용해야 합니다.
-                adapter.notifyDataSetChanged(); // UI를 갱신합니다.
-            }
-        };
-        // Realm이 고객 결과가 변경할 때마다 리스너에게 통보하도록합니다.
-        // (항목 추가, 삭제, 갱신, 어떤 종류의 정렬 등)
-        exchangeRates.addChangeListener(changeListener);
     }
 
 

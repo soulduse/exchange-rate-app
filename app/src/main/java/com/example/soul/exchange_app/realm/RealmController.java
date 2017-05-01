@@ -12,6 +12,7 @@ import com.example.soul.exchange_app.model.SetExchangeRate;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 
@@ -74,6 +75,10 @@ public class RealmController {
     // Refresh the realm instance
     public void refresh(){
         realm.waitForChange();
+    }
+
+    public void close(){
+        realm.close();
     }
 
     // clear all objects from class

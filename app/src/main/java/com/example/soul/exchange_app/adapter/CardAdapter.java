@@ -14,13 +14,13 @@ import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
-import com.example.soul.exchange_app.realm.RealmRecyclerViewAdapter;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmResults;
 
 /**
@@ -28,8 +28,8 @@ import io.realm.RealmResults;
  */
 
 
-//public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdapter.MyViewHolder> {
-public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
+public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdapter.MyViewHolder> {
+//public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
 
     private Context mContext;
     private List<ExchangeRate> exchangeRateList;
@@ -63,8 +63,9 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
         }
     }
 
-    public CardAdapter(Context context) {
-        this.mContext = context;
+    public CardAdapter(OrderedRealmCollection<ExchangeRate> data) {
+        super(data, true);
+        setHasStableIds(true);
     }
 
 //
@@ -144,10 +145,8 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
-
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final ExchangeRate obj = getItem(position);
-        final MyViewHolder holder = (MyViewHolder) viewHolder;
 
         holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(obj.getPriceBase()));
@@ -187,10 +186,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate> {
     }
 
     @Override
-    public int getItemCount() {
-        if (getRealmAdapter() != null) {
-            return getRealmAdapter().getCount();
-        }
-        return 0;
+    public long getItemId(int position) {
+        return getItem(position).hashCode();
     }
 }
