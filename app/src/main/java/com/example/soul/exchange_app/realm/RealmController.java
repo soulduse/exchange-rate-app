@@ -99,6 +99,11 @@ public class RealmController {
         return realm.where(ExchangeRate.class).findAll();
     }
 
+    // find all objects in the ExchangeRate.class
+    public RealmResults<ExchangeRate> getExchangeRateAsync(){
+        return realm.where(ExchangeRate.class).findAllAsync();
+    }
+
     // find single object in the ExchangeRate.class
     public ExchangeRate isExchangeRate(String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();

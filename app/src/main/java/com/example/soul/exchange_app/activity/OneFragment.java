@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,16 +18,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.adapter.CardAdapter;
+import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.util.DateUtil;
 import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -41,9 +48,12 @@ public class OneFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView dateUpdateText;
     private View view;
+    private CardAdapter adapter;
 
     // data
     private OneFragmentManager oneFragmentManager;
+    private DataManager dataManager;
+    private DateUtil dateUtil;
 
     // Realm
     private Realm realm;
@@ -53,11 +63,18 @@ public class OneFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // data initialization
         oneFragmentManager  = new OneFragmentManager();
-
+        dataManager = new DataManager();
+        dateUtil    = new DateUtil(getContext());
     }
 
 
@@ -97,7 +114,15 @@ public class OneFragment extends Fragment {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
+
+        realmController = RealmController.with(getContext());
+        this.realm = realmController.getRealm();
+
         load();
+
+
+
+        setUpRecyclerView();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
@@ -109,6 +134,13 @@ public class OneFragment extends Fragment {
         return view;
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     public void load() {
         // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
         Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
@@ -118,8 +150,13 @@ public class OneFragment extends Fragment {
             }
         };
 
-        oneFragmentManager.getAsyncExecutor()
-                .setInit(recyclerView, view, mSwipeRefreshLayout, dateUpdateText)
+//        oneFragmentManager.getAsyncExecutor()
+//                .setInit(recyclerView, view, mSwipeRefreshLayout, dateUpdateText)
+//                .setCallable(callable)
+//                .setCallback(callback)
+//                .execute();
+
+        dataManager.getAsyncExecutor()
                 .setCallable(callable)
                 .setCallback(callback)
                 .execute();
@@ -131,7 +168,6 @@ public class OneFragment extends Fragment {
         - network disconnect    : Realm DB에서 내용을 가져온다.
      */
     private List<ExchangeRate> getParserDataList(){
-        realmController = RealmController.with(getContext());
         List<ExchangeRate> exchangeRateList = null;
 
         if(NetworkUtil.isNetworkConnected(getContext())){
@@ -146,15 +182,17 @@ public class OneFragment extends Fragment {
             exchangeRateList = realmController.getExchangeRate().subList(0, realmController.getExchangeRate().size());
             Log.d(TAG, "exchangeRateList Realm Data Size : "+exchangeRateList.size());
         }
-
         return exchangeRateList;
     }
 
+
+
     // 비동기로 실행된 결과를 받아 처리하는 코드
-    private OneFragmentManager.AsyncCallback<List<ExchangeRate>> callback = new OneFragmentManager.AsyncCallback<List<ExchangeRate>>() {
+    private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
         @Override
         public void onResult(List<ExchangeRate> result) {
-            Log.d(TAG, "result size : "+result.size());
+
+
         }
 
         @Override
@@ -207,4 +245,67 @@ public class OneFragment extends Fragment {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+
+
+    private void setUpRecyclerView() {
+        realm = Realm.getDefaultInstance();
+        adapter = new CardAdapter(realm.where(ExchangeRate.class).findAll());
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
+        dateUpdateText.setText(dateUtil.getDate());
+        mSwipeRefreshLayout.setRefreshing(false);
+//        Snackbar.make(view, "Update Data", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
+    }
+
+    public void setRealmAdapter(RealmResults<ExchangeRate> ExchangeRates) {
+
+        RealmBooksAdapter realmAdapter = new RealmBooksAdapter(this.getApplicationContext(), books, true);
+        // Set the data and tell the RecyclerView to draw
+        adapter.setRealmAdapter(realmAdapter);
+        adapter.notifyDataSetChanged();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // ... 간결함을 위해 여러 코드를 생략합니다
+        realm = Realm.getDefaultInstance();
+        // 전체 고객을 가져옵니다
+        RealmResults<ExchangeRate> exchangeRates = realm.where(ExchangeRate.class).findAllAsync();
+        // ... 리스트 어댑터를 만들고 이것을 ListView, RecyclerView 등에 추가합니다
+
+        // Realm 변경 리스너를 설정합니다
+        RealmChangeListener changeListener = new RealmChangeListener() {
+            @Override
+            public void onChange(Object element) {
+                // 어떤 스레드에서 Realm 데이터베이스가 변경되면 이 메서드가 실행됩니다.
+                // 변경 리스너는 오로지 루퍼 스레드에서만 돈다는 것을 주의하세요.
+                // 비 루퍼 스레드에는 대신에 Realm.waitForChange()를 사용해야 합니다.
+                adapter.notifyDataSetChanged(); // UI를 갱신합니다.
+            }
+        };
+        // Realm이 고객 결과가 변경할 때마다 리스너에게 통보하도록합니다.
+        // (항목 추가, 삭제, 갱신, 어떤 종류의 정렬 등)
+        exchangeRates.addChangeListener(changeListener);
+    }
+
+
 }

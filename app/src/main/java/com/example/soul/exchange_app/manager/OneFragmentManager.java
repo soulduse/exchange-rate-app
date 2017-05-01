@@ -133,7 +133,7 @@ public class OneFragmentManager implements ExchangeInfo {
          */
         private void notifyResult(T result) {
             Log.d(TAG, "entered notifyResult!");
-            adapter = new CardAdapter(viewExchange.getContext(), (List<ExchangeRate>)result, recyclerView);
+//            adapter = new CardAdapter(viewExchange.getContext(), (List<ExchangeRate>)result, recyclerView);
             adapter.setHasStableIds(true);
             recyclerView.setAdapter(adapter);
             dateUpdateText.setText(dateUtil.getDate());
