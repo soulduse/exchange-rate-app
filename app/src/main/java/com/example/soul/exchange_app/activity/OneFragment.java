@@ -20,10 +20,13 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import io.realm.Realm;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -42,6 +45,10 @@ public class OneFragment extends Fragment {
     // data
     private OneFragmentManager oneFragmentManager;
 
+    // Realm
+    private Realm realm;
+    private RealmController realmController;
+
     public OneFragment() {
     }
 
@@ -49,7 +56,8 @@ public class OneFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // data initialization
-        oneFragmentManager = new OneFragmentManager();
+        oneFragmentManager  = new OneFragmentManager();
+
     }
 
 
@@ -123,14 +131,23 @@ public class OneFragment extends Fragment {
         - network disconnect    : Realm DB에서 내용을 가져온다.
      */
     private List<ExchangeRate> getParserDataList(){
+        realmController = RealmController.with(getContext());
+        List<ExchangeRate> exchangeRateList = null;
 
-        if(NetworkUtil.isNetworkConnected(getContext())){ // connected network
+        if(NetworkUtil.isNetworkConnected(getContext())){
+            // connected network    - getData from parsing
+            exchangeRateList = new ExchangeParser().getParserDatas();
+            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
 
-            return new ExchangeParser().getParserDatas();
-        }else{                                            // disconnected network
-            
-            return new ExchangeParser().getParserDatas();
+            // if network is connected, realm database will change datas
+            realmController.setRealmDatas(exchangeRateList);
+        }else{
+            // disconnected network - getData from realmDB
+            exchangeRateList = realmController.getExchangeRate().subList(0, realmController.getExchangeRate().size());
+            Log.d(TAG, "exchangeRateList Realm Data Size : "+exchangeRateList.size());
         }
+
+        return exchangeRateList;
     }
 
     // 비동기로 실행된 결과를 받아 처리하는 코드

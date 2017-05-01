@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Fragment;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.model.SetExchangeRate;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmModel;
@@ -19,10 +22,13 @@ import io.realm.RealmResults;
 
 public class RealmController {
 
+    private final String TAG = getClass().getSimpleName();
     private static RealmController instance;
     private final Realm realm;
 
-
+    private enum FieldNames{
+        id, countryName, countryAbbr
+    }
 
     public RealmController(Context context){
         Realm.init(context);
@@ -93,6 +99,11 @@ public class RealmController {
         return realm.where(ExchangeRate.class).findAll();
     }
 
+    // find single object in the ExchangeRate.class
+    public ExchangeRate isExchangeRate(String keyword){
+        return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
+    }
+
     //query a single item with the given id
     public Object getSingleData(long id, Class<? extends RealmModel> clazz) {
 
@@ -142,4 +153,42 @@ public class RealmController {
         }
     }
 
+
+    public void setRealmDatas(List<ExchangeRate> exchangeRateList){
+        Log.d(TAG, "realm Size >> "+getExchangeRate().size());
+
+        for(ExchangeRate datas : exchangeRateList){
+            Log.d(TAG, "realm object >> "+isExchangeRate(datas.getCountryAbbr()));
+            Log.d(TAG, "realm countryAbbr is null? >> "+(isExchangeRate(datas.getCountryAbbr()) != null));
+            realm.beginTransaction();
+
+            ExchangeRate exchangeRate = isExchangeRate(datas.getCountryAbbr());
+
+            // Realm 에 데이터가 없는 상태
+            if(exchangeRate == null){
+                // add object
+                Number currentIdNum = realm.where(ExchangeRate.class).max("id");
+                int nextId;
+                if(currentIdNum == null) {
+                    nextId = 1;
+                } else {
+                    nextId = currentIdNum.intValue() + 1;
+                }
+                Log.d(TAG, "getId Value : "+ nextId);
+                datas.setId(nextId);
+                realm.copyToRealm(datas);
+            }
+            // realm 에 기존의 데이터가 있는 상태로 데이터를 갱신한다.
+            else{
+                exchangeRate.setPriceBase(datas.getPriceBase());
+                exchangeRate.setPriceSell(datas.getPriceSell());
+                exchangeRate.setPriceBuy(datas.getPriceBuy());
+                exchangeRate.setPriceSend(datas.getPriceSend());
+                exchangeRate.setPriceReceive(datas.getPriceReceive());
+                exchangeRate.setPriceusExchange(datas.getPriceusExchange());
+                Log.d(TAG, "changed datas in realm");
+            }
+            realm.commitTransaction();
+        }
+    }
 }
