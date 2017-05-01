@@ -169,27 +169,6 @@ public class OneFragment extends Fragment {
         realm = realmController.getRealm();
         List<ExchangeRate> exchangeRateList = null;
 
-        /*
-        if(NetworkUtil.isNetworkConnected(getContext())){
-            // connected network    - getData from parsing
-//            exchangeRateList = new ExchangeParser().getParserDatas();
-
-            // if network is connected, realm database will change datas
-            realmController.setRealmDatas(new ExchangeParser().getParserDatas());
-            exchangeRateList = realmController.getExchangeRate();
-            Log.d(TAG, "exchangeRateList size : "+exchangeRateList.size());
-        }else{
-            // disconnected network - getData from realmDB
-            try{
-//                exchangeRateList = realmController.getExchangeRate().subList(0, realmController.getExchangeRate().size());
-                exchangeRateList = realmController.getExchangeRate();
-                Log.d(TAG, "exchangeRateList Realm Data Size : "+exchangeRateList.size());
-            }catch (NullPointerException ne){
-                Snackbar.make(view, "네트워크 연결을 체크 해주세요.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        }
-        */
         if(NetworkUtil.isNetworkConnected(getContext())){
             // connected network    - getData from parsing
             realmController.setRealmDatas(new ExchangeParser().getParserDatas());
