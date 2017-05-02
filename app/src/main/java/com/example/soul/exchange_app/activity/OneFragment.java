@@ -16,13 +16,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
-import com.example.soul.exchange_app.manager.OneFragmentManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
@@ -50,7 +48,6 @@ public class OneFragment extends Fragment {
     private CardAdapter adapter;
 
     // data
-    private OneFragmentManager oneFragmentManager;
     private DataManager dataManager;
     private DateUtil dateUtil;
 
@@ -71,7 +68,6 @@ public class OneFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // data initialization
-        oneFragmentManager  = new OneFragmentManager();
         dataManager = new DataManager();
         dateUtil    = new DateUtil(getContext());
 
