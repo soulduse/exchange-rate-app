@@ -3,13 +3,18 @@ package com.example.soul.exchange_app.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.adapter.SetCountryAdapter;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.model.SetExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -22,9 +27,10 @@ public class SetCountryActivity extends Activity {
 
     private final String TAG = getClass().getSimpleName();
     private RecyclerView recyclerView;
+    private SetCountryAdapter adapter;
     private Realm realm;
-
-    private SetExchangeRate setExchangeRate;
+    private RealmController realmController;
+    private List<SetExchangeRate> setExchangeRateList;
 
 
     @Override
@@ -32,10 +38,20 @@ public class SetCountryActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_country);
 
-        realm = RealmController.with(this).getRealm();
+        realm = Realm.getDefaultInstance();
+        realmController = RealmController.getInstance();
+
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view_frag_set);
 
-        initRealm();
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
+        mLayoutManager.supportsPredictiveItemAnimations();
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter = new SetCountryAdapter(realmController.getSetExchange(), getApplicationContext());
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
+//        initRealm();
+//        setAdapter();
     }
 
 
@@ -50,32 +66,19 @@ public class SetCountryActivity extends Activity {
      * 1. 임의로 데이터를 모두 삭제한 뒤 다시 insert하는 형식이라 비효율 적임.
      */
     private void initRealm(){
-        RealmController.getInstance().clearAll(SetExchangeRate.class);
-        RealmResults<ExchangeRate> rates = RealmController.getInstance().getExchangeRate();
-        Log.d(TAG, "realm ExchangeRate data size : "+rates.size());
 
-        for(int i=0; i<rates.size(); i++){
-            long idx = RealmController.getInstance().getNextKey(SetExchangeRate.class);
-            ExchangeRate results = RealmController.getInstance().isExchangeRate(idx, rates.get(i).getCountryAbbr());
-            setExchangeRate = new SetExchangeRate();
-            setExchangeRate.setId(idx);
-            setExchangeRate.setCountryAbbr(rates.get(i).getCountryAbbr());
-            setExchangeRate.setCountryName(rates.get(i).getCountryName());
-            setExchangeRate.setThumbnail(rates.get(i).getThumbnail());
+//        Log.e(TAG, "realm setExchangeRateList data size : "+setExchangeRateList.size());
+    }
 
-            realm.beginTransaction();
-            if(results != null){
-                realm.copyToRealm(setExchangeRate);
-            }else{
-                setExchangeRate.setId(setExchangeRate.getId());
-                setExchangeRate.setCountryAbbr(setExchangeRate.getCountryAbbr());
-                setExchangeRate.setCountryName(setExchangeRate.getCountryName());
-                setExchangeRate.setThumbnail(setExchangeRate.getCountryName());
-            }
-            realm.commitTransaction();
-        }
 
-        RealmResults<SetExchangeRate> setRates = RealmController.getInstance().getSetExchange();
-        Log.e(TAG, "realm SetExchangeRate data size : "+setRates.size());
+    private void setAdapter(){
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }
