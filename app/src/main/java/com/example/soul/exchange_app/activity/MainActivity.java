@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private FloatingActionButton fab;
+    private final String TAG = getClass().getSimpleName();
 
     @Override
 
@@ -38,21 +39,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        setupViewPager(viewPager);
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -62,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         adapter.addFragment(new TwoFragment(), getResources().getString(R.string.viewpager_tap_name_2));
         adapter.addFragment(new ThreeFragment(), getResources().getString(R.string.viewpager_tap_name_3));
         viewPager.setOffscreenPageLimit(2);
+        Log.d(TAG, "viewPager.getCurrentItem() >> "+viewPager.getCurrentItem());
+        if(viewPager.getCurrentItem() == 0){
+            Log.d(TAG, "Fab button 0 ");
+            fab.show();
+            moveNextActivityFAB(0);
+        }
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -72,13 +71,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             public void onPageSelected(int position) {
                 switch (position){
                     case 0:
+                        Log.d(TAG, "Fab button 0 ");
                         fab.show();
                         moveNextActivityFAB(position);
                         break;
                     case 1:
+                        Log.d(TAG, "Fab button 1 ");
                         fab.hide();
                         break;
                     case 2:
+                        Log.d(TAG, "Fab button 2 ");
                         fab.show();
                         moveNextActivityFAB(position);
                         break;
