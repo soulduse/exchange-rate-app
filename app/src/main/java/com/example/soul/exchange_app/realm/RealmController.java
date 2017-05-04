@@ -224,4 +224,19 @@ public class RealmController {
         return nextId;
     }
 
+    // 사용자가 클릭한 CheckBox 값 바꾸기
+    public void changeCheckCounties(final boolean isChecked, final String key){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                String []keyArray = key.split(" ");
+                SetExchangeRate setExchangeRate = realm.where(SetExchangeRate.class).
+                        equalTo("countryAbbr", keyArray[0]).
+                        equalTo("countryName", keyArray[1]).
+                        findFirst();
+                setExchangeRate.setCheckState(isChecked);
+            }
+        });
+    }
+
 }

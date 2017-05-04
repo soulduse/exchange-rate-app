@@ -8,14 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.SetExchangeRate;
+import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
@@ -26,13 +29,15 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<SetExchangeRate,
 
     private Context context;
     private final String TAG = getClass().getSimpleName();
+    private RealmController realmController;
 
 
     public SetCountryAdapter(@Nullable OrderedRealmCollection<SetExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);
-        Log.d(TAG, "SetCountryAdapter : "+data.toString());
+//        Log.d(TAG, "SetCountryAdapter : "+data.toString());
         this.context = context;
+        realmController = RealmController.getInstance();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -59,15 +64,36 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<SetExchangeRate,
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         SetExchangeRate obj = getItem(position);
-
-        Log.d(TAG, "setCountyAdapter obj : "+obj.toString());
-        holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
+        String title = obj.getCountryAbbr() + " " + obj.getCountryName();
+//        Log.d(TAG, "setCountyAdapter obj : "+obj.toString());
+        holder.title.setText(title);
+        holder.isCheck.setOnCheckedChangeListener(null);
         holder.isCheck.setChecked(obj.isCheckState());
         Glide.with(context).load(obj.getThumbnail()).into(holder.thumbnail);
+        changeCheck(holder.isCheck, title);
     }
 
     @Override
     public long getItemId(int index) {
         return getItem(index).hashCode();
+    }
+
+
+    private void changeCheck(final CheckBox checkBox, final String key){
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                realmController.changeCheckCounties(isChecked, key);
+                /*
+                Log.d(TAG, "buttonView.isChecked() : "+buttonView.isChecked()+"\n "+
+                        "buttonView.getText() : "+buttonView.getText()+"\n "+
+                        "buttonView.getId() : "+buttonView.getId()+"\n "+
+                        "isChecked : "+isChecked+"\n"+
+                        "Name of Country : "+key);
+
+                */
+
+            }
+        });
     }
 }
