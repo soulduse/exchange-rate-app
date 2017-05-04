@@ -18,7 +18,6 @@ import com.example.soul.exchange_app.model.SetExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
