@@ -104,14 +104,14 @@ public class RealmController {
         return realm.where(ExchangeRate.class).findAll();
     }
 
-    // find all objects in the ExchangeRate.class
-    public RealmResults<ExchangeRate> getExchangeRateAsync(){
-        return realm.where(ExchangeRate.class).findAllAsync();
-    }
-
     // find single object in the ExchangeRate.class
     public ExchangeRate isExchangeRate(String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
+    }
+
+    // find single object in the ExchangeRate.class
+    public SetExchangeRate isSetExchangeRate(String keyword){
+        return realm.where(SetExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
     }
 
     //query a single item with the given id
@@ -163,7 +163,6 @@ public class RealmController {
         }
     }
 
-
     public void setRealmDatas(List<ExchangeRate> exchangeRateList){
         Log.d(TAG, "realm Size >> "+getExchangeRate().size());
 
@@ -177,15 +176,7 @@ public class RealmController {
             // Realm 에 데이터가 없는 상태
             if(exchangeRate == null){
                 // add object
-                Number currentIdNum = realm.where(ExchangeRate.class).max("id");
-                int nextId;
-                if(currentIdNum == null) {
-                    nextId = 1;
-                } else {
-                    nextId = currentIdNum.intValue() + 1;
-                }
-                Log.d(TAG, "getId Value : "+ nextId);
-                datas.setId(nextId);
+                datas.setId(getAutoIncrement(ExchangeRate.class));
                 realm.copyToRealm(datas);
             }
             // realm 에 기존의 데이터가 있는 상태로 데이터를 갱신한다.
@@ -201,4 +192,36 @@ public class RealmController {
             realm.commitTransaction();
         }
     }
+
+    public void initUsersExchangeData(List<ExchangeRate> exchangeRateList){
+
+        int setExchangeRateSize = realm.where(SetExchangeRate.class).findAll().size();
+        Log.d(TAG, "setExchangeRateSize : "+setExchangeRateSize);
+
+        if(setExchangeRateSize == 0){
+            Log.d(TAG, "Realm Test 001");
+            for(ExchangeRate datas : exchangeRateList){
+                realm.beginTransaction();
+                SetExchangeRate setExchangeRate = realm.createObject(SetExchangeRate.class);
+                setExchangeRate.setCountryName(datas.getCountryName());
+                setExchangeRate.setCountryAbbr(datas.getCountryAbbr());
+                setExchangeRate.setThumbnail(datas.getThumbnail());
+                setExchangeRate.setCheckState(false);
+                realm.commitTransaction();
+            }
+        }
+    }
+
+    private int getAutoIncrement(Class<? extends RealmModel> clazz){
+        Number currentIdNum = realm.where(clazz).max("id");
+        int nextId;
+        if(currentIdNum == null) {
+            nextId = 1;
+        } else {
+            nextId = currentIdNum.intValue() + 1;
+        }
+        Log.d(TAG, "autoIncrement Number : "+nextId);
+        return nextId;
+    }
+
 }
