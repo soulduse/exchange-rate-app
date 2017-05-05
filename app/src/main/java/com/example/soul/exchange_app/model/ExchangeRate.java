@@ -20,6 +20,7 @@ public class ExchangeRate extends RealmObject{
     private double priceReceive;
     private double priceusExchange;
     private String thumbnail;
+    private boolean checkState;
 
     public long getId() {
         return id;
@@ -99,5 +100,13 @@ public class ExchangeRate extends RealmObject{
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public boolean isCheckState() {
+        return checkState;
+    }
+
+    public void setCheckState(boolean checkState) {
+        this.checkState = checkState;
     }
 }

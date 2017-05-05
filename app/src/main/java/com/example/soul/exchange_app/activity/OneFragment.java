@@ -117,6 +117,11 @@ public class OneFragment extends Fragment {
         realm.close();
     }
 
+    /**
+     네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
+     - network connect       : parsing data를 가져온다.
+     - network disconnect    : Realm DB에서 내용을 가져온다.
+     */
     public void load() {
 
         if(NetworkUtil.isNetworkConnected(getContext())){
@@ -152,11 +157,6 @@ public class OneFragment extends Fragment {
         snackbar.show();
     }
 
-    /**
-        네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
-        - network connect       : parsing data를 가져온다.
-        - network disconnect    : Realm DB에서 내용을 가져온다.
-     */
     private List<ExchangeRate> getParserDataList(){
         return new ExchangeParser().getParserDatas();
     }
@@ -168,6 +168,7 @@ public class OneFragment extends Fragment {
         @Override
         public void onResult(List<ExchangeRate> result) {
             realmController.setRealmDatas(result);
+            realmController.initUsersExchangeData(result);
             Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
             setCardAdapter();
             Snackbar.make(view, "Update success!", Snackbar.LENGTH_LONG)

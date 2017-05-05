@@ -239,4 +239,8 @@ public class RealmController {
         });
     }
 
+    public List<SetExchangeRate> getCheckedItems(){
+        return realm.where(SetExchangeRate.class).equalTo("checkState", true).findAll();
+    }
+
 }
