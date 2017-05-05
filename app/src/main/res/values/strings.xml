@@ -10,4 +10,5 @@
     <string name="buy_text">팔때 : </string>
     <string name="send_text">보낼때 : </string>
     <string name="receive_text">받을때 : </string>
+    <string name="set_actionbar_name">국가설정</string>
 </resources>

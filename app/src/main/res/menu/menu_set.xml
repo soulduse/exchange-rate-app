@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.soul.exchange_app.activity.SetCountryActivity">
+    <item
+        android:id="@+id/select_all"
+        android:icon="@drawable/ic_check_box_white_24dp"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="100"
+        android:title="select" />
+    <item
+        android:id="@+id/deselect_all"
+        android:icon="@drawable/ic_check_box_outline_blank_white_24dp"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="200"
+        android:title="deselect" />
+</menu>

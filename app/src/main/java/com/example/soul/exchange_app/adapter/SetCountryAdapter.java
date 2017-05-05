@@ -31,6 +31,7 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
     private RealmController realmController;
 
 
+
     public SetCountryAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);

@@ -7,6 +7,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.SetCountryAdapter;
@@ -39,6 +42,7 @@ public class SetCountryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle(getResources().getString(R.string.set_actionbar_name));
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view_frag_set);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
@@ -48,6 +52,30 @@ public class SetCountryActivity extends AppCompatActivity {
         adapter = new SetCountryAdapter(realmController.getExchangeRate(), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_set, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.select_all:
+                Log.d(TAG, "selected option item");
+                realmController.changeAllSelected(true);
+                break;
+
+            case R.id.deselect_all:
+                Log.d(TAG, "deselected option item");
+                realmController.changeAllSelected(false);
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

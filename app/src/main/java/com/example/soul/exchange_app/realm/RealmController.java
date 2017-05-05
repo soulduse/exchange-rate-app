@@ -207,6 +207,19 @@ public class RealmController {
         });
     }
 
+    public void changeAllSelected(final boolean selected){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                List<ExchangeRate> exchangeRateList = realm.where(ExchangeRate.class).
+                        equalTo("checkState", !selected).findAll();
+                for(ExchangeRate datas : exchangeRateList){
+                    datas.setCheckState(selected);
+                }
+            }
+        });
+    }
+
     public RealmResults<ExchangeRate> getCheckedItems(){
         return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll();
     }
