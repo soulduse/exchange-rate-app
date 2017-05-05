@@ -7,12 +7,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.model.SetExchangeRate;
 
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 
@@ -93,12 +91,6 @@ public class RealmController {
         return realm.where(clazz).findAll();
     }
 
-
-    // find all objects in the SetExchangeRate.class
-    public RealmResults<SetExchangeRate> getSetExchange(){
-        return realm.where(SetExchangeRate.class).findAll();
-    }
-
     // find all objects in the ExchangeRate.class
     public RealmResults<ExchangeRate> getExchangeRate(){
         return realm.where(ExchangeRate.class).findAll();
@@ -107,11 +99,6 @@ public class RealmController {
     // find single object in the ExchangeRate.class
     public ExchangeRate isExchangeRate(String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
-    }
-
-    // find single object in the ExchangeRate.class
-    public SetExchangeRate isSetExchangeRate(String keyword){
-        return realm.where(SetExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
     }
 
     //query a single item with the given id
@@ -193,25 +180,6 @@ public class RealmController {
         }
     }
 
-    public void initUsersExchangeData(List<ExchangeRate> exchangeRateList){
-
-        int setExchangeRateSize = realm.where(SetExchangeRate.class).findAll().size();
-        Log.d(TAG, "setExchangeRateSize : "+setExchangeRateSize);
-
-        if(setExchangeRateSize == 0){
-            Log.d(TAG, "Realm Test 001");
-            for(ExchangeRate datas : exchangeRateList){
-                realm.beginTransaction();
-                SetExchangeRate setExchangeRate = realm.createObject(SetExchangeRate.class);
-                setExchangeRate.setCountryName(datas.getCountryName());
-                setExchangeRate.setCountryAbbr(datas.getCountryAbbr());
-                setExchangeRate.setThumbnail(datas.getThumbnail());
-                setExchangeRate.setCheckState(false);
-                realm.commitTransaction();
-            }
-        }
-    }
-
     private int getAutoIncrement(Class<? extends RealmModel> clazz){
         Number currentIdNum = realm.where(clazz).max("id");
         int nextId;
@@ -230,17 +198,21 @@ public class RealmController {
             @Override
             public void execute(Realm realm) {
                 String []keyArray = key.split(" ");
-                SetExchangeRate setExchangeRate = realm.where(SetExchangeRate.class).
+                ExchangeRate exchangeRate = realm.where(ExchangeRate.class).
                         equalTo("countryAbbr", keyArray[0]).
                         equalTo("countryName", keyArray[1]).
                         findFirst();
-                setExchangeRate.setCheckState(isChecked);
+                exchangeRate.setCheckState(isChecked);
             }
         });
     }
 
-    public List<SetExchangeRate> getCheckedItems(){
-        return realm.where(SetExchangeRate.class).equalTo("checkState", true).findAll();
+    public RealmResults<ExchangeRate> getCheckedItems(){
+        return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll();
+    }
+
+    public int getCheckedItemSize(){
+        return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll().size();
     }
 
 }

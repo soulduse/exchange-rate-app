@@ -168,7 +168,6 @@ public class OneFragment extends Fragment {
         @Override
         public void onResult(List<ExchangeRate> result) {
             realmController.setRealmDatas(result);
-            realmController.initUsersExchangeData(result);
             Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
             setCardAdapter();
             Snackbar.make(view, "Update success!", Snackbar.LENGTH_LONG)
@@ -187,7 +186,7 @@ public class OneFragment extends Fragment {
     };
 
     private void setCardAdapter(){
-        adapter = new CardAdapter(realmController.getExchangeRate(), getContext());
+        adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         dateUpdateText.setText(dateUtil.getDate());

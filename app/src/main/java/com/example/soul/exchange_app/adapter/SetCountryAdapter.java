@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.model.SetExchangeRate;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.OrderedRealmCollection;
@@ -24,14 +24,14 @@ import io.realm.RealmRecyclerViewAdapter;
  * Created by soul on 2017. 5. 4..
  */
 
-public class SetCountryAdapter extends RealmRecyclerViewAdapter<SetExchangeRate, SetCountryAdapter.MyViewHolder> {
+public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, SetCountryAdapter.MyViewHolder> {
 
     private Context context;
     private final String TAG = getClass().getSimpleName();
     private RealmController realmController;
 
 
-    public SetCountryAdapter(@Nullable OrderedRealmCollection<SetExchangeRate> data, Context context) {
+    public SetCountryAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);
 //        Log.d(TAG, "SetCountryAdapter : "+data.toString());
@@ -62,7 +62,7 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<SetExchangeRate,
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        SetExchangeRate obj = getItem(position);
+        ExchangeRate obj = getItem(position);
         String title = obj.getCountryAbbr() + " " + obj.getCountryName();
 //        Log.d(TAG, "setCountyAdapter obj : "+obj.toString());
         holder.title.setText(title);

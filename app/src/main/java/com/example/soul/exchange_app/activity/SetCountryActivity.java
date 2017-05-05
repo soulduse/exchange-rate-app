@@ -1,6 +1,5 @@
 package com.example.soul.exchange_app.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,18 +7,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.SetCountryAdapter;
-import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.model.SetExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
 
-import java.util.List;
-
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by soul on 2017. 3. 20..
@@ -52,7 +45,7 @@ public class SetCountryActivity extends AppCompatActivity {
         mLayoutManager.supportsPredictiveItemAnimations();
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new SetCountryAdapter(realmController.getSetExchange(), getApplicationContext());
+        adapter = new SetCountryAdapter(realmController.getExchangeRate(), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
     }

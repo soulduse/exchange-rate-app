@@ -13,12 +13,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.model.SetExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
-
-import java.util.List;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -81,7 +78,6 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         ExchangeRate obj = getItem(position);
 
-        List<SetExchangeRate> setExchangeRateList = realmController.getCheckedItems();
         holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(obj.getPriceBase()));
         holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(obj.getPriceBuy()));
