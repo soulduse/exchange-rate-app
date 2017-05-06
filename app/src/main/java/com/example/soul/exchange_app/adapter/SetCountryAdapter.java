@@ -62,15 +62,23 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         ExchangeRate obj = getItem(position);
-        String title = obj.getCountryAbbr() + " " + obj.getCountryName();
+        final String title = obj.getCountryAbbr() + " " + obj.getCountryName();
 //        Log.d(TAG, "setCountyAdapter obj : "+obj.toString());
         holder.title.setText(title);
         holder.isCheck.setOnCheckedChangeListener(null);
         holder.isCheck.setChecked(obj.isCheckState());
         Glide.with(context).load(obj.getThumbnail()).into(holder.thumbnail);
         changeCheck(holder.isCheck, title);
+
+        // itemView 클릭시 Check 되도록 추가
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.isCheck.performClick();
+            }
+        });
     }
 
     @Override
@@ -84,15 +92,6 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 realmController.changeCheckCounties(isChecked, key);
-                /*
-                Log.d(TAG, "buttonView.isChecked() : "+buttonView.isChecked()+"\n "+
-                        "buttonView.getText() : "+buttonView.getText()+"\n "+
-                        "buttonView.getId() : "+buttonView.getId()+"\n "+
-                        "isChecked : "+isChecked+"\n"+
-                        "Name of Country : "+key);
-
-                */
-
             }
         });
     }
