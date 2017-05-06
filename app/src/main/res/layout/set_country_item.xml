@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="0.3dp"
+    android:background="#FFFFFF">
 
 
     <CheckBox
@@ -34,7 +36,8 @@
         android:id="@+id/countryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:textColor="@color/exchange_title"
+        android:textSize="@dimen/text_size"
         app:layout_constraintBaseline_toBaselineOf="@+id/countryCheckBox"
         app:layout_constraintLeft_toRightOf="@+id/countryPicture"
         android:layout_marginLeft="8dp" />
