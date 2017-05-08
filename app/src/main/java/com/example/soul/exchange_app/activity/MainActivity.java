@@ -138,4 +138,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     public void processFinish(List<ExchangeRate> mExchangeRates) {
         Log.d("MainActivity", "Data 들어와라"+ mExchangeRates.isEmpty());
     }
+
+    public void moveViewPager(int position){
+        viewPager.setCurrentItem(position, true);
+    }
 }
