@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
-import com.example.soul.exchange_app.manager.ViewPagerManager;
+import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
@@ -35,7 +37,6 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
     private final String TAG = getClass().getSimpleName();
     private Realm realm;
     private RealmController realmController;
-
 
     private static final int ROTATE_0_DEGREE    = 0;
     private static final int ROTATE_180_DEGREE  = 180;
@@ -98,11 +99,9 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             public void onClick(View v) {
                 Log.d(TAG, "Move to second viewPager.");
                 realmController.setCalcuCountry(obj.getCountryAbbr(), ExchangeInfo.KRW);
-
-                ViewPagerManager vpm = new ViewPagerManager();
-                vpm.getInterface().onReceivedEvent(1);
-//                MainActivity activity = (MainActivity)mContext;
-//                activity.moveViewPager(1);
+                MainActivity activity = (MainActivity)mContext;
+                activity.moveViewPager(1);
+                Toast.makeText(mContext, realmController.getCalcuCountries()[0]+"/"+realmController.getCalcuCountries()[1], Toast.LENGTH_LONG).show();
             }
         });
 
