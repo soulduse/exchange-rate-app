@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.manager.ViewPagerManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
@@ -34,14 +36,14 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
     private Realm realm;
     private RealmController realmController;
 
+
     private static final int ROTATE_0_DEGREE    = 0;
     private static final int ROTATE_180_DEGREE  = 180;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, price, buy, sell, send, receive;
+        public TextView title, price, buy, sell, send, receive, calcu, alarm;
         public ImageView thumbnail, arrow;
         public LinearLayout details;
-        public RecyclerView recyclerView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -51,6 +53,9 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             sell = (TextView) view.findViewById(R.id.sell_cash);
             send = (TextView) view.findViewById(R.id.send_cash);
             receive = (TextView) view.findViewById(R.id.receive_cash);
+            calcu = (TextView)view.findViewById(R.id.btn_calcu);
+            alarm = (TextView)view.findViewById(R.id.btn_alarm);
+
             details = (LinearLayout) view.findViewById(R.id.detail_card);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             arrow = (ImageView) view.findViewById(R.id.arrow);
@@ -76,7 +81,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        ExchangeRate obj = getItem(position);
+        final ExchangeRate obj = getItem(position);
 
         holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
         holder.price.setText(MoneyUtil.addCommas(obj.getPriceBase()));
@@ -87,6 +92,20 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 
         // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         final boolean isExpanded = position == mExpandedPosition;
+
+        holder.calcu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Move to second viewPager.");
+                realmController.setCalcuCountry(obj.getCountryAbbr(), ExchangeInfo.KRW);
+
+                ViewPagerManager vpm = new ViewPagerManager();
+                vpm.getInterface().onReceivedEvent(1);
+//                MainActivity activity = (MainActivity)mContext;
+//                activity.moveViewPager(1);
+            }
+        });
+
 
         holder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         changeArrow(isExpanded, holder.arrow);

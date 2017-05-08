@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
+import com.example.soul.exchange_app.manager.ViewPagerManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.AsyncResponse;
 
@@ -46,6 +48,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         setupViewPager(viewPager);
+
+        ViewPagerManager vpm = new ViewPagerManager();
+        vpm.setOnEventListener(new ViewPagerManager.EventListener() {
+            @Override
+            public void onReceivedEvent(int position) {
+                viewPager.setCurrentItem(position, true);
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -137,9 +147,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     public void processFinish(List<ExchangeRate> mExchangeRates) {
         Log.d("MainActivity", "Data 들어와라"+ mExchangeRates.isEmpty());
+
+
     }
 
-    public void moveViewPager(int position){
-        viewPager.setCurrentItem(position, true);
-    }
+//    public void moveViewPager(int position){
+//        viewPager.setCurrentItem(position, true);
+//    }
+
+
+
+
+
 }
