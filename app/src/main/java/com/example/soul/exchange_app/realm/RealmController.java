@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 
 import java.util.List;
@@ -226,6 +227,54 @@ public class RealmController {
 
     public int getCheckedItemSize(){
         return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll().size();
+    }
+
+    // RecyclerView에 아이템중 계산하기를 눌렀을때 fragment2 화면에서는 선택한 나라와 우리나라간에 비교를 기본으로 한다.
+    public void setCalcuCountry(final String countryOne, final String countryTwo){
+        Log.w(TAG, "setCalcuCountry 진입");
+        realm.executeTransaction(new Realm.Transaction(){
+
+            @Override
+            public void execute(Realm realm) {
+
+                Log.w(TAG, "setCalcuCountry execute 진입");
+                CalcuCountries calcuCountries;
+                if(getSizeOfCalcu() == 0){
+                    calcuCountries = realm.createObject(CalcuCountries.class);
+                }else{
+                    calcuCountries = realm.where(CalcuCountries.class).findFirst();
+                }
+                calcuCountries.setCalOne(countryOne);
+                calcuCountries.setCalTwo(countryTwo);
+                if(calcuCountries.getExchangeRates().size() > 0){
+                    calcuCountries.getExchangeRates().clear();
+                }
+                calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(getCalcuCountries()));
+
+                Log.w(TAG, "결과 >>>> "+calcuCountries.toString());
+
+            }
+        });
+    }
+
+    public int getSizeOfCalcu(){
+        return realm.where(CalcuCountries.class).findAll().size();
+    }
+
+    public String[] getCalcuCountries(){
+        String[] countries = new String[2];
+        CalcuCountries calcuCountries = realm.where(CalcuCountries.class).findFirst();
+        countries[0] = calcuCountries.getCalOne();
+        countries[1] = calcuCountries.getCalTwo();
+        return countries;
+    }
+
+    private RealmResults<ExchangeRate> getExchangeRateEqualToAbbr(String[] countries){
+        return realm.where(ExchangeRate.class)
+                .equalTo("countryAbbr", countries[0])
+                .or()
+                .equalTo("countryAbbr", countries[1])
+                .findAll();
     }
 
 }
