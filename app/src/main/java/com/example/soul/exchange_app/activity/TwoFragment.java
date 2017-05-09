@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.activity;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.databinding.FragmentTwoBinding;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
 
@@ -23,7 +25,7 @@ public class TwoFragment  extends Fragment {
     private RealmController realmController;
     private Realm realm;
     private final String TAG = getClass().getSimpleName();
-    private FragmentTwo
+    private FragmentTwoBinding binding;
 
     public TwoFragment() {
     }
@@ -45,9 +47,9 @@ public class TwoFragment  extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_two, container, false);
-//        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
-//        View view = binding.getRoot();
+//        View view = inflater.inflate(R.layout.fragment_two, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
+        View view = binding.getRoot();
         return view;
     }
 

@@ -15,12 +15,8 @@ import android.view.View;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
-import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.paser.AsyncResponse;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements AsyncResponse {
+public class MainActivity extends AppCompatActivity {
 
     // view
     private ViewPager viewPager;
@@ -132,11 +128,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void processFinish(List<ExchangeRate> mExchangeRates) {
-        Log.d("MainActivity", "Data 들어와라"+ mExchangeRates.isEmpty());
     }
 
     public void moveViewPager(int position){
