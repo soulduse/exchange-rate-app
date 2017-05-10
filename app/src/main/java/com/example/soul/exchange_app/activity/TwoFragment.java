@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.databinding.FragmentTwoBinding;
@@ -49,6 +50,7 @@ public class TwoFragment  extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        View view = inflater.inflate(R.layout.fragment_two, container, false);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
+        binding.setFragment(this);
         View view = binding.getRoot();
         return view;
     }
@@ -57,5 +59,9 @@ public class TwoFragment  extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    public void onButtonClick(View view){
+        Toast.makeText(getContext(), "Button Click", Toast.LENGTH_SHORT).show();
     }
 }

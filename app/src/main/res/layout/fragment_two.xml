@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="fragment"
+            type="com.example.soul.exchange_app.activity.TwoFragment"/>
+    </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,6 +22,7 @@
             android:text="7"
             android:textColor="#333"
             android:textSize="@dimen/cal_button_text_size"
+            android:onClick="@{fragment::onButtonClick}"
             app:layout_constraintBottom_toTopOf="@+id/button_four"
             app:layout_constraintEnd_toStartOf="@+id/button_eight"
             app:layout_constraintStart_toStartOf="parent" />
