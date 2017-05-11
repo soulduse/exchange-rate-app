@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="viewBg">#f1f5f8</color>
+    <color name="colorPrimary">#59a7e5</color>
+    <color name="colorPrimaryDark">#3975a4</color>
+    <color name="colorAccent">#4E8DF5</color>
+    <color name="view_background">#ededed</color>
     <color name="exchange_title">#4c4c4c</color>
-    <color name="background_light">#fafafa</color> <!-- grey 50 -->
+    <color name="background_light">#eaeaea</color> <!-- grey 50 -->
+    <color name="colorText">#414141</color> <!-- grey 50 -->
     <color name="refresh_progress_1">@color/colorPrimary</color>
     <color name="refresh_progress_2">@color/colorAccent</color>
     <color name="refresh_progress_3">@color/exchange_title</color>
     <color name="selected_comment_background">@color/exchange_title</color>
     <color name="comment_background">@color/exchange_title</color>
+    <color name="calcu_numbers_background">#f7f7f7</color>
+    <color name="calcu_buttons_background">@color/exchange_title</color>
 
     <!-- Customize your theme here. -->
     <color name="calColorPrimary">#009688</color>
