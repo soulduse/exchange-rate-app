@@ -12,6 +12,7 @@
     <color name="refresh_progress_3">@color/exchange_title</color>
     <color name="selected_comment_background">@color/exchange_title</color>
     <color name="comment_background">@color/exchange_title</color>
+    <color name="calcu_ripple_background">#c2c2c2</color>
     <color name="calcu_numbers_background">#f7f7f7</color>
     <color name="calcu_buttons_background">@color/exchange_title</color>
 
