@@ -30,11 +30,11 @@ This app is exchange rate app.
 6. 추가 기능
     - 환율 정보 탭에서 상세보기를 통해 그래프를 확인 할 수 있다.
 
-##### 작업 환경
+### 작업 환경
   - Android Studio 2.3
   - MacOS 10.12.4
 
-##### 사용된 라이브러리
+### 사용된 라이브러리
 * [DataBinding] - to remove all the boilerplate findViewById()
 * [Jsoup] - scrape and parse HTML from a URL, file, or string
 * [RecyclerView] - more advanced and more flexible version of the ListView
@@ -43,12 +43,12 @@ This app is exchange rate app.
 * [Realm] - Mobile Database
 * [constraint-layout] - to create large and complex layouts
 ----
-#### 사용 예정인 라이브러리
+### 사용 예정인 라이브러리
 * [Retrofit] - HTTP API into a Java interface.
 * [JUnit] - JUnit testing framework
 * [Mockito framework] - to used in unit testing.
 
-#### ETC
+### ETC
   - 개발 진행 도중 추가 되었으면 하는 아이디어나 내용들 작성 예정.
   - 네이버의 HTML 환율 정보의 데이터 순서가 HTML파싱을 통해 긁어오는 정보라서 불안정한 경우가 있다.
   - 다음 기술들도 사용해볼것 rxJava, stetho
