@@ -3,6 +3,7 @@ package com.example.soul.exchange_app.util;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
@@ -11,7 +12,7 @@ import java.text.DecimalFormat;
 
 public class MoneyUtil {
 
-    private final String TAG = getClass().getSimpleName();
+    private static String TAG = "MoneyUtil.class";
 
     public static Object changeStringToNumber(String data){
         Object result;
@@ -35,15 +36,19 @@ public class MoneyUtil {
         return data.replace(",", "");
     }
 
+    public static boolean checkNumLength(Object obj){
+        String pattern = "\\d*(\\.\\d{0,2})?";
+        Log.d(TAG, obj.toString() +" / result : "+obj.toString().matches(pattern));
+
+        return obj.toString().matches(pattern);
+    }
+
     public static String fmt(Object obj)
     {
         DecimalFormat form = new DecimalFormat("#,###.##");
-        return form.format(obj);
-//
-//        if(d == (long) d)
-//            return String.format("%d",(long)d);
-//        else
-//            return String.format("%s",d);
+        form.setRoundingMode(RoundingMode.DOWN);
+        Double d = Double.parseDouble(removeCommas(obj.toString()));
+        return form.format(d);
     }
 
     /*
