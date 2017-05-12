@@ -49,7 +49,7 @@ This app is exchange rate app.
 * [Mockito framework] - to used in unit testing.
 
 ### ETC
-  - 개발 진행 도중 추가 되었으면 하는 아이디어나 내용들 작성 예정.
+  - 개발 진행 도중 추가 되었으면 하는 아이디어나 내용들 README.md 에 작성 예정.
   - 네이버의 HTML 환율 정보의 데이터 순서가 HTML파싱을 통해 긁어오는 정보라서 불안정한 경우가 있다.
   - 다음 기술들도 사용해볼것 rxJava, stetho
   
