@@ -3,6 +3,7 @@ package com.example.soul.exchange_app.util;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * Created by soul on 2017. 3. 9..
@@ -30,8 +31,19 @@ public class MoneyUtil {
         return result;
     }
 
-    private static String removeCommas(String data){
+    public static String removeCommas(String data){
         return data.replace(",", "");
+    }
+
+    public static String fmt(Object obj)
+    {
+        DecimalFormat form = new DecimalFormat("#,###.##");
+        return form.format(obj);
+//
+//        if(d == (long) d)
+//            return String.format("%d",(long)d);
+//        else
+//            return String.format("%s",d);
     }
 
     /*

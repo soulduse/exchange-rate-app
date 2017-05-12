@@ -48,6 +48,7 @@ public class ExchangeParser implements ExchangeInfo{
 
         Document doc = getParserDoc();
 
+
         Elements titleLinks = doc.select("thead span");
         Elements links = doc.select("tbody tr");
 
@@ -68,6 +69,8 @@ public class ExchangeParser implements ExchangeInfo{
         perCountryArrList = new ArrayList<>();
 
         Document doc = getParserDoc();
+
+        Log.d(TAG, "getParserDoc : "+doc.toString());
 
         Elements titleLinks = doc.select("thead span");
         Elements links = doc.select("tbody tr");
