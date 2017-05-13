@@ -101,6 +101,7 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
             exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
+            /*
             Log.w(
                     TAG,
                     "COUNTRY_NAME       : "+exchangeArrList.get(i)[COUNTRY_NAME]+" :: length : "+exchangeArrList.get(i).length+"\n"+
@@ -112,8 +113,15 @@ public class ExchangeParser implements ExchangeInfo{
                     "PRICE_RECEIVE      : "+exchangeArrList.get(i)[PRICE_RECEIVE]+"\n"+
                     "PRICE_US_EXCHANGE  : "+exchangeArrList.get(i)[PRICE_US_EXCHANGE]
             );
+            */
             perCountDats.add(exchangeRate);
         }
+
+        // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
+        exchangeRate = new ExchangeRate();
+        exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
+        exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
+        perCountDats.add(exchangeRate);
 
         return perCountDats;
     }

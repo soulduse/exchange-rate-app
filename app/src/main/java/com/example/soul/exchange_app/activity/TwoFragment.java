@@ -13,11 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.databinding.FragmentTwoBinding;
+import com.example.soul.exchange_app.model.CalcuCountries;
+import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
+
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -31,7 +36,6 @@ public class TwoFragment  extends Fragment {
     private Realm realm;
     private final String TAG = getClass().getSimpleName();
     private FragmentTwoBinding binding;
-    private boolean lastDot = false;
 
     public TwoFragment() {
     }
@@ -44,9 +48,9 @@ public class TwoFragment  extends Fragment {
         if(realmController.getSizeOfCalcu() == 0){
             realmController.setCalcuCountry(ExchangeInfo.USD, ExchangeInfo.KRW);
         }else{
-            String [] counties = realmController.getCalcuCountries();
+            String [] counties = realmController.getCalcuCountriesName();
             realmController.setCalcuCountry(counties[0], counties[1]);
-            Log.d(TAG, "getCalcuCountries >> " +counties[0]+"/"+counties[1]);
+            Log.d(TAG, "getCalcuCountriesName >> " +counties[0]+"/"+counties[1]);
         }
 
     }
@@ -56,6 +60,15 @@ public class TwoFragment  extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
         binding.setFragment(this);
+
+        CalcuCountries calcuCountries = realmController.getCalcuCountries();
+        List<ExchangeRate> list = calcuCountries.getExchangeRates();
+//        setDataofKorea(list);
+        Log.d(TAG, "list size : "+list.size());
+        if(list.size() != 0){
+            Glide.with(getContext()).load(list.get(0).getThumbnail()).into(binding.flag1);
+            Glide.with(getContext()).load(list.get(1).getThumbnail()).into(binding.flag2);
+        }
 
         View view = binding.getRoot();
         setupButtons();
@@ -68,26 +81,13 @@ public class TwoFragment  extends Fragment {
         realm.close();
     }
 
-    private void setupButtons() {
-        // it is for calculator
-        binding.buttonOne.setOnClickListener(onNumberClickListener);
-        binding.buttonTwo.setOnClickListener(onNumberClickListener);
-        binding.buttonThree.setOnClickListener(onNumberClickListener);
-        binding.buttonFour.setOnClickListener(onNumberClickListener);
-        binding.buttonFive.setOnClickListener(onNumberClickListener);
-        binding.buttonSix.setOnClickListener(onNumberClickListener);
-        binding.buttonSeven.setOnClickListener(onNumberClickListener);
-        binding.buttonEight.setOnClickListener(onNumberClickListener);
-        binding.buttonNine.setOnClickListener(onNumberClickListener);
-        binding.buttonZero.setOnClickListener(onNumberClickListener);
-        binding.buttonDoubleZero.setOnClickListener(onNumberClickListener);
-        binding.buttonDot.setOnClickListener(onNumberClickListener);
-
-        // etc stuffs
-        binding.buttonClean.setOnClickListener(onNumberClickListener);
-        binding.buttonBackspace.setOnClickListener(onNumberClickListener);
-        binding.buttonSwap.setOnClickListener(onNumberClickListener);
-        binding.buttonShare.setOnClickListener(onNumberClickListener);
+    private void setDataofKorea(List<ExchangeRate> list){
+        if(list.size() <= 1){
+            ExchangeRate exchangeRate = new ExchangeRate();
+            exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
+            exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
+            list.add(exchangeRate);
+        }
     }
 
     private View.OnClickListener onNumberClickListener = new View.OnClickListener() {
@@ -152,7 +152,28 @@ public class TwoFragment  extends Fragment {
                 printSnackbar("준비중인 기능입니다.");
                 break;
         }
+    }
 
+    private void setupButtons() {
+        // it is for calculator
+        binding.buttonOne.setOnClickListener(onNumberClickListener);
+        binding.buttonTwo.setOnClickListener(onNumberClickListener);
+        binding.buttonThree.setOnClickListener(onNumberClickListener);
+        binding.buttonFour.setOnClickListener(onNumberClickListener);
+        binding.buttonFive.setOnClickListener(onNumberClickListener);
+        binding.buttonSix.setOnClickListener(onNumberClickListener);
+        binding.buttonSeven.setOnClickListener(onNumberClickListener);
+        binding.buttonEight.setOnClickListener(onNumberClickListener);
+        binding.buttonNine.setOnClickListener(onNumberClickListener);
+        binding.buttonZero.setOnClickListener(onNumberClickListener);
+        binding.buttonDoubleZero.setOnClickListener(onNumberClickListener);
+        binding.buttonDot.setOnClickListener(onNumberClickListener);
+
+        // etc stuffs
+        binding.buttonClean.setOnClickListener(onNumberClickListener);
+        binding.buttonBackspace.setOnClickListener(onNumberClickListener);
+        binding.buttonSwap.setOnClickListener(onNumberClickListener);
+        binding.buttonShare.setOnClickListener(onNumberClickListener);
     }
 
     private void printSnackbar(String msg){

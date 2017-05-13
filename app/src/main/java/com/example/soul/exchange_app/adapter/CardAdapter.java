@@ -1,6 +1,5 @@
 package com.example.soul.exchange_app.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -101,7 +100,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
                 realmController.setCalcuCountry(obj.getCountryAbbr(), ExchangeInfo.KRW);
                 MainActivity activity = (MainActivity)mContext;
                 activity.moveViewPager(1);
-                Toast.makeText(mContext, realmController.getCalcuCountries()[0]+"/"+realmController.getCalcuCountries()[1], Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, realmController.getCalcuCountriesName()[0]+"/"+realmController.getCalcuCountriesName()[1], Toast.LENGTH_LONG).show();
             }
         });
 

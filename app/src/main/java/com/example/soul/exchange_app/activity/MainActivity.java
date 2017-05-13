@@ -44,6 +44,18 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!(mPagerAdapter == null)) {
+
+            mPagerAdapter.notifyDataSetChanged();
+
+
+        }
+    }
+
     private void setupViewPager(ViewPager viewPager){
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

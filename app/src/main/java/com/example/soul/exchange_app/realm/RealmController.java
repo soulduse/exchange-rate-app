@@ -152,11 +152,11 @@ public class RealmController {
     }
 
     public void setRealmDatas(List<ExchangeRate> exchangeRateList){
-        Log.d(TAG, "realm Size >> "+getExchangeRate().size());
+//        Log.d(TAG, "realm Size >> "+getExchangeRate().size());
 
         for(ExchangeRate datas : exchangeRateList){
-            Log.d(TAG, "realm object >> "+isExchangeRate(datas.getCountryAbbr()));
-            Log.d(TAG, "realm countryAbbr is null? >> "+(isExchangeRate(datas.getCountryAbbr()) != null));
+//            Log.d(TAG, "realm object >> "+isExchangeRate(datas.getCountryAbbr()));
+//            Log.d(TAG, "realm countryAbbr is null? >> "+(isExchangeRate(datas.getCountryAbbr()) != null));
             realm.beginTransaction();
 
             ExchangeRate exchangeRate = isExchangeRate(datas.getCountryAbbr());
@@ -249,7 +249,7 @@ public class RealmController {
                 if(calcuCountries.getExchangeRates().size() > 0){
                     calcuCountries.getExchangeRates().clear();
                 }
-                calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(getCalcuCountries()));
+                calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(getCalcuCountriesName()));
 
                 Log.w(TAG, "결과 >>>> "+calcuCountries.toString());
 
@@ -261,7 +261,12 @@ public class RealmController {
         return realm.where(CalcuCountries.class).findAll().size();
     }
 
-    public String[] getCalcuCountries(){
+    public CalcuCountries getCalcuCountries(){
+        CalcuCountries calcuCountries = realm.where(CalcuCountries.class).findFirst();
+        return calcuCountries;
+    }
+
+    public String[] getCalcuCountriesName(){
         String[] countries = new String[2];
         CalcuCountries calcuCountries = realm.where(CalcuCountries.class).findFirst();
         countries[0] = calcuCountries.getCalOne();
