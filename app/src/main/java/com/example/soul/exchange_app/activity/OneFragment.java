@@ -121,7 +121,6 @@ public class OneFragment extends Fragment {
     }
 
     private void setCardAdapter(){
-        Log.d(TAG, "reflash!");
         adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);

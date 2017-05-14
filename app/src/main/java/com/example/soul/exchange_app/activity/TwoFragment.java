@@ -36,6 +36,8 @@ public class TwoFragment  extends Fragment {
     private Realm realm;
     private final String TAG = getClass().getSimpleName();
     private FragmentTwoBinding binding;
+    private List<ExchangeRate> exchangeList;
+
 
     public TwoFragment() {
     }
@@ -65,14 +67,14 @@ public class TwoFragment  extends Fragment {
         }
 
         CalcuCountries calcuCountries = realmController.getCalcuCountries();
-        List<ExchangeRate> list = calcuCountries.getExchangeRates();
-//        setDataofKorea(list);
-        Log.d(TAG, "list size : "+list.size());
-        if(list.size() != 0){
-            binding.name1.setText(list.get(0).getCountryAbbr());
-            binding.name2.setText(list.get(1).getCountryAbbr());
-            Glide.with(getContext()).load(list.get(0).getThumbnail()).into(binding.flag1);
-            Glide.with(getContext()).load(list.get(1).getThumbnail()).into(binding.flag2);
+        exchangeList = calcuCountries.getExchangeRates();
+//        setDataofKorea(exchangeList);
+        Log.d(TAG, "exchangeList size : "+ exchangeList.size());
+        if(exchangeList.size() != 0){
+            binding.name1.setText(exchangeList.get(0).getCountryAbbr());
+            binding.name2.setText(exchangeList.get(1).getCountryAbbr());
+            Glide.with(getContext()).load(exchangeList.get(0).getThumbnail()).into(binding.flag1);
+            Glide.with(getContext()).load(exchangeList.get(1).getThumbnail()).into(binding.flag2);
         }
 
         View view = binding.getRoot();
@@ -108,13 +110,17 @@ public class TwoFragment  extends Fragment {
     private void clickNum(String s) {
         Editable editable = binding.editText.getText();
 
-        if((editable.length()<19 && editable.length() >= 0) && !editable.toString().contains(".") && !s.equals(".")){
+        if((editable.length()<17 && editable.length() >= 0) && !editable.toString().contains(".") && !s.equals(".")){
             binding.editText.setText(MoneyUtil.fmt(editable+s));
+            double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),editable+s);
+            binding.editText2.setText(MoneyUtil.fmt(data));
         }else if (editable.length() <= 0 && s.equals(".")){
             binding.editText.setText("0.");
         }else if((editable.length()<19 && editable.length() >= 1) && (s.equals(".")||editable.toString().contains("."))){
             if(MoneyUtil.checkNumLength(MoneyUtil.removeCommas(editable+s))){
                 binding.editText.setText(editable+s);
+                double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),editable+s);
+                binding.editText2.setText(MoneyUtil.fmt(data));
             }else{
                 printSnackbar("소수점 이하 2자까지 입력할 수 있습니다.");
             }
@@ -125,6 +131,7 @@ public class TwoFragment  extends Fragment {
 
     private void clearNum(){
         binding.editText.getText().clear();
+        binding.editText2.getText().clear();
     }
 
     private void clickEtc(int id){
@@ -137,9 +144,12 @@ public class TwoFragment  extends Fragment {
                     msg = msg.substring(0, msg.length()-1);
                     String addedCommasNumbers = MoneyUtil.fmt(Double.parseDouble(msg));
                     Log.d(TAG, "msg : "+msg+" / addedCommasNumbers : "+addedCommasNumbers);
+                    double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),addedCommasNumbers);
+                    binding.editText2.setText(MoneyUtil.fmt(data));
                     binding.editText.setText(addedCommasNumbers);
                 }else if(text.length() <= 1){
                     binding.editText.getText().clear();
+                    binding.editText2.getText().clear();
                 }
                 break;
             case R.id.button_swap:

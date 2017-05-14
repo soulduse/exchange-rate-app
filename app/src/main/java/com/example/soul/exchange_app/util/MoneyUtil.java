@@ -47,15 +47,28 @@ public class MoneyUtil {
     {
         DecimalFormat form = new DecimalFormat("#,###.##");
         form.setRoundingMode(RoundingMode.DOWN);
-        Double d = Double.parseDouble(removeCommas(obj.toString()));
-        return form.format(d);
+        return form.format(makeDouble(obj.toString()));
     }
 
-    /*
-    private String addCommas(double data){
-        NumberFormat numformat = new DecimalFormat("###,###.###");
-        String result = numformat.format(data);
-        return result;
+    public static String fmt(double val)
+    {
+        DecimalFormat form = new DecimalFormat("#,###.##");
+        return form.format(val);
     }
-    */
+
+    private static double makeDouble(String num){
+        Double d = Double.parseDouble(removeCommas(num));
+        return d;
+    }
+
+    public static double calMoney(double base1, double base2, String money){
+        Log.d(TAG, "base1("+base1+") * money("+makeDouble(money)+") = "+base1 * makeDouble(money)+" / base2 : "+base2);
+        if(base2 <= 0){
+            Log.d(TAG, "base1("+base1+") * money("+makeDouble(money)+") = "+base1 * makeDouble(money));
+            return base1 * makeDouble(money);
+        }else{
+            return (base1/base2) * makeDouble(money);
+        }
+    }
+
 }
