@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private FloatingActionButton fab;
     private final String TAG = getClass().getSimpleName();
+    private ViewPagerAdapter mPagerAdapter;
 
     @Override
 
@@ -44,24 +45,12 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!(mPagerAdapter == null)) {
-
-            mPagerAdapter.notifyDataSetChanged();
-
-
-        }
-    }
-
     private void setupViewPager(ViewPager viewPager){
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), getResources().getString(R.string.viewpager_tap_name_1));
-        adapter.addFragment(new TwoFragment(), getResources().getString(R.string.viewpager_tap_name_2));
-        adapter.addFragment(new ThreeFragment(), getResources().getString(R.string.viewpager_tap_name_3));
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.addFragment(new OneFragment(), getResources().getString(R.string.viewpager_tap_name_1));
+        mPagerAdapter.addFragment(new TwoFragment(), getResources().getString(R.string.viewpager_tap_name_2));
+        mPagerAdapter.addFragment(new ThreeFragment(), getResources().getString(R.string.viewpager_tap_name_3));
         viewPager.setOffscreenPageLimit(2);
         Log.d(TAG, "viewPager.getCurrentItem() >> "+viewPager.getCurrentItem());
         if(viewPager.getCurrentItem() == 0){
@@ -100,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(mPagerAdapter);
     }
 
     private void moveNextActivityFAB(final int position){
@@ -144,5 +133,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveViewPager(int position){
         viewPager.setCurrentItem(position, true);
+        if (!(mPagerAdapter == null)) {
+            mPagerAdapter.notifyDataSetChanged();
+            Log.d(TAG, "onResume notifyDataSetChanged!");
+        }
     }
 }

@@ -43,16 +43,6 @@ public class TwoFragment  extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realmController = RealmController.getInstance();
-        realm = realmController.getRealm();
-        if(realmController.getSizeOfCalcu() == 0){
-            realmController.setCalcuCountry(ExchangeInfo.USD, ExchangeInfo.KRW);
-        }else{
-            String [] counties = realmController.getCalcuCountriesName();
-            realmController.setCalcuCountry(counties[0], counties[1]);
-            Log.d(TAG, "getCalcuCountriesName >> " +counties[0]+"/"+counties[1]);
-        }
-
     }
 
     @Nullable
@@ -60,6 +50,18 @@ public class TwoFragment  extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
         binding.setFragment(this);
+
+        realmController = RealmController.getInstance();
+        realmController.setRealm();
+        realm = realmController.getRealm();
+
+        if(realmController.getSizeOfCalcu() == 0){
+            realmController.setCalcuCountry(ExchangeInfo.USD, ExchangeInfo.KRW);
+        }else{
+            String [] counties = realmController.getCalcuCountriesName();
+            realmController.setCalcuCountry(counties[0], counties[1]);
+            Log.d(TAG, "getCalcuCountriesName >> " +counties[0]+"/"+counties[1]);
+        }
 
         CalcuCountries calcuCountries = realmController.getCalcuCountries();
         List<ExchangeRate> list = calcuCountries.getExchangeRates();
@@ -76,18 +78,9 @@ public class TwoFragment  extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
         realm.close();
-    }
-
-    private void setDataofKorea(List<ExchangeRate> list){
-        if(list.size() <= 1){
-            ExchangeRate exchangeRate = new ExchangeRate();
-            exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
-            exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
-            list.add(exchangeRate);
-        }
+        super.onDestroyView();
     }
 
     private View.OnClickListener onNumberClickListener = new View.OnClickListener() {

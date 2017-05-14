@@ -24,10 +24,10 @@ public class RealmController {
 
     private final String TAG = getClass().getSimpleName();
     private static RealmController instance;
-    private final Realm realm;
+    private Realm realm;
 
     private enum FieldNames{
-        id, countryName, countryAbbr
+        id, countryAbbr
     }
 
     public RealmController(Context context){
@@ -65,6 +65,10 @@ public class RealmController {
 
     public static RealmController getInstance(){
         return instance;
+    }
+
+    public void setRealm(){
+        realm = Realm.getDefaultInstance();
     }
 
     public Realm getRealm() {

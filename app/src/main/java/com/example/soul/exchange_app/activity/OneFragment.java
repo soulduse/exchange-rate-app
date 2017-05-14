@@ -70,9 +70,6 @@ public class OneFragment extends Fragment {
         // data initialization
         dataManager = new DataManager();
         dateUtil    = new DateUtil(getContext());
-
-        realmController = RealmController.with(getContext());
-        realm = realmController.getRealm();
     }
 
 
@@ -80,6 +77,9 @@ public class OneFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        realmController = RealmController.with(getContext());
+        realm = realmController.getRealm();
 
         view = inflater.inflate(R.layout.fragment_one, container, false);
 
@@ -112,9 +112,9 @@ public class OneFragment extends Fragment {
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
         realm.close();
+        super.onDestroyView();
     }
 
     /**
