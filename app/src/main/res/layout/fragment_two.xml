@@ -277,6 +277,9 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/exchange_title"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/flag1"
             app:layout_constraintLeft_toRightOf="@+id/flag1"
             app:layout_constraintTop_toTopOf="@+id/flag1" />
@@ -288,6 +291,9 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/exchange_title"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/flag2"
             app:layout_constraintLeft_toRightOf="@+id/flag2"
             app:layout_constraintTop_toTopOf="@+id/flag2" />

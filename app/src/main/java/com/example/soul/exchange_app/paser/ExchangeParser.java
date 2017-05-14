@@ -118,6 +118,7 @@ public class ExchangeParser implements ExchangeInfo{
         }
 
         // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
+        Log.d(TAG, "Create Korean Datas");
         exchangeRate = new ExchangeRate();
         exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
         exchangeRate.setCountryAbbr(ExchangeInfo.KRW);

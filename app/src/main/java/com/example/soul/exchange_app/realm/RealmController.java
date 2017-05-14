@@ -279,6 +279,7 @@ public class RealmController {
     }
 
     private RealmResults<ExchangeRate> getExchangeRateEqualToAbbr(String[] countries){
+        Log.d(TAG, "countries data : "+countries[0]+" / "+countries[1]);
         return realm.where(ExchangeRate.class)
                 .equalTo("countryAbbr", countries[0])
                 .or()

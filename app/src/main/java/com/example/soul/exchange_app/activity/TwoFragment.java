@@ -55,6 +55,7 @@ public class TwoFragment  extends Fragment {
         realmController.setRealm();
         realm = realmController.getRealm();
 
+        Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ realmController.getSizeOfCalcu());
         if(realmController.getSizeOfCalcu() == 0){
             realmController.setCalcuCountry(ExchangeInfo.USD, ExchangeInfo.KRW);
         }else{
@@ -68,6 +69,8 @@ public class TwoFragment  extends Fragment {
 //        setDataofKorea(list);
         Log.d(TAG, "list size : "+list.size());
         if(list.size() != 0){
+            binding.name1.setText(list.get(0).getCountryAbbr());
+            binding.name2.setText(list.get(1).getCountryAbbr());
             Glide.with(getContext()).load(list.get(0).getThumbnail()).into(binding.flag1);
             Glide.with(getContext()).load(list.get(1).getThumbnail()).into(binding.flag2);
         }
