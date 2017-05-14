@@ -157,6 +157,12 @@
                         android:textSize="@dimen/text_size"/>
                 </LinearLayout>
 
+                <WebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </WebView>
             </LinearLayout>
 
         </LinearLayout>

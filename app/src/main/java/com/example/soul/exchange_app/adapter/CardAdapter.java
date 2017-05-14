@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         public TextView title, price, buy, sell, send, receive, calcu, alarm;
         public ImageView thumbnail, arrow;
         public LinearLayout details;
+        public WebView webView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -59,6 +61,8 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             details = (LinearLayout) view.findViewById(R.id.detail_card);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             arrow = (ImageView) view.findViewById(R.id.arrow);
+
+            webView = (WebView)view.findViewById(R.id.webview);
         }
     }
 
@@ -89,6 +93,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(obj.getPriceSell()));
         holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(obj.getPriceSend()));
         holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(obj.getPriceReceive()));
+        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
 
         // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         final boolean isExpanded = position == mExpandedPosition;
