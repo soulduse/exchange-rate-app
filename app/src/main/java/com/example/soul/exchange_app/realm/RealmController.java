@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.paser.ExchangeInfo;
 
 import java.util.List;
 
@@ -99,6 +100,10 @@ public class RealmController {
     // find all objects in the ExchangeRate.class
     public RealmResults<ExchangeRate> getExchangeRate(){
         return realm.where(ExchangeRate.class).findAll();
+    }
+
+    public RealmResults<ExchangeRate> getExchangeRateExceptKorea(){
+        return realm.where(ExchangeRate.class).not().equalTo(FieldNames.countryAbbr.name(), ExchangeInfo.KRW).findAll();
     }
 
     // find single object in the ExchangeRate.class
@@ -226,7 +231,11 @@ public class RealmController {
     }
 
     public RealmResults<ExchangeRate> getCheckedItems(){
-        return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll();
+        return realm.where(ExchangeRate.class)
+                .equalTo("checkState", true)
+                .not()
+                .equalTo(FieldNames.countryAbbr.name(), ExchangeInfo.KRW)
+                .findAll();
     }
 
     public int getCheckedItemSize(){

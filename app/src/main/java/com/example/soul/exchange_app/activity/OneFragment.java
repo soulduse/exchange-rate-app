@@ -78,7 +78,8 @@ public class OneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        realmController = RealmController.with(getContext());
+        realmController = RealmController.getInstance();
+        realmController.setRealm();
         realm = realmController.getRealm();
 
         view = inflater.inflate(R.layout.fragment_one, container, false);
@@ -98,12 +99,14 @@ public class OneFragment extends Fragment {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
-        load();
+
+        setCardAdapter();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                load();
+                MainActivity activity = (MainActivity)getContext();
+                activity.load();
             }
         });
 
@@ -117,75 +120,8 @@ public class OneFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /**
-     네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
-     - network connect       : parsing data를 가져온다.
-     - network disconnect    : Realm DB에서 내용을 가져온다.
-     */
-    public void load() {
-
-        if(NetworkUtil.isNetworkConnected(getContext())){
-            Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
-                @Override
-                public List<ExchangeRate> call() throws Exception {
-                    return getParserDataList();
-                }
-            };
-
-            dataManager.getAsyncExecutor()
-                    .setCallable(callable)
-                    .setCallback(callback)
-                    .execute();
-        }else{
-            // Realm 데이터가 존재하는 경우
-            if(realmController.getExchangeRate().size()>0){
-                setCardAdapter();
-                showSnackBar();
-            }else{
-                showSnackBar();
-            }
-        }
-        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
-    }
-
-    private void showSnackBar(){
-        Snackbar snackbar = Snackbar
-                .make(getActivity().findViewById(android.R.id.content), "No internet connection!", Snackbar.LENGTH_LONG)
-        .setAction("Action", null);
-        // Changing message text color
-        snackbar.setActionTextColor(Color.RED);
-        snackbar.show();
-    }
-
-    private List<ExchangeRate> getParserDataList(){
-        return new ExchangeParser().getParserDatas();
-    }
-
-
-
-    // 비동기로 실행된 결과를 받아 처리하는 코드
-    private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
-        @Override
-        public void onResult(List<ExchangeRate> result) {
-            realmController.setRealmDatas(result);
-            Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
-            setCardAdapter();
-            Snackbar.make(view, "Update success!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-
-        @Override
-        public void exceptionOccured(Exception e) {
-            Log.d(TAG, "exceptionOccured : "+e.getMessage());
-        }
-
-        @Override
-        public void cancelled() {
-            Log.d(TAG, "cancelled");
-        }
-    };
-
     private void setCardAdapter(){
+        Log.d(TAG, "reflash!");
         adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);

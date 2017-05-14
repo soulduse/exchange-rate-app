@@ -49,7 +49,7 @@ public class SetCountryActivity extends AppCompatActivity {
         mLayoutManager.supportsPredictiveItemAnimations();
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new SetCountryAdapter(realmController.getExchangeRate(), getApplicationContext());
+        adapter = new SetCountryAdapter(realmController.getExchangeRateExceptKorea(), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
     }

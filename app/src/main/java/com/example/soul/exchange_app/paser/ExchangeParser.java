@@ -122,6 +122,7 @@ public class ExchangeParser implements ExchangeInfo{
         exchangeRate = new ExchangeRate();
         exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
         exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
+        exchangeRate.setCheckState(false);
         perCountDats.add(exchangeRate);
 
         return perCountDats;

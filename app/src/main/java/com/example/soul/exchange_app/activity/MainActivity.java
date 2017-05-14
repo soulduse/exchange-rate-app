@@ -1,6 +1,7 @@
 package com.example.soul.exchange_app.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,16 @@ import android.view.View;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
+import com.example.soul.exchange_app.manager.DataManager;
+import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.util.NetworkUtil;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private final String TAG = getClass().getSimpleName();
     private ViewPagerAdapter mPagerAdapter;
+
+    // data
+    private DataManager dataManager;
+
+    // Realm
+    private Realm realm;
+    private RealmController realmController;
 
     @Override
 
@@ -36,13 +54,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
+        dataManager = new DataManager();
 
+        realmController = RealmController.with(getApplicationContext());
+        realm = realmController.getRealm();
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        setupViewPager(viewPager);
+        load();
+
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -131,11 +153,76 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
+     - network connect       : parsing data를 가져온다.
+     - network disconnect    : Realm DB에서 내용을 가져온다.
+     */
+    public void load() {
+        if(NetworkUtil.isNetworkConnected(getApplicationContext())){
+            Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
+                @Override
+                public List<ExchangeRate> call() throws Exception {
+                    return getParserDataList();
+                }
+            };
+
+            dataManager.getAsyncExecutor()
+                    .setCallable(callable)
+                    .setCallback(callback)
+                    .execute();
+        }else{
+            setupViewPager(viewPager);
+            showSnackBar("No internet connection!");
+        }
+        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
+    }
+
+    private List<ExchangeRate> getParserDataList(){
+        return new ExchangeParser().getParserDatas();
+    }
+
+    // 비동기로 실행된 결과를 받아 처리하는 코드
+    private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
+        @Override
+        public void onResult(List<ExchangeRate> result) {
+            realmController.setRealmDatas(result);
+            setupViewPager(viewPager);
+            Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
+            showSnackBar("Update success!");
+        }
+
+        @Override
+        public void exceptionOccured(Exception e) {
+            Log.d(TAG, "exceptionOccured : "+e.getMessage());
+        }
+
+        @Override
+        public void cancelled() {
+            Log.d(TAG, "cancelled");
+        }
+    };
+
+    private void showSnackBar(String msg){
+        Snackbar snackbar = Snackbar
+                .make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
+                .setAction("Action", null);
+        // Changing message text color
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
+    }
+
     public void moveViewPager(int position){
         viewPager.setCurrentItem(position, true);
         if (!(mPagerAdapter == null)) {
             mPagerAdapter.notifyDataSetChanged();
             Log.d(TAG, "onResume notifyDataSetChanged!");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        realm.close();
+        super.onDestroy();
     }
 }
