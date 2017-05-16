@@ -43,7 +43,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price, buy, sell, send, receive, calcu, alarm;
-        public ImageView thumbnail, arrow;
+        public ImageView thumbnail, arrow, graph;
         public LinearLayout details;
         public WebView webView;
 
@@ -63,6 +63,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             arrow = (ImageView) view.findViewById(R.id.arrow);
 
             webView = (WebView)view.findViewById(R.id.webview);
+            graph = (ImageView)view.findViewById(R.id.image_graph);
         }
     }
 
@@ -93,7 +94,10 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(obj.getPriceSell()));
         holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(obj.getPriceSend()));
         holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(obj.getPriceReceive()));
-        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
+//        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
+        Glide.with(mContext)
+                .load("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png")
+                .into(holder.graph);
 
         // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
         final boolean isExpanded = position == mExpandedPosition;

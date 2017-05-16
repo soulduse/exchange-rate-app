@@ -157,6 +157,11 @@
                         android:textSize="@dimen/text_size"/>
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/image_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <WebView
                     android:id="@+id/webview"
                     android:layout_width="match_parent"
