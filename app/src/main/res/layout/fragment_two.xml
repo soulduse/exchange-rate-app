@@ -257,7 +257,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/flag2"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.23000002" />
 
         <ImageView
             android:id="@+id/flag2"
@@ -299,15 +299,18 @@
             app:layout_constraintTop_toTopOf="@+id/flag2" />
 
         <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/select_option"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="TextView"
+            android:background="@drawable/shape_round_btn"
+            android:text="기준환율선택"
+            android:textColor="@color/calcu_numbers_background"
+            android:textSize="15dp"
             app:layout_constraintBottom_toTopOf="@+id/button_nine"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -315,36 +318,32 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:layout_width="140dp"
+            android:id="@+id/view2"
+            android:layout_width="120dp"
             android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:background="#ccc"
-            app:layout_constraintBottom_toBottomOf="@+id/textView9"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toRightOf="@+id/textView9"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView9"
-            app:layout_constraintVertical_bias="0.0"
-            android:id="@+id/view2" />
+            app:layout_constraintLeft_toRightOf="@+id/select_option"
+            app:layout_constraintTop_toTopOf="@+id/select_option"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/select_option"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <View
             android:id="@+id/view"
-            android:layout_width="140dp"
+            android:layout_width="120dp"
             android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:background="#ccc"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintRight_toLeftOf="@+id/select_option"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/textView9"
-            app:layout_constraintTop_toTopOf="@+id/textView9"
-            app:layout_constraintVertical_bias="0.125"
-            app:layout_constraintBottom_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toTopOf="@+id/select_option"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/select_option"
+            android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/editText"
@@ -355,12 +354,16 @@
             android:clickable="false"
             android:inputType="numberDecimal"
             android:textDirection="firstStrongRtl"
-            app:layout_constraintLeft_toRightOf="@+id/name1"
+            app:layout_constraintTop_toTopOf="@+id/flag1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/flag1"
             android:layout_marginLeft="8dp"
+            app:layout_constraintVertical_bias="0.523"
+            app:layout_constraintLeft_toLeftOf="@+id/name1"
             android:layout_marginRight="8dp"
-            app:layout_constraintRight_toRightOf="@+id/view2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintBaseline_toBaselineOf="@+id/name1" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" />
 
         <EditText
             android:id="@+id/editText2"
@@ -371,11 +374,15 @@
             android:clickable="false"
             android:inputType="numberDecimal"
             android:textDirection="firstStrongRtl"
-            app:layout_constraintBaseline_toBaselineOf="@+id/name2"
-            app:layout_constraintLeft_toRightOf="@+id/name2"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/flag2"
+            app:layout_constraintTop_toTopOf="@+id/flag2"
+            android:layout_marginTop="0dp"
             android:layout_marginLeft="8dp"
+            app:layout_constraintVertical_bias="0.461"
+            app:layout_constraintLeft_toLeftOf="@+id/name2"
             android:layout_marginRight="8dp"
-            app:layout_constraintRight_toRightOf="@+id/view2"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>

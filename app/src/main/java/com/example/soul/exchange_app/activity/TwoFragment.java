@@ -1,5 +1,8 @@
 package com.example.soul.exchange_app.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +40,7 @@ public class TwoFragment  extends Fragment {
     private final String TAG = getClass().getSimpleName();
     private FragmentTwoBinding binding;
     private List<ExchangeRate> exchangeList;
+    private double selectedPriceFirst, selectedPriceSecond;
 
 
     public TwoFragment() {
@@ -91,14 +95,23 @@ public class TwoFragment  extends Fragment {
     private View.OnClickListener onNumberClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if(selectedPriceFirst == 0 && selectedPriceSecond == 0){
+                selectedPriceFirst   = exchangeList.get(0).getPriceBase();
+                selectedPriceSecond = exchangeList.get(1).getPriceBase();
+            }
+
             if (v instanceof TextView) {
                 TextView tv = (TextView) v;
-                if(!tv.getText().toString().equalsIgnoreCase("C")){
-                    clickNum(tv.getText().toString());
+                if(tv.getId() == R.id.select_option){       // 환율 계산기존 변경
+                    selectOptions();
                 }
-                else{
+                else if(tv.getId() == R.id.button_clean){   // 숫자 모두 지우기
                     clearNum();
                 }
+                else{
+                    clickNum(tv.getText().toString());      // 숫자 입력
+                }
+
             }else if(v instanceof ImageView){
                 ImageView iv = (ImageView)v;
                 clickEtc(iv.getId());
@@ -112,14 +125,14 @@ public class TwoFragment  extends Fragment {
 
         if((editable.length()<17 && editable.length() >= 0) && !editable.toString().contains(".") && !s.equals(".")){
             binding.editText.setText(MoneyUtil.fmt(editable+s));
-            double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),editable+s);
+            double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,editable+s);
             binding.editText2.setText(MoneyUtil.fmt(data));
         }else if (editable.length() <= 0 && s.equals(".")){
             binding.editText.setText("0.");
         }else if((editable.length()<19 && editable.length() >= 1) && (s.equals(".")||editable.toString().contains("."))){
             if(MoneyUtil.checkNumLength(MoneyUtil.removeCommas(editable+s))){
                 binding.editText.setText(editable+s);
-                double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),editable+s);
+                double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,editable+s);
                 binding.editText2.setText(MoneyUtil.fmt(data));
             }else{
                 printSnackbar("소수점 이하 2자까지 입력할 수 있습니다.");
@@ -134,6 +147,51 @@ public class TwoFragment  extends Fragment {
         binding.editText2.getText().clear();
     }
 
+    private void selectOptions(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.select_option);
+        builder.setItems(R.array.price_options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                printSnackbar("selected basePrice >> "+which);
+                // 0-매매기준율, 1-살때, 2-팔때, 3-보낼때, 4-받을때
+                Resources res = getResources();
+                String[] titles= res.getStringArray(R.array.price_options);
+
+                switch (which){
+                    case 0:
+                        selectedPriceFirst   = exchangeList.get(0).getPriceBase();
+                        selectedPriceSecond = exchangeList.get(1).getPriceBase();
+                        break;
+                    case 1:
+                        selectedPriceFirst   = exchangeList.get(0).getPriceBuy();
+                        selectedPriceSecond = exchangeList.get(1).getPriceBuy();
+                        break;
+                    case 2:
+                        selectedPriceFirst   = exchangeList.get(0).getPriceSell();
+                        selectedPriceSecond = exchangeList.get(1).getPriceSell();
+                        break;
+                    case 3:
+                        selectedPriceFirst   = exchangeList.get(0).getPriceSend();
+                        selectedPriceSecond = exchangeList.get(1).getPriceSend();
+                        break;
+                    case 4:
+                        selectedPriceFirst   = exchangeList.get(0).getPriceReceive();
+                        selectedPriceSecond = exchangeList.get(1).getPriceReceive();
+                        break;
+                }
+
+                binding.selectOption.setText(titles[which]);
+                if(binding.editText.getText().length() != 0){
+                    binding.editText.setText(binding.editText.getText());
+                    double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,binding.editText.getText().toString());
+                    binding.editText2.setText(MoneyUtil.fmt(data));
+                }
+            }
+        });
+        builder.show();
+    }
+
     private void clickEtc(int id){
         switch (id){
             // 한 숫자씩 지우기
@@ -144,7 +202,7 @@ public class TwoFragment  extends Fragment {
                     msg = msg.substring(0, msg.length()-1);
                     String addedCommasNumbers = MoneyUtil.fmt(Double.parseDouble(msg));
                     Log.d(TAG, "msg : "+msg+" / addedCommasNumbers : "+addedCommasNumbers);
-                    double data = MoneyUtil.calMoney(exchangeList.get(0).getPriceBase(),exchangeList.get(1).getPriceBase(),addedCommasNumbers);
+                    double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,addedCommasNumbers);
                     binding.editText2.setText(MoneyUtil.fmt(data));
                     binding.editText.setText(addedCommasNumbers);
                 }else if(text.length() <= 1){
@@ -180,6 +238,7 @@ public class TwoFragment  extends Fragment {
         binding.buttonBackspace.setOnClickListener(onNumberClickListener);
         binding.buttonSwap.setOnClickListener(onNumberClickListener);
         binding.buttonShare.setOnClickListener(onNumberClickListener);
+        binding.selectOption.setOnClickListener(onNumberClickListener);
     }
 
     private void printSnackbar(String msg){
