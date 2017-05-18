@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,12 +27,14 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
     private final String TAG = getClass().getSimpleName();
     private RealmController realmController;
     private Context context;
+    private OnItemClickListener mListener;
 
-    public DialogAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context) {
+    public DialogAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context, OnItemClickListener mListener) {
         super(data, true);
         setHasStableIds(true);
         realmController = RealmController.getInstance();
         this.context    = context;
+        this.mListener  = mListener;
     }
 
 
@@ -41,23 +42,24 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "SetCountryAdapter - onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.set_country_item, parent, false);
+                inflate(R.layout.dialog_country_item, parent, false);
 
         return new DialogAdapter.MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ExchangeRate obj = getItem(position);
+        final ExchangeRate obj = getItem(position);
         final String title = obj.getCountryAbbr() + " " + obj.getCountryName();
         holder.title.setText(title);
         Glide.with(context).load(obj.getThumbnail()).into(holder.thumbnail);
+
 
         // itemView 클릭시 Check 되도록 추가
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onItemClicked(obj);
             }
         });
 
@@ -71,5 +73,9 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
             title       = (TextView)itemView.findViewById(R.id.countryName);
             thumbnail   = (ImageView)itemView.findViewById(R.id.countryPicture);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(ExchangeRate result);
     }
 }

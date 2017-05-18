@@ -30,26 +30,11 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
     private final String TAG = getClass().getSimpleName();
     private RealmController realmController;
 
-
-
     public SetCountryAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);
-//        Log.d(TAG, "SetCountryAdapter : "+data.toString());
         this.context = context;
         realmController = RealmController.getInstance();
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView title;
-        public ImageView thumbnail;
-        public CheckBox isCheck;
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            title       = (TextView)itemView.findViewById(R.id.countryName);
-            thumbnail   = (ImageView)itemView.findViewById(R.id.countryPicture);
-            isCheck     = (CheckBox)itemView.findViewById(R.id.countryCheckBox);
-        }
     }
 
     @Override
@@ -94,5 +79,17 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
                 realmController.changeCheckCounties(isChecked, key);
             }
         });
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+        public TextView title;
+        public ImageView thumbnail;
+        public CheckBox isCheck;
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            title       = (TextView)itemView.findViewById(R.id.countryName);
+            thumbnail   = (ImageView)itemView.findViewById(R.id.countryPicture);
+            isCheck     = (CheckBox)itemView.findViewById(R.id.countryCheckBox);
+        }
     }
 }
