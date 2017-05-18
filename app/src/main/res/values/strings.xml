@@ -12,6 +12,8 @@
     <string name="receive_text">받을때 : </string>
     <string name="set_actionbar_name">국가설정</string>
 
+    <string name="select_country">"나라 선택"</string>
+
     <string name="select_option">"기준 환율 선택"</string>
     <string-array name="price_options">
         <item>매매기준율</item>
