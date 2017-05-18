@@ -89,6 +89,16 @@ public class ExchangeParser implements ExchangeInfo{
         ExchangeRate exchangeRate;
 
         exchangeArrList = getPerserArrList();
+
+        // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
+        Log.d(TAG, "Create Korean Datas");
+        exchangeRate = new ExchangeRate();
+        exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
+        exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
+        exchangeRate.setCountryName(ExchangeInfo.KNAME);
+        exchangeRate.setCheckState(false);
+        perCountDats.add(exchangeRate);
+
         for(int i=0; i<exchangeArrList.size(); i++) {
             exchangeRate = new ExchangeRate();
             exchangeRate.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
@@ -116,14 +126,6 @@ public class ExchangeParser implements ExchangeInfo{
             */
             perCountDats.add(exchangeRate);
         }
-
-        // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
-        Log.d(TAG, "Create Korean Datas");
-        exchangeRate = new ExchangeRate();
-        exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
-        exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
-        exchangeRate.setCheckState(false);
-        perCountDats.add(exchangeRate);
 
         return perCountDats;
     }
