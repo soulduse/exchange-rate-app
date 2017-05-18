@@ -12,6 +12,7 @@ public interface ExchangeInfo {
 
     String USD              = "USD";
     String KRW              = "KRW";
+    String KNAME            = "대한민국";
 
     int COUNTRY_NAME        = 0;
     int COUNTRY_ABBR        = 1; // Abbreviations
