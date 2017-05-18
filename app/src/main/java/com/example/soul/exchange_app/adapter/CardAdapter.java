@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
@@ -20,6 +21,10 @@ import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -96,7 +101,8 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(obj.getPriceReceive()));
 //        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
         Glide.with(mContext)
-                .load("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png?sidcode=1476753629698")
+                .load("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"
+                        +obj.getCountryAbbr()+"KRW_search.png?sidcode=1476753629698?"+makeCurrentTime(1))
                 .into(holder.graph);
 
         // reference site : http://stackoverflow.com/questions/27203817/recyclerview-expand-collapse-items/38623873#38623873
@@ -144,4 +150,37 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
     public long getItemId(int position) {
         return getItem(position).hashCode();
     }
+
+
+    private String makeCurrentTime(int which){
+
+        final String DAY            = "yyyyMMdd";
+        final String HOUR           = "yyyyMMddHH";
+        final String MINUTE         = "yyyyMMddHHmm";
+
+        String selectedStr          = null;
+
+        switch (which){
+            // DAY
+            case 0:
+                selectedStr = DAY;
+                break;
+
+            // HOUR
+            case 1:
+                selectedStr = HOUR;
+                break;
+
+            // MINUTE
+            case 2:
+                selectedStr = MINUTE;
+                break;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat(selectedStr);
+        Date currentTime = new Date();
+        String dTime = formatter.format ( currentTime );
+        return dTime;
+    }
 }
+
