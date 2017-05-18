@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
+import com.example.soul.exchange_app.adapter.DialogAdapter;
 import com.example.soul.exchange_app.databinding.FragmentTwoBinding;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
@@ -41,6 +43,7 @@ public class TwoFragment  extends Fragment {
     private FragmentTwoBinding binding;
     private List<ExchangeRate> exchangeList;
     private double selectedPriceFirst, selectedPriceSecond;
+    private MyDialogFragment myDialogFragment;
 
 
     public TwoFragment() {
@@ -153,7 +156,6 @@ public class TwoFragment  extends Fragment {
         builder.setItems(R.array.price_options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                printSnackbar("selected basePrice >> "+which);
                 // 0-매매기준율, 1-살때, 2-팔때, 3-보낼때, 4-받을때
                 Resources res = getResources();
                 String[] titles= res.getStringArray(R.array.price_options);
@@ -192,7 +194,23 @@ public class TwoFragment  extends Fragment {
         builder.show();
     }
 
+    private void selectCountry(){
+        Log.d(TAG, "selectCountry");
+        myDialogFragment = new MyDialogFragment(mListener);
+        myDialogFragment.show(getFragmentManager() ,"TAG");
+    }
+
+    DialogAdapter.OnItemClickListener mListener = new DialogAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClicked(ExchangeRate result) {
+            Log.d(TAG, "이벤트 리스너 받다 : "+result.getCountryAbbr());
+            myDialogFragment.dismiss();
+        }
+    };
+
     private void clickEtc(int id){
+
+        Log.d(TAG," clicked!");
         switch (id){
             // 한 숫자씩 지우기
             case R.id.button_backspace:
@@ -214,6 +232,12 @@ public class TwoFragment  extends Fragment {
                 break;
             case R.id.button_share:
                 printSnackbar("준비중인 기능입니다.");
+                break;
+            case R.id.flag1:
+                selectCountry();
+                break;
+            case R.id.flag2:
+                selectCountry();
                 break;
         }
     }
@@ -239,6 +263,9 @@ public class TwoFragment  extends Fragment {
         binding.buttonSwap.setOnClickListener(onNumberClickListener);
         binding.buttonShare.setOnClickListener(onNumberClickListener);
         binding.selectOption.setOnClickListener(onNumberClickListener);
+
+        binding.flag1.setOnClickListener(onNumberClickListener);
+        binding.flag2.setOnClickListener(onNumberClickListener);
     }
 
     private void printSnackbar(String msg){
