@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import java.util.List;
 
 import io.realm.Realm;
 
+
 /**
  * Created by soul on 2017. 2. 24..
  */
@@ -44,6 +44,8 @@ public class TwoFragment  extends Fragment {
     private List<ExchangeRate> exchangeList;
     private double selectedPriceFirst, selectedPriceSecond;
     private MyDialogFragment myDialogFragment;
+    private int position;
+    private int selectedPrice;
 
 
     public TwoFragment() {
@@ -159,29 +161,10 @@ public class TwoFragment  extends Fragment {
                 // 0-매매기준율, 1-살때, 2-팔때, 3-보낼때, 4-받을때
                 Resources res = getResources();
                 String[] titles= res.getStringArray(R.array.price_options);
+                selectedPrice = which;
 
-                switch (which){
-                    case 0:
-                        selectedPriceFirst   = exchangeList.get(0).getPriceBase();
-                        selectedPriceSecond = exchangeList.get(1).getPriceBase();
-                        break;
-                    case 1:
-                        selectedPriceFirst   = exchangeList.get(0).getPriceBuy();
-                        selectedPriceSecond = exchangeList.get(1).getPriceBuy();
-                        break;
-                    case 2:
-                        selectedPriceFirst   = exchangeList.get(0).getPriceSell();
-                        selectedPriceSecond = exchangeList.get(1).getPriceSell();
-                        break;
-                    case 3:
-                        selectedPriceFirst   = exchangeList.get(0).getPriceSend();
-                        selectedPriceSecond = exchangeList.get(1).getPriceSend();
-                        break;
-                    case 4:
-                        selectedPriceFirst   = exchangeList.get(0).getPriceReceive();
-                        selectedPriceSecond = exchangeList.get(1).getPriceReceive();
-                        break;
-                }
+                selectedPriceFirst  = getPrice(selectedPrice, exchangeList.get(0));
+                selectedPriceSecond = getPrice(selectedPrice, exchangeList.get(1));
 
                 binding.selectOption.setText(titles[which]);
                 if(binding.editText.getText().length() != 0){
@@ -194,8 +177,9 @@ public class TwoFragment  extends Fragment {
         builder.show();
     }
 
-    private void selectCountry(){
+    private void selectCountry(int position){
         Log.d(TAG, "selectCountry");
+        this.position = position;
         myDialogFragment = new MyDialogFragment(mListener);
         myDialogFragment.show(getFragmentManager() ,"TAG");
     }
@@ -204,9 +188,56 @@ public class TwoFragment  extends Fragment {
         @Override
         public void onItemClicked(ExchangeRate result) {
             Log.d(TAG, "이벤트 리스너 받다 : "+result.getCountryAbbr());
+            if(position == 0){
+                binding.name1.setText(result.getCountryAbbr());
+                Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
+                selectedPriceFirst  = getPrice(selectedPrice, result);
+            }else{
+                binding.name2.setText(result.getCountryAbbr());
+                Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
+                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
+                    selectedPriceSecond = getPrice(selectedPrice, result) * 100;
+                }
+                selectedPriceSecond = getPrice(selectedPrice, result);
+            }
+
+            if(binding.editText.getText().length() != 0){
+                binding.editText.setText(binding.editText.getText());
+                double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,binding.editText.getText().toString());
+                binding.editText2.setText(MoneyUtil.fmt(data));
+            }
+
             myDialogFragment.dismiss();
         }
     };
+
+    private double getPrice(int which, ExchangeRate data){
+        double price = 0;
+
+        switch (which){
+            case 0:
+                price = data.getPriceBase();
+                break;
+
+            case 1:
+                price = data.getPriceBuy();
+                break;
+
+            case 2:
+                price = data.getPriceSell();
+                break;
+
+            case 3:
+                price = data.getPriceSend();
+                break;
+
+            case 4:
+                price = data.getPriceReceive();
+                break;
+        }
+
+        return price;
+    }
 
     private void clickEtc(int id){
 
@@ -234,10 +265,10 @@ public class TwoFragment  extends Fragment {
                 printSnackbar("준비중인 기능입니다.");
                 break;
             case R.id.flag1:
-                selectCountry();
+                selectCountry(0);
                 break;
             case R.id.flag2:
-                selectCountry();
+                selectCountry(1);
                 break;
         }
     }

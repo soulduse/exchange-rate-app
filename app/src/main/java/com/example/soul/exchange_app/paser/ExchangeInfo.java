@@ -12,6 +12,7 @@ public interface ExchangeInfo {
 
     String USD              = "USD";
     String KRW              = "KRW";
+    String JPY              = "JPY";
     String KNAME            = "대한민국";
 
     int COUNTRY_NAME        = 0;

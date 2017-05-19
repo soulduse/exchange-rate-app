@@ -265,6 +265,7 @@ public class RealmController {
                 calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(getCalcuCountriesName()));
 
                 Log.w(TAG, "결과 >>>> "+calcuCountries.toString());
+                Log.w(TAG, "결과 >>>> "+calcuCountries.getExchangeRates().get(0).getCountryAbbr()+" / "+calcuCountries.getExchangeRates().get(1).getCountryAbbr());
 
             }
         });
