@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         realmController = RealmController.with(getApplicationContext());
         realm = realmController.getRealm();
 
+        if(realm.isClosed()){
+            realmController.setRealm();
+            realm = realmController.getRealm();
+        }
+
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -222,7 +227,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        realm.close();
         super.onDestroy();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
     }
 }
