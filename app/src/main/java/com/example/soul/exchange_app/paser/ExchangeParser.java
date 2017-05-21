@@ -109,13 +109,14 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeRate = new ExchangeRate();
             exchangeRate.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
             exchangeRate.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
+            // 일본 데이터가 일본 100 으로 수치가 다르게 표시되기 때문에 / 100을 해줘야 정상적으로 계산값이 맞아 떨어진다.
             if(exchangeArrList.get(i)[COUNTRY_ABBR].equals(ExchangeInfo.JPY)){
-                exchangeRate.setPriceBase((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]))*100);
-                exchangeRate.setPriceBuy((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]))*100);
-                exchangeRate.setPriceSell((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]))*100);
-                exchangeRate.setPriceSend((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]))*100);
-                exchangeRate.setPriceReceive((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]))*100);
-                exchangeRate.setPriceusExchange((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]))*100);
+                exchangeRate.setPriceBase((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]))/100);
+                exchangeRate.setPriceBuy((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]))/100);
+                exchangeRate.setPriceSell((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]))/100);
+                exchangeRate.setPriceSend((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]))/100);
+                exchangeRate.setPriceReceive((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]))/100);
+                exchangeRate.setPriceusExchange((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]))/100);
             }else{
                 exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
                 exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));

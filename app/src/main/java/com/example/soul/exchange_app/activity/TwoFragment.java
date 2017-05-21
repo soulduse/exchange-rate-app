@@ -195,24 +195,10 @@ public class TwoFragment  extends Fragment {
                 binding.name1.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
                 selectedPriceFirst  = getPrice(selectedPrice, result);
-//                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
-//                    Log.d(TAG, "이벤트 리스너 받다 1 : "+result.getCountryAbbr());
-//                    selectedPriceFirst = getPrice(selectedPrice, result) * 100;
-//                }else{
-//                    Log.d(TAG, "이벤트 리스너 받다 2 : "+result.getCountryAbbr());
-//                    selectedPriceFirst  = getPrice(selectedPrice, result);
-//                }
             }else{
                 binding.name2.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
                 selectedPriceSecond = getPrice(selectedPrice, result);
-//                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
-//                    Log.d(TAG, "이벤트 리스너 받다 3 : "+result.getCountryAbbr());
-//                    selectedPriceSecond = getPrice(selectedPrice, result) * 100;
-//                }else{
-//                    Log.d(TAG, "이벤트 리스너 받다 4 : "+result.getCountryAbbr());
-//                    selectedPriceSecond = getPrice(selectedPrice, result);
-//                }
             }
 
             if(binding.editText.getText().length() != 0){
