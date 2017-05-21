@@ -177,6 +177,8 @@ public class TwoFragment  extends Fragment {
         builder.show();
     }
 
+
+    // position 0 = 첫번째 나라 / 1 = 두번째 나라 선택
     private void selectCountry(int position){
         Log.d(TAG, "selectCountry");
         this.position = position;
@@ -188,17 +190,29 @@ public class TwoFragment  extends Fragment {
         @Override
         public void onItemClicked(ExchangeRate result) {
             Log.d(TAG, "이벤트 리스너 받다 : "+result.getCountryAbbr());
+
             if(position == 0){
                 binding.name1.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
                 selectedPriceFirst  = getPrice(selectedPrice, result);
+//                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
+//                    Log.d(TAG, "이벤트 리스너 받다 1 : "+result.getCountryAbbr());
+//                    selectedPriceFirst = getPrice(selectedPrice, result) * 100;
+//                }else{
+//                    Log.d(TAG, "이벤트 리스너 받다 2 : "+result.getCountryAbbr());
+//                    selectedPriceFirst  = getPrice(selectedPrice, result);
+//                }
             }else{
                 binding.name2.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
-                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
-                    selectedPriceSecond = getPrice(selectedPrice, result) * 100;
-                }
                 selectedPriceSecond = getPrice(selectedPrice, result);
+//                if(result.getCountryAbbr().equals(ExchangeInfo.JPY)){
+//                    Log.d(TAG, "이벤트 리스너 받다 3 : "+result.getCountryAbbr());
+//                    selectedPriceSecond = getPrice(selectedPrice, result) * 100;
+//                }else{
+//                    Log.d(TAG, "이벤트 리스너 받다 4 : "+result.getCountryAbbr());
+//                    selectedPriceSecond = getPrice(selectedPrice, result);
+//                }
             }
 
             if(binding.editText.getText().length() != 0){

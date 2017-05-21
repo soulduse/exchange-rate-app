@@ -90,18 +90,41 @@ public class ExchangeParser implements ExchangeInfo{
 
         exchangeArrList = getPerserArrList();
 
+        // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
+        Log.d(TAG, "Create Korean Datas");
+        exchangeRate = new ExchangeRate();
+        exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
+        exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
+        exchangeRate.setCountryName(ExchangeInfo.KNAME);
+        exchangeRate.setCheckState(false);
+        exchangeRate.setPriceBase(1);
+        exchangeRate.setPriceBuy(1);
+        exchangeRate.setPriceSell(1);
+        exchangeRate.setPriceSend(1);
+        exchangeRate.setPriceReceive(1);
 
+        perCountDats.add(exchangeRate);
 
         for(int i=0; i<exchangeArrList.size(); i++) {
             exchangeRate = new ExchangeRate();
             exchangeRate.setCountryName(exchangeArrList.get(i)[COUNTRY_NAME]);
             exchangeRate.setCountryAbbr(exchangeArrList.get(i)[COUNTRY_ABBR]);
-            exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
-            exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
-            exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
-            exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
-            exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
-            exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+            if(exchangeArrList.get(i)[COUNTRY_ABBR].equals(ExchangeInfo.JPY)){
+                exchangeRate.setPriceBase((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]))*100);
+                exchangeRate.setPriceBuy((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]))*100);
+                exchangeRate.setPriceSell((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]))*100);
+                exchangeRate.setPriceSend((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]))*100);
+                exchangeRate.setPriceReceive((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]))*100);
+                exchangeRate.setPriceusExchange((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]))*100);
+            }else{
+                exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
+                exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
+                exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
+                exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
+                exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
+                exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+            }
+
             exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
             /*
@@ -119,15 +142,6 @@ public class ExchangeParser implements ExchangeInfo{
             */
             perCountDats.add(exchangeRate);
         }
-
-        // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
-        Log.d(TAG, "Create Korean Datas");
-        exchangeRate = new ExchangeRate();
-        exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
-        exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
-        exchangeRate.setCountryName(ExchangeInfo.KNAME);
-        exchangeRate.setCheckState(false);
-        perCountDats.add(exchangeRate);
 
         return perCountDats;
     }
