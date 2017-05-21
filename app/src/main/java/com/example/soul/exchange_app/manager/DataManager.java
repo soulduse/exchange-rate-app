@@ -7,6 +7,8 @@ import com.example.soul.exchange_app.paser.ExchangeInfo;
 
 import java.util.concurrent.Callable;
 
+import io.realm.Realm;
+
 /**
  * Created by soul on 2017. 4. 30..
  */

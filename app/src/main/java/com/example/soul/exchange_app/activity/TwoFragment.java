@@ -47,6 +47,9 @@ public class TwoFragment  extends Fragment {
     private int position;
     private int selectedPrice;
 
+    private int dataSwapFirst   = 0;
+    private int dataSwapSecond  = 1;
+
 
     public TwoFragment() {
     }
@@ -80,10 +83,10 @@ public class TwoFragment  extends Fragment {
 //        setDataofKorea(exchangeList);
         Log.d(TAG, "exchangeList size : "+ exchangeList.size());
         if(exchangeList.size() != 0){
-            binding.name1.setText(exchangeList.get(0).getCountryAbbr());
-            binding.name2.setText(exchangeList.get(1).getCountryAbbr());
-            Glide.with(getContext()).load(exchangeList.get(0).getThumbnail()).into(binding.flag1);
-            Glide.with(getContext()).load(exchangeList.get(1).getThumbnail()).into(binding.flag2);
+            binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
+            binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
+            Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
+            Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
         }
 
         View view = binding.getRoot();
@@ -101,8 +104,8 @@ public class TwoFragment  extends Fragment {
         @Override
         public void onClick(View v) {
             if(selectedPriceFirst == 0 && selectedPriceSecond == 0){
-                selectedPriceFirst   = exchangeList.get(0).getPriceBase();
-                selectedPriceSecond = exchangeList.get(1).getPriceBase();
+                selectedPriceFirst   = exchangeList.get(dataSwapFirst).getPriceBase();
+                selectedPriceSecond = exchangeList.get(dataSwapSecond).getPriceBase();
             }
 
             if (v instanceof TextView) {
@@ -163,8 +166,8 @@ public class TwoFragment  extends Fragment {
                 String[] titles= res.getStringArray(R.array.price_options);
                 selectedPrice = which;
 
-                selectedPriceFirst  = getPrice(selectedPrice, exchangeList.get(0));
-                selectedPriceSecond = getPrice(selectedPrice, exchangeList.get(1));
+                selectedPriceFirst  = getPrice(selectedPrice, exchangeList.get(dataSwapFirst));
+                selectedPriceSecond = getPrice(selectedPrice, exchangeList.get(dataSwapSecond));
 
                 binding.selectOption.setText(titles[which]);
                 if(binding.editText.getText().length() != 0){
@@ -259,7 +262,36 @@ public class TwoFragment  extends Fragment {
                     binding.editText2.getText().clear();
                 }
                 break;
+            // 위아래 스왑
             case R.id.button_swap:
+                if(dataSwapFirst != 0){
+                    dataSwapFirst = 0;
+                }else{
+                    dataSwapFirst = 1;
+                }
+
+                if(dataSwapSecond != 0){
+                    dataSwapSecond = 0;
+                }else{
+                    dataSwapSecond = 1;
+                }
+
+                selectedPriceFirst   = exchangeList.get(dataSwapFirst).getPriceBase();
+                selectedPriceSecond = exchangeList.get(dataSwapSecond).getPriceBase();
+
+                if(binding.editText.getText().length() != 0){
+                    binding.editText.setText(binding.editText.getText());
+                    double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,binding.editText.getText().toString());
+                    binding.editText2.setText(MoneyUtil.fmt(data));
+                }
+
+                if(exchangeList.size() != 0){
+                    binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
+                    binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
+                    Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
+                    Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
+                }
+
                 break;
             case R.id.button_share:
                 printSnackbar("준비중인 기능입니다.");
