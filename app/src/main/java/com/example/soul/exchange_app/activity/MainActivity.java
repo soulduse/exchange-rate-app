@@ -20,6 +20,7 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
@@ -131,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 }else if(position == 2){
                     Snackbar.make(view, "Third Page!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    CustomNotiDialog notiDialog = CustomNotiDialog.newInstance();
+                    notiDialog.show(getSupportFragmentManager(), "dialog");
                 }
             }
         });

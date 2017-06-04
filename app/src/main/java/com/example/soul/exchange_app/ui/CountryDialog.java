@@ -1,4 +1,4 @@
-package com.example.soul.exchange_app.activity;
+package com.example.soul.exchange_app.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,14 +25,14 @@ import io.realm.Realm;
  * Created by soul on 2017. 5. 18..
  */
 
-public class MyDialogFragment extends DialogFragment {
+public class CountryDialog extends DialogFragment {
     private RecyclerView mRecyclerView;
     private DialogAdapter adapter;
     private Realm realm;
     private RealmController realmController;
     private DialogAdapter.OnItemClickListener mListener;
 
-    public MyDialogFragment(DialogAdapter.OnItemClickListener mListener){
+    public CountryDialog(DialogAdapter.OnItemClickListener mListener){
         this.mListener = mListener;
     }
 

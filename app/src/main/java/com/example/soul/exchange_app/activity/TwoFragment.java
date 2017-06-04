@@ -24,6 +24,7 @@ import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.ui.CountryDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class TwoFragment  extends Fragment {
     private FragmentTwoBinding binding;
     private List<ExchangeRate> exchangeList;
     private double selectedPriceFirst, selectedPriceSecond;
-    private MyDialogFragment myDialogFragment;
+    private CountryDialog myDialogFragment;
     private int position;
     private int selectedPrice;
 
@@ -185,7 +186,7 @@ public class TwoFragment  extends Fragment {
     private void selectCountry(int position){
         Log.d(TAG, "selectCountry");
         this.position = position;
-        myDialogFragment = new MyDialogFragment(mListener);
+        myDialogFragment = new CountryDialog(mListener);
         myDialogFragment.show(getFragmentManager() ,"TAG");
     }
 
