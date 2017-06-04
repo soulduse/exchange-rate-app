@@ -44,7 +44,8 @@ public class CustomNotiDialog extends DialogFragment {
         Spinner countrySpinner = (Spinner) v.findViewById(R.id.spinner);
         Spinner exchangeSpinner = (Spinner) v.findViewById(R.id.spinner2);
         TextView aboveOrbelow = (TextView)v.findViewById(R.id.aboveOrbelowTxt);
-        TextView addBtn = (TextView)v.findViewById(R.id.)
+        TextView addAlarm = (TextView)v.findViewById(R.id.addAlarm);
+        TextView cancelAlarm = (TextView)v.findViewById(R.id.cancelAlarm);
 
 
         return v;
