@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.adapters.ToolbarBindingAdapter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,11 @@ import io.realm.Realm;
 
 public class CustomNotiDialog extends DialogFragment implements AdapterView.OnItemSelectedListener{
 
+    private static final String TAG = CustomNotiDialog.class.getSimpleName();
     private Realm realm;
     private RealmController realmController;
     private DialogNotificationBinding binding;
+
 
     /**
      * Create a new instance of CountryDialog, providing "num"
@@ -88,7 +91,7 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                // 이상 이하 switch
+                // 이상 이하 swtch
                 case R.id.aboveOrbelowTxt:
 
                     String text = binding.aboveOrbelowTxt.getText().equals(getString(R.string.above))
@@ -103,12 +106,11 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
                     break;
                 // 환율 알림 추가
                 case R.id.addAlarm:
-                    String priceText = binding.alarmPrice.getText().toString();
+                    String priceText = binding.alarmPriceEdit.getText().toString();
                     if(priceText == null || priceText.isEmpty()){
                         Toast.makeText(getContext(), R.string.warning_empty_price, Toast.LENGTH_SHORT).show();
                         break;
                     }
-
                     ExchangeRate exchangeRate = (ExchangeRate) binding.spinner.getSelectedItem();
                     // true = 이상, false = 이하
                     boolean state = binding.aboveOrbelowTxt.getText().toString().equals("이상") ? true : false;
@@ -116,7 +118,16 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
                     double price = Double.parseDouble(priceText);
                     int standardExchange = binding.spinner2.getSelectedItemPosition();
 
+                    // 중복된 알람이 있는지 검증
+                    if(realmController.isOverlap(exchangeRate, state, price, standardExchange)){
+                        Toast.makeText(getContext(), R.string.warning_overlap_alarm, Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+                    // 알람을 Realm에 저장한다.
                     realmController.addAlarm(exchangeRate, state, price, standardExchange);
+                    // 데이터가 등록되었으니 Dialog 창을 닫는다.
+                    dismiss();
                     break;
             }
         }
