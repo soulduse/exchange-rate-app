@@ -21,5 +21,8 @@
     <dimen name="cal_button_height">70dp</dimen>
     <dimen name="cal_button_text_size">25dp</dimen>
 
+    <dimen name="arrow_height">18dp</dimen>
+    <dimen name="arrow_width">18dp</dimen>
+
     <dimen name="z_card">5dp</dimen>
 </resources>
