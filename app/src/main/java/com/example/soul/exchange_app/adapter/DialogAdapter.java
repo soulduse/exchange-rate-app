@@ -37,7 +37,6 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
         this.mListener  = mListener;
     }
 
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "SetCountryAdapter - onCreateViewHolder");
