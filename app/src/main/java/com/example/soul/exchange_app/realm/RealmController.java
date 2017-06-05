@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
@@ -295,6 +296,21 @@ public class RealmController {
                 .or()
                 .equalTo("countryAbbr", countries[1])
                 .findAll();
+    }
+
+
+    public void addAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard){
+
+        realm.executeTransaction(new Realm.Transaction() {
+             @Override
+             public void execute(Realm realm) {
+                 AlarmModel alarmModel = realm.createObject(AlarmModel.class);
+                 alarmModel.setExchangeRate(exchangeRate);
+                 alarmModel.setAboveOrbelow(aboveOrBelow);
+                 alarmModel.setPrice(price);
+                 alarmModel.setStandardExchange(standard);
+             }
+        });
     }
 
 }
