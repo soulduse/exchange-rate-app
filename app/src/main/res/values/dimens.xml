@@ -14,6 +14,7 @@
     <dimen name="flag_thumbnail_width">45dp</dimen>
     <dimen name="card_title_padding">3dp</dimen>
     <dimen name="text_size">18dp</dimen>
+    <dimen name="sub_text_size">16dp</dimen>
     <dimen name="link_text_size">15dp</dimen>
     <dimen name="sub_text_margin">20dp</dimen>
     <dimen name="update_date_top_margin">10dp</dimen>
