@@ -11,6 +11,7 @@ public class AlarmModel extends RealmObject{
     private int standardExchange;
     private double price;
     private boolean aboveOrbelow;
+    private boolean alarmSwitch;
 
     public ExchangeRate getExchangeRate() {
         return exchangeRate;
@@ -42,5 +43,13 @@ public class AlarmModel extends RealmObject{
 
     public void setAboveOrbelow(boolean aboveOrbelow) {
         this.aboveOrbelow = aboveOrbelow;
+    }
+
+    public boolean isAlarmSwitch() {
+        return alarmSwitch;
+    }
+
+    public void setAlarmSwitch(boolean alarmSwitch) {
+        this.alarmSwitch = alarmSwitch;
     }
 }
