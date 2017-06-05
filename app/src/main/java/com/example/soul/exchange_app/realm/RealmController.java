@@ -299,6 +299,7 @@ public class RealmController {
     }
 
 
+    // 알람 등록
     public void addAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard){
 
         realm.executeTransaction(new Realm.Transaction() {
@@ -309,8 +310,25 @@ public class RealmController {
                  alarmModel.setAboveOrbelow(aboveOrBelow);
                  alarmModel.setPrice(price);
                  alarmModel.setStandardExchange(standard);
+                 alarmModel.setAlarmSwitch(true);
              }
         });
+    }
+
+    // 이미 값이 있는지 체크
+    public boolean isOverlap(ExchangeRate exchangeRate, boolean aboveOrBelow, double price, int standard){
+        AlarmModel alarmModel = realm.where(AlarmModel.class)
+                .equalTo("exchangeRate.countryAbbr", exchangeRate.getCountryAbbr())
+                .equalTo("aboveOrbelow", aboveOrBelow)
+                .equalTo("price", price)
+                .equalTo("standardExchange", standard)
+                .findFirst();
+
+        return alarmModel != null;
+    }
+
+    public RealmResults<AlarmModel> getAlarmModelList(){
+        return realm.where(AlarmModel.class).findAll();
     }
 
 }
