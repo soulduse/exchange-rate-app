@@ -5,6 +5,8 @@ import android.util.Log;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by soul on 2017. 3. 9..
@@ -69,6 +71,13 @@ public class MoneyUtil {
         }else{
             return (base1/base2) * makeDouble(money);
         }
+    }
+
+
+    public static boolean isNumber(String s){
+        Pattern p = Pattern.compile("(^[0-9]*$)");
+        Matcher m = p.matcher(s);
+        return m.find();
     }
 
 }
