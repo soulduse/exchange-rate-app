@@ -47,7 +47,6 @@ public class DialogAdapter2 extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d(TAG, "SetCountryAdapter - onCreateViewHolder");
         TextView title;
         ImageView thumbnail;
         MyViewHolder myViewHolder;
