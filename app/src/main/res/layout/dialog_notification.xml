@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:text="이하"
+            android:text="이상"
             app:layout_constraintLeft_toRightOf="@+id/alarmPriceEdit"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_bias="0.504"

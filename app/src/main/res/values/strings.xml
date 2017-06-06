@@ -13,6 +13,7 @@
     <string name="set_actionbar_name">국가설정</string>
     <string name="warning_empty_price">환율 금액을 입력해주세요.</string>
     <string name="warning_overlap_alarm">이미 등록한 알람입니다.</string>
+    <string name="notice_add_alarm">등록된 알람이 없습니다.</string>
 
     <string name="select_country">"나라 선택"</string>
     <string name="above">"이상"</string>
