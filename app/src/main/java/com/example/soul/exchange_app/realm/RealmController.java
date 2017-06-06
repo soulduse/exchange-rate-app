@@ -6,10 +6,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.soul.exchange_app.adapter.AlarmAdapter;
+import com.example.soul.exchange_app.databinding.DialogNotificationBinding;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
+import com.example.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
 
@@ -300,18 +303,35 @@ public class RealmController {
 
 
     // 알람 등록
-    public void addAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard){
-
+    public void addAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position){
         realm.executeTransaction(new Realm.Transaction() {
              @Override
              public void execute(Realm realm) {
                  AlarmModel alarmModel = realm.createObject(AlarmModel.class);
                  alarmModel.setExchangeRate(exchangeRate);
+                 alarmModel.setPosition(position);
                  alarmModel.setAboveOrbelow(aboveOrBelow);
                  alarmModel.setPrice(price);
                  alarmModel.setStandardExchange(standard);
                  alarmModel.setAlarmSwitch(true);
              }
+        });
+    }
+
+    // 알람 수정
+    public void updateAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position, final int itemPosition){
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<AlarmModel> alarmModelList = realm.where(AlarmModel.class).findAll();
+                AlarmModel alarmModel = alarmModelList.get(itemPosition);
+                alarmModel.setExchangeRate(exchangeRate);
+                alarmModel.setPosition(position);
+                alarmModel.setAboveOrbelow(aboveOrBelow);
+                alarmModel.setPrice(price);
+                alarmModel.setStandardExchange(standard);
+            }
         });
     }
 
@@ -331,4 +351,23 @@ public class RealmController {
         return realm.where(AlarmModel.class).findAll();
     }
 
+    public void deleteAlarm(final int position){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<AlarmModel> realmResults = realm.where(AlarmModel.class).findAll();
+                realmResults.get(position).deleteFromRealm();
+            }
+        });
+    }
+
+    public void setAlarm(final boolean alarmSwitch, final int position){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                AlarmModel alarmModel = realm.where(AlarmModel.class).findAll().get(position);
+                alarmModel.setAlarmSwitch(alarmSwitch);
+            }
+        });
+    }
 }
