@@ -1,23 +1,20 @@
 package com.example.soul.exchange_app.ui;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.adapters.ToolbarBindingAdapter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.DialogAdapter2;
 import com.example.soul.exchange_app.databinding.DialogNotificationBinding;
+import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
@@ -29,25 +26,43 @@ import io.realm.Realm;
  * Created by soul on 2017. 6. 4..
  */
 
-public class CustomNotiDialog extends DialogFragment implements AdapterView.OnItemSelectedListener{
+public class CustomNotiDialog extends DialogFragment{
 
     private static final String TAG = CustomNotiDialog.class.getSimpleName();
     private Realm realm;
     private RealmController realmController;
     private DialogNotificationBinding binding;
+    private AlarmModel alarmModel;
+    private int position = -1;
+    private OnChangeDataListener onChangeDataListener;
 
-
-    /**
-     * Create a new instance of CountryDialog, providing "num"
-     * as an argument.
-     */
     public static CustomNotiDialog newInstance() {
         return new CustomNotiDialog();
+    }
+
+    public static CustomNotiDialog newInstance(AlarmModel alarmModel, int position) {
+        CustomNotiDialog customDialog = new CustomNotiDialog();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putSerializable("alarm", alarmModel);
+        args.putInt("position", position);
+        customDialog.setArguments(args);
+
+        return customDialog;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if(getArguments() != null && !getArguments().isEmpty()){
+            alarmModel = (AlarmModel) getArguments().getSerializable("alarm");
+            position = getArguments().getInt("position");
+        }
+
+
 
         // Pick a style based on the num.
         int style = DialogFragment.STYLE_NORMAL, theme = 0;
@@ -73,19 +88,54 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
         binding.spinner.setAdapter(countryAdapter);
         binding.spinner2.setAdapter(exchangeAdapter);
 
+        if(alarmModel!=null){
+            binding.alarmPriceEdit.setText(MoneyUtil.fmt(alarmModel.getPrice()));
+            String text = !alarmModel.isAboveOrbelow()
+                    ? getString(R.string.below) : getString(R.string.above);
+            binding.aboveOrbelowTxt.setText(text);
+            binding.spinner.setSelection(alarmModel.getPosition());
+            binding.spinner2.setSelection(alarmModel.getStandardExchange());
+            binding.deleteAlarm.setVisibility(View.VISIBLE);
+            binding.deleteAlarm.setOnClickListener(clickListener);
+        }
+
+
         View view = binding.getRoot();
         setListener();
         return view;
     }
 
     private void setListener(){
-        binding.spinner.setOnItemSelectedListener(this);
-        binding.spinner2.setOnItemSelectedListener(this);
-
         binding.aboveOrbelowTxt.setOnClickListener(clickListener);
         binding.addAlarm.setOnClickListener(clickListener);
         binding.deleteAlarm.setOnClickListener(clickListener);
+        binding.alarmPriceEdit.addTextChangedListener(watcher);
     }
+
+    private TextWatcher watcher = new TextWatcher() {
+
+        String result = "";
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            Log.d(TAG, "beforeTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count+" / after : "+after);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            Log.d(TAG, "onTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count);
+            if(!s.toString().equals(result) && !s.toString().isEmpty()){     // StackOverflow를 막기위해,
+                result = MoneyUtil.fmt(MoneyUtil.removeCommas(s.toString()));
+                binding.alarmPriceEdit.setText(result);                 // 결과 텍스트 셋팅.
+                binding.alarmPriceEdit.setSelection(result.length());   // 커서를 제일 끝으로 보냄.
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+//            Log.d(TAG, "afterTextChanged Editable : "+s.toString());
+        }
+    };
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -93,7 +143,6 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
             switch (v.getId()){
                 // 이상 이하 swtch
                 case R.id.aboveOrbelowTxt:
-
                     String text = binding.aboveOrbelowTxt.getText().equals(getString(R.string.above))
                             ? getString(R.string.below) : getString(R.string.above);
                     binding.aboveOrbelowTxt.setText(text);
@@ -101,12 +150,13 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
 
                 // 환율 알림 제거
                 case R.id.deleteAlarm:
-                    Toast.makeText(getContext(), "삭제", Toast.LENGTH_SHORT).show();
+                    realmController.deleteAlarm(position);
+                    onChangeDataListener.eventListener();
                     dismiss();
                     break;
                 // 환율 알림 추가
                 case R.id.addAlarm:
-                    String priceText = binding.alarmPriceEdit.getText().toString();
+                    String priceText = MoneyUtil.removeCommas(binding.alarmPriceEdit.getText().toString());
                     if(priceText == null || priceText.isEmpty()){
                         Toast.makeText(getContext(), R.string.warning_empty_price, Toast.LENGTH_SHORT).show();
                         break;
@@ -117,6 +167,7 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
                     // price가 숫자인지에 대한 검증은 안해도된다 왜냐하면 EditText의 데이터 타입을 숫자로 설정 해놓았기 때문.
                     double price = Double.parseDouble(priceText);
                     int standardExchange = binding.spinner2.getSelectedItemPosition();
+                    int countryPosition = binding.spinner.getSelectedItemPosition();
 
                     // 중복된 알람이 있는지 검증
                     if(realmController.isOverlap(exchangeRate, state, price, standardExchange)){
@@ -124,8 +175,13 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
                         break;
                     }
 
+                    if(alarmModel != null){
+                        realmController.updateAlarm(exchangeRate, state, price, standardExchange, countryPosition, position);
+                        dismiss();
+                        break;
+                    }
                     // 알람을 Realm에 저장한다.
-                    realmController.addAlarm(exchangeRate, state, price, standardExchange);
+                    realmController.addAlarm(exchangeRate, state, price, standardExchange, countryPosition);
                     // 데이터가 등록되었으니 Dialog 창을 닫는다.
                     dismiss();
                     break;
@@ -133,21 +189,17 @@ public class CustomNotiDialog extends DialogFragment implements AdapterView.OnIt
         }
     };
 
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    public interface OnChangeDataListener {
+        void eventListener();
+    }
+
+    public void setOnChangeDataListener(OnChangeDataListener listener){
+        this.onChangeDataListener = listener;
     }
 }
