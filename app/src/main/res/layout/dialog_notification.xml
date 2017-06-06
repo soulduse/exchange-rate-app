@@ -141,7 +141,7 @@
             android:id="@+id/deleteAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="취소"
+            android:text="삭제"
             android:visibility="invisible"
             app:layout_constraintBaseline_toBaselineOf="@+id/addAlarm"
             app:layout_constraintRight_toLeftOf="@+id/addAlarm"

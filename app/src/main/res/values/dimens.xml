@@ -24,5 +24,7 @@
     <dimen name="arrow_height">18dp</dimen>
     <dimen name="arrow_width">18dp</dimen>
 
+    <dimen name="notification_size">36dp</dimen>
+
     <dimen name="z_card">5dp</dimen>
 </resources>
