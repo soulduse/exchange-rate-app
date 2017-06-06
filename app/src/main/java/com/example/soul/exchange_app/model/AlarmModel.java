@@ -1,13 +1,16 @@
 package com.example.soul.exchange_app.model;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 
 /**
  * Created by soul on 2017. 6. 5..
  */
 
-public class AlarmModel extends RealmObject{
+public class AlarmModel extends RealmObject implements Serializable{
     private ExchangeRate exchangeRate;
+    private int position;
     private int standardExchange;
     private double price;
     private boolean aboveOrbelow;
@@ -51,5 +54,13 @@ public class AlarmModel extends RealmObject{
 
     public void setAlarmSwitch(boolean alarmSwitch) {
         this.alarmSwitch = alarmSwitch;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
