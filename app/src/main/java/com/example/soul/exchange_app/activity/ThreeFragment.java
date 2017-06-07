@@ -33,8 +33,6 @@ import java.util.List;
 
 public class ThreeFragment  extends Fragment {
 
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder notificationBuilder;
     private RealmController realmController;
     private static final String TAG = ThreeFragment.class.getSimpleName();
 
@@ -48,28 +46,7 @@ public class ThreeFragment  extends Fragment {
         realmController = RealmController.getInstance();
         realmController.setRealm();
 
-        /*
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),
-                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationBuilder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("오늘의 환율")
-                .setContentText("미국 달러 상승")
-                .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setContentIntent(pendingIntent);
 
-//        button = (Button)view.findViewById(R.id.noti_test);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                notificationManager.notify(0, notificationBuilder.build());
-//            }
-//        });
-
-        */
     }
 
     @Nullable
