@@ -70,7 +70,25 @@ public class MainActivity extends AppCompatActivity {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         load();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // start service
+        startService();
+    }
+
+    // 서비스 시작
+    private void startService(){
+        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
+        startService(intent);
+    }
+
+    // 서비스 종료
+    private void stopService(){
+        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
+        stopService(intent);
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -125,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(position == 0){
+                    stopService();
                     Intent intent = new Intent(getApplicationContext(), SetCountryActivity.class);
                     startActivity(intent);
                 }else if(position == 2){
