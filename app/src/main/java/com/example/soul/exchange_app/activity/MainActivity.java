@@ -17,6 +17,7 @@ import android.view.View;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
+import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
@@ -89,6 +90,30 @@ public class MainActivity extends AppCompatActivity {
     private void stopService(){
         Intent intent = new Intent(getApplicationContext(), AlarmService.class);
         stopService(intent);
+    }
+
+    /**
+     * 1. 데이터 파싱 요청을 한다.
+     * 2. Network 연결 상태 체크
+     *      - connect    : 데이터 파싱 후 데이터를 Realm에 저장 or 갱신.
+     *      - disconnect : false 반환되고 realm에 저장된 데이터로 화면을 구성.
+     * 3. Network & 파싱 모든 처리가 정상적으로 이루어 지면 리스너에서 setupViewPager를 해준다.
+     */
+    private void load(){
+        boolean parser = ParserManager.newInstance(this).load();
+        if(!parser){
+            initViewPager(false);
+        }
+    }
+
+    /**
+     * @param internet
+     * 화면의 viewpager의 초기 설정을 도와준다.
+     */
+    public void initViewPager(boolean internet){
+        setupViewPager(viewPager);
+        String msg = internet ? getString(R.string.connect_internet) : getString(R.string.disconnect_internet);
+        showSnackBar(msg);
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -175,56 +200,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
-     - network connect       : parsing data를 가져온다.
-     - network disconnect    : Realm DB에서 내용을 가져온다.
-     */
-    public void load() {
-        if(NetworkUtil.isNetworkConnected(getApplicationContext())){
-            Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
-                @Override
-                public List<ExchangeRate> call() throws Exception {
-                    return getParserDataList();
-                }
-            };
-
-            dataManager.getAsyncExecutor()
-                    .setCallable(callable)
-                    .setCallback(callback)
-                    .execute();
-        }else{
-            setupViewPager(viewPager);
-            showSnackBar("No internet connection!");
-        }
-        // 비동기로 실행될 코드List<ExchangeRate> mExchangeDatas
-    }
-
-    private List<ExchangeRate> getParserDataList(){
-        return new ExchangeParser().getParserDatas();
-    }
-
-    // 비동기로 실행된 결과를 받아 처리하는 코드
-    private DataManager.AsyncCallback<List<ExchangeRate>> callback = new DataManager.AsyncCallback<List<ExchangeRate>>() {
-        @Override
-        public void onResult(List<ExchangeRate> result) {
-            realmController.setRealmDatas(result);
-            setupViewPager(viewPager);
-            Log.d(TAG, "realmController.getExchangeRate() : "+realmController.getExchangeRate().toString());
-            showSnackBar("Update success!");
-        }
-
-        @Override
-        public void exceptionOccured(Exception e) {
-            Log.d(TAG, "exceptionOccured : "+e.getMessage());
-        }
-
-        @Override
-        public void cancelled() {
-            Log.d(TAG, "cancelled");
-        }
-    };
 
     private void showSnackBar(String msg){
         Snackbar snackbar = Snackbar

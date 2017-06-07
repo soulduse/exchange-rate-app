@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +20,10 @@ import android.widget.TextView;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
-import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.DateUtil;
-import com.example.soul.exchange_app.util.NetworkUtil;
 
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.realm.Realm;
 
@@ -76,7 +71,7 @@ public class OneFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         realmController = RealmController.getInstance();
         realmController.setRealm();
@@ -105,8 +100,10 @@ public class OneFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                MainActivity activity = (MainActivity)getContext();
-                activity.load();
+                boolean parser = ParserManager.newInstance(getContext()).load();
+                if(!parser){
+                    printSnackbar(getString(R.string.disconnect_internet));
+                }
             }
         });
 
@@ -168,5 +165,9 @@ public class OneFragment extends Fragment {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
+    private void printSnackbar(String msg){
+        Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
 
 }
