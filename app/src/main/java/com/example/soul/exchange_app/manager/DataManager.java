@@ -1,108 +1,94 @@
 package com.example.soul.exchange_app.manager;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.util.Log;
 
-import com.example.soul.exchange_app.paser.ExchangeInfo;
+import com.example.soul.exchange_app.activity.MainActivity;
+import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.util.NetworkUtil;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
-import io.realm.Realm;
 
 /**
- * Created by soul on 2017. 4. 30..
+ * Created by soul on 2017. 6. 7..
+ * 파싱한 데이터를
  */
 
-public class DataManager implements ExchangeInfo {
+public class DataManager {
 
-    private final String TAG = getClass().getSimpleName();
+    private static final String TAG = DataManager.class.getSimpleName();
 
-    public DataManager.AsyncExecutor getAsyncExecutor(){
-        return new DataManager.AsyncExecutor();
+    // data
+    private ParserManager parserManager;
+
+    // Realm
+    private RealmController realmController;
+
+    private Context context;
+
+    private DataManager(Context context){
+        this.context = context;
+        realmController = RealmController.with(context);
+        parserManager = new ParserManager();
     }
 
-    public interface AsyncCallback<T> {
-        void onResult(T result);
-        void exceptionOccured(Exception e);
-        void cancelled();
+    public static DataManager newInstance(Context context) {
+        return new DataManager(context);
     }
 
-    public interface AsyncExecutorAware<T> {
-        void setAsyncExecutor(DataManager.AsyncExecutor<T> asyncExecutor);
-    }
 
-    public class AsyncExecutor<T> extends AsyncTask<T, Void, T> {
-        private final String TAG = this.getClass().getSimpleName();
+    /**
+     네트워크 연결상태에 따른 어디서 데이터를 가져올 것인가에 대한 구분 (두 가지 경우의 수가 있다.)
+     - network connect       : parsing data를 가져온다.
+     - network disconnect    : Realm DB에서 내용을 가져온다.
+     */
+    public boolean load() {
+        if(NetworkUtil.isNetworkConnected(context)){
+            Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
+                @Override
+                public List<ExchangeRate> call() throws Exception {
+                    return getParserDataList();
+                }
+            };
 
-        private DataManager.AsyncCallback<T> callback;
-        private Callable<T> callable;
-        private Exception occuredException;
-
-        public DataManager.AsyncExecutor<T> setCallable(Callable<T> callable) {
-            this.callable = callable;
-            return this;
+            parserManager.getAsyncExecutor()
+                    .setCallable(callable)
+                    .setCallback(callback)
+                    .execute();
+            return true;
         }
 
-        public DataManager.AsyncExecutor<T> setCallback(DataManager.AsyncCallback<T> callback) {
-            this.callback = callback;
-            processAsyncExecutorAware(callback);
-            return this;
-        }
+        return false;
+    }
 
-        @SuppressWarnings("unchecked")
-        private void processAsyncExecutorAware(DataManager.AsyncCallback<T> callback) {
-            if (callback instanceof DataManager.AsyncExecutorAware) {
-                ((DataManager.AsyncExecutorAware<T>) callback).setAsyncExecutor(this);
+    private List<ExchangeRate> getParserDataList(){
+        return new ExchangeParser().getParserDatas();
+    }
+
+    // 비동기로 실행된 결과를 받아 처리하는 코드
+    private ParserManager.AsyncCallback<List<ExchangeRate>> callback = new ParserManager.AsyncCallback<List<ExchangeRate>>() {
+        @Override
+        public void onResult(List<ExchangeRate> result) {
+            realmController.setRealmDatas(result);
+            if(context instanceof MainActivity){
+                Log.d(TAG, "Parsed from MainActivity");
+                MainActivity activity = (MainActivity)context;
+                activity.initViewPager(true);
             }
         }
 
         @Override
-        protected T doInBackground(T... params) {
-            try {
-                return callable.call();
-            } catch (Exception ex) {
-                Log.e(TAG,
-                        "exception occured while doing in background: "
-                                + ex.getMessage(), ex);
-                this.occuredException = ex;
-                return null;
-            }
+        public void exceptionOccured(Exception e) {
+            Log.d(TAG, "exceptionOccured : "+e.getMessage());
         }
 
         @Override
-        protected void onPostExecute(T result) {
-            if (isCancelled()) {
-                notifyCanceled();
-            }
-            if (isExceptionOccured()) {
-                notifyException();
-                return;
-            }
-            notifyResult(result);
+        public void cancelled() {
+            Log.d(TAG, "cancelled");
         }
-
-        private void notifyCanceled() {
-            if (callback != null)
-                callback.cancelled();
-        }
-
-        private boolean isExceptionOccured() {
-            return occuredException != null;
-        }
-
-        private void notifyException() {
-            if (callback != null)
-                callback.exceptionOccured(occuredException);
-        }
-
-        /**
-         * soution about animation reference is :
-         * http://stackoverflow.com/questions/27300811/recyclerview-adapter-notifydatasetchanged-stops-fancy-animation
-         */
-        private void notifyResult(T result) {
-            Log.d(TAG, "entered notifyResult!");
-            if (callback != null)
-                callback.onResult(result);
-        }
-    }
+    };
 }
