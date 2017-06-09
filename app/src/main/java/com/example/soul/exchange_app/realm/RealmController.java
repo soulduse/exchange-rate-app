@@ -8,12 +8,14 @@ import android.util.Log;
 
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.databinding.DialogNotificationBinding;
+import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -361,7 +363,7 @@ public class RealmController {
         });
     }
 
-    public void setAlarm(final boolean alarmSwitch, final int position){
+    public void turnAlarm(final boolean alarmSwitch, final int position){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -370,4 +372,55 @@ public class RealmController {
             }
         });
     }
+
+
+    public List<AlarmModel> getAlarms(){
+        final List<AlarmModel> resultList = new ArrayList<>();
+
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                // 알람 설정이 켜져 있는 데이터만 가져온다. (켜져 있는 데이터를 기반으로 알람을 울릴 것인지 판단 한다)
+                List<AlarmModel> alarmModelList = realm.where(AlarmModel.class)
+                        .equalTo("alarmSwitch", true)
+                        .findAll();
+
+                for(AlarmModel alarmModel : alarmModelList){
+                    double setPrice = alarmModel.getPrice();
+                    boolean isAbove = alarmModel.isAboveOrbelow();
+                    double currentPrice = DataManager.newInstance()
+                            .getPrice(alarmModel.getStandardExchange(),alarmModel.getExchangeRate());
+
+                    boolean addAbove = setPrice <= currentPrice;
+                    boolean addBelow = setPrice >= currentPrice;
+
+                    // 사용자가 이상을 선택 했고 사용자가 입력한 금액보다 현재 환율금액이 더 큰 경우. (현재가 > 사용자 입력가)
+                    if(isAbove && addAbove){
+                        resultList.add(alarmModel);
+                    }
+                    // 사용자가 이하를 선택 했고 사용자가 입력한 금액보다 현재 환율금액이 더 작은 경우.(현재가 < 사용자 입력가)
+                    else if(!isAbove && addBelow){
+                        resultList.add(alarmModel);
+                    }
+                }
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                // Transaction was a success.
+                Log.d(TAG, "Transaction was a success.");
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                // Transaction failed and was automatically canceled.
+                Log.d(TAG, "Transaction failed and was automatically canceled.");
+            }
+        });
+
+        return resultList;
+    }
+
+
+
 }
