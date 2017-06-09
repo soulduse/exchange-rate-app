@@ -16,16 +16,10 @@ import android.view.View;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
-import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.manager.ParserManager;
-import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
-import com.example.soul.exchange_app.util.NetworkUtil;
-
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.realm.Realm;
 
@@ -39,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter mPagerAdapter;
 
     // data
-    private DataManager dataManager;
+    private ParserManager parserManager;
 
     // Realm
     private Realm realm;
@@ -56,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        dataManager = new DataManager();
+        parserManager = new ParserManager();
 
         realmController = RealmController.with(getApplicationContext());
         realm = realmController.getRealm();
@@ -100,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
      * 3. Network & 파싱 모든 처리가 정상적으로 이루어 지면 리스너에서 setupViewPager를 해준다.
      */
     private void load(){
-        boolean parser = ParserManager.newInstance(this).load();
+        boolean parser = DataManager.newInstance(this).load();
         if(!parser){
             initViewPager(false);
         }

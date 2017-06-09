@@ -1,7 +1,6 @@
 package com.example.soul.exchange_app.activity;
 
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +18,8 @@ import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.CardAdapter;
-import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.manager.ParserManager;
+import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.DateUtil;
 
@@ -43,7 +42,7 @@ public class OneFragment extends Fragment {
     private CardAdapter adapter;
 
     // data
-    private DataManager dataManager;
+    private ParserManager parserManager;
     private DateUtil dateUtil;
 
     // Realm
@@ -63,7 +62,7 @@ public class OneFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // data initialization
-        dataManager = new DataManager();
+        parserManager = new ParserManager();
         dateUtil    = new DateUtil(getContext());
     }
 
@@ -100,9 +99,10 @@ public class OneFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                boolean parser = ParserManager.newInstance(getContext()).load();
+                boolean parser = DataManager.newInstance(getContext()).load();
                 if(!parser){
                     printSnackbar(getString(R.string.disconnect_internet));
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });

@@ -73,7 +73,7 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
         holder.alarmIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realmController.setAlarm(!alarmSwitch, position);
+                realmController.turnAlarm(!alarmSwitch, position);
             }
         });
 

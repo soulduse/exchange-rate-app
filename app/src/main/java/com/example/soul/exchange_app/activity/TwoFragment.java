@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.DialogAdapter;
 import com.example.soul.exchange_app.databinding.FragmentTwoBinding;
+import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
@@ -167,8 +168,8 @@ public class TwoFragment  extends Fragment {
                 String[] titles= res.getStringArray(R.array.price_options);
                 selectedPrice = which;
 
-                selectedPriceFirst  = getPrice(selectedPrice, exchangeList.get(dataSwapFirst));
-                selectedPriceSecond = getPrice(selectedPrice, exchangeList.get(dataSwapSecond));
+                selectedPriceFirst  = DataManager.newInstance().getPrice(selectedPrice, exchangeList.get(dataSwapFirst));
+                selectedPriceSecond = DataManager.newInstance().getPrice(selectedPrice, exchangeList.get(dataSwapSecond));
 
                 binding.selectOption.setText(titles[which]);
                 if(binding.editText.getText().length() != 0){
@@ -198,11 +199,11 @@ public class TwoFragment  extends Fragment {
             if(position == 0){
                 binding.name1.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
-                selectedPriceFirst  = getPrice(selectedPrice, result);
+                selectedPriceFirst  = DataManager.newInstance().getPrice(selectedPrice, result);
             }else{
                 binding.name2.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
-                selectedPriceSecond = getPrice(selectedPrice, result);
+                selectedPriceSecond = DataManager.newInstance().getPrice(selectedPrice, result);
             }
 
             if(binding.editText.getText().length() != 0){
@@ -214,34 +215,6 @@ public class TwoFragment  extends Fragment {
             myDialogFragment.dismiss();
         }
     };
-
-    private double getPrice(int which, ExchangeRate data){
-        double price = 0;
-
-        switch (which){
-            case 0:
-                price = data.getPriceBase();
-                break;
-
-            case 1:
-                price = data.getPriceBuy();
-                break;
-
-            case 2:
-                price = data.getPriceSell();
-                break;
-
-            case 3:
-                price = data.getPriceSend();
-                break;
-
-            case 4:
-                price = data.getPriceReceive();
-                break;
-        }
-
-        return price;
-    }
 
     private void clickEtc(int id){
 
