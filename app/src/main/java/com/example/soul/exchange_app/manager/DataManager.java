@@ -36,8 +36,15 @@ public class DataManager {
         parserManager = new ParserManager();
     }
 
+    private DataManager(){
+    }
+
     public static DataManager newInstance(Context context) {
         return new DataManager(context);
+    }
+
+    public static DataManager newInstance() {
+        return new DataManager();
     }
 
 
@@ -91,4 +98,33 @@ public class DataManager {
             Log.d(TAG, "cancelled");
         }
     };
+
+
+    public double getPrice(int which, ExchangeRate data){
+        double price = 0;
+
+        switch (which){
+            case 0:
+                price = data.getPriceBase();
+                break;
+
+            case 1:
+                price = data.getPriceBuy();
+                break;
+
+            case 2:
+                price = data.getPriceSell();
+                break;
+
+            case 3:
+                price = data.getPriceSend();
+                break;
+
+            case 4:
+                price = data.getPriceReceive();
+                break;
+        }
+
+        return price;
+    }
 }
