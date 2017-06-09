@@ -1,22 +1,30 @@
 package com.example.soul.exchange_app.activity;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
-import com.example.soul.exchange_app.manager.ParserManager;
+import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,20 +33,25 @@ import java.util.TimerTask;
  * Created by soul on 2017. 6. 6..
  */
 
-public class AlarmService extends Service {
+public class AlarmService extends IntentService {
 
     private static final String TAG = AlarmAdapter.class.getSimpleName();
     private Timer jobScheduler;
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder notificationBuilder;
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+    private NotificationCompat.InboxStyle inboxStyle;
     private RealmController realmController;
+    String[] titles = null;
 
-    // data
-    private DataManager dataManager;
-
-    public AlarmService() {
-        super();
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public AlarmService(String name) {
+        super(name);
     }
+
 
     @Nullable
     @Override
@@ -47,36 +60,73 @@ public class AlarmService extends Service {
     }
 
     @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        realmController = RealmController.with(getApplicationContext());
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-        realmController = RealmController.getInstance();
-        realmController.setRealm();
-        dataManager = new DataManager();
+
+        Resources res = getResources();
+        titles = res.getStringArray(R.array.price_options);
+
+        mBuilder    = createNotification();
+        inboxStyle  = new NotificationCompat.InboxStyle();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         ScheduledJob job = new ScheduledJob();
         jobScheduler = new Timer();
         jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
 
-        Intent goMain = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, goMain, PendingIntent.FLAG_UPDATE_CURRENT);
-        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("오늘의 환율")
-                .setContentText("미국 달러 상승")
-                .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setContentIntent(pendingIntent);
-
-        // 조건문 필요
-//        notificationManager.notify(0, notificationBuilder.build());
-
 
         return START_REDELIVER_INTENT;
+    }
+
+    /**
+     * 노티피케이션을 누르면 실행되는 기능을 가져오는 노티피케이션
+     *
+     * 실제 기능을 추가하는 것
+     * @return
+     */
+    private PendingIntent createPendingIntent(){
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        return stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+    }
+
+
+    /**
+     * 노티피케이션 빌드
+     * @return
+     */
+    private NotificationCompat.Builder createNotification(){
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(icon)
+                .setContentTitle("StatusBar Title")
+                .setContentText("StatusBar subTitle")
+                .setSmallIcon(R.mipmap.ic_launcher/*스와이프 전 아이콘*/)
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setDefaults(Notification.DEFAULT_ALL);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            builder.setCategory(Notification.CATEGORY_MESSAGE)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+        return builder;
     }
 
     @Override
@@ -91,7 +141,36 @@ public class AlarmService extends Service {
 
         public void run() {
             Log.d(TAG, new Date().toString());
-            ParserManager.newInstance(getApplicationContext()).load();
+
+            // 데이터 갱신
+//            DataManager.newInstance(getApplicationContext()).load();
+
+            List<AlarmModel> alarmModelList = realmController.getAlarms();
+            int alarmSize = alarmModelList.size();
+            String[] events = new String[alarmSize];
+
+            for(int i=0; i<alarmSize; i++){
+                AlarmModel alarmModel = alarmModelList.get(i);
+                String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
+                String standard         = titles[alarmModel.getStandardExchange()];
+                double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+
+                events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+            }
+
+
+            inboxStyle.setBigContentTitle("Event tracker details:");
+            inboxStyle.setSummaryText("Events summary");
+            for (String str : events) {
+                inboxStyle.addLine(str);
+            }
+            //스타일 추가
+            mBuilder.setStyle(inboxStyle);
+            mBuilder.setContentIntent(createPendingIntent());
+
+
+            mNotificationManager.notify(1, mBuilder.build());
         }
     }
 }
