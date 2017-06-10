@@ -1,6 +1,5 @@
 package com.example.soul.exchange_app.activity;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-import com.bumptech.glide.load.engine.Resource;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
@@ -27,13 +25,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
 
 
 /**
  * Created by soul on 2017. 6. 6..
  */
 
-public class AlarmService extends IntentService {
+public class AlarmService extends Service {
 
     private static final String TAG = AlarmAdapter.class.getSimpleName();
     private Timer jobScheduler;
@@ -41,17 +44,8 @@ public class AlarmService extends IntentService {
     private NotificationCompat.Builder mBuilder;
     private NotificationCompat.InboxStyle inboxStyle;
     private RealmController realmController;
-    String[] titles = null;
-
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public AlarmService(String name) {
-        super(name);
-    }
-
+    private String[] titles = null;
+    private Realm realm;
 
     @Nullable
     @Override
@@ -59,10 +53,6 @@ public class AlarmService extends IntentService {
         return null;
     }
 
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        realmController = RealmController.with(getApplicationContext());
-    }
 
     @Override
     public void onCreate() {
@@ -74,14 +64,17 @@ public class AlarmService extends IntentService {
         mBuilder    = createNotification();
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        realmController = new RealmController();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor();
+        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
 
-        ScheduledJob job = new ScheduledJob();
-        jobScheduler = new Timer();
-        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
+//        ScheduledJob job = new ScheduledJob();
+//        jobScheduler = new Timer();
+//        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
 
 
         return START_REDELIVER_INTENT;
@@ -134,43 +127,83 @@ public class AlarmService extends IntentService {
         super.onDestroy();
         jobScheduler.cancel();
         jobScheduler = null;
-        realmController.close();
+        realm.close();
     }
+
+    Runnable scheduleJob = new Runnable() {
+        @Override
+        public void run() {
+            // 데이터 갱신
+//            DataManager.newInstance(getApplicationContext()).load();
+            realm = Realm.getDefaultInstance();
+            try{
+                List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
+                int alarmSize = alarmModelList.size();
+                String[] events = new String[alarmSize];
+
+                for(int i=0; i<alarmSize; i++){
+                    AlarmModel alarmModel = alarmModelList.get(i);
+                    String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
+                    String standard         = titles[alarmModel.getStandardExchange()];
+                    double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                    String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+
+                    events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+                }
+
+
+                inboxStyle.setBigContentTitle("Event tracker details:");
+                inboxStyle.setSummaryText("Events summary");
+                for (String str : events) {
+                    inboxStyle.addLine(str);
+                }
+                //스타일 추가
+                mBuilder.setStyle(inboxStyle);
+                mBuilder.setContentIntent(createPendingIntent());
+
+
+                mNotificationManager.notify(1, mBuilder.build());
+            }finally {
+                realm.close();
+            }
+        }
+    };
 
     class ScheduledJob extends TimerTask {
 
         public void run() {
-            Log.d(TAG, new Date().toString());
-
             // 데이터 갱신
 //            DataManager.newInstance(getApplicationContext()).load();
+            realm = Realm.getDefaultInstance();
+            try{
+                List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
+                int alarmSize = alarmModelList.size();
+                String[] events = new String[alarmSize];
 
-            List<AlarmModel> alarmModelList = realmController.getAlarms();
-            int alarmSize = alarmModelList.size();
-            String[] events = new String[alarmSize];
+                for(int i=0; i<alarmSize; i++){
+                    AlarmModel alarmModel = alarmModelList.get(i);
+                    String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
+                    String standard         = titles[alarmModel.getStandardExchange()];
+                    double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                    String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
 
-            for(int i=0; i<alarmSize; i++){
-                AlarmModel alarmModel = alarmModelList.get(i);
-                String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
-                String standard         = titles[alarmModel.getStandardExchange()];
-                double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
-                String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+                    events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+                }
 
-                events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+                inboxStyle.setBigContentTitle("Event tracker details:");
+                inboxStyle.setSummaryText("Events summary");
+                for (String str : events) {
+                    inboxStyle.addLine(str);
+                }
+                //스타일 추가
+                mBuilder.setStyle(inboxStyle);
+                mBuilder.setContentIntent(createPendingIntent());
+
+
+                mNotificationManager.notify(1, mBuilder.build());
+            }finally {
+                realm.close();
             }
-
-
-            inboxStyle.setBigContentTitle("Event tracker details:");
-            inboxStyle.setSummaryText("Events summary");
-            for (String str : events) {
-                inboxStyle.addLine(str);
-            }
-            //스타일 추가
-            mBuilder.setStyle(inboxStyle);
-            mBuilder.setContentIntent(createPendingIntent());
-
-
-            mNotificationManager.notify(1, mBuilder.build());
         }
     }
 }
