@@ -72,9 +72,9 @@ public class AlarmService extends Service {
         ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
 
-//        ScheduledJob job = new ScheduledJob();
-//        jobScheduler = new Timer();
-//        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
+        ScheduledJob job = new ScheduledJob();
+        jobScheduler = new Timer();
+        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
 
 
         return START_REDELIVER_INTENT;
