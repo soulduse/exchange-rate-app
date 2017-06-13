@@ -21,7 +21,6 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,9 +71,9 @@ public class AlarmService extends Service {
         ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
 
-        ScheduledJob job = new ScheduledJob();
-        jobScheduler = new Timer();
-        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
+//        ScheduledJob job = new ScheduledJob();
+//        jobScheduler = new Timer();
+//        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
 
 
         return START_REDELIVER_INTENT;
@@ -168,42 +167,5 @@ public class AlarmService extends Service {
             }
         }
     };
-
-    class ScheduledJob extends TimerTask {
-
-        public void run() {
-            // 데이터 갱신
-//            DataManager.newInstance(getApplicationContext()).load();
-            realm = Realm.getDefaultInstance();
-            try{
-                List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
-                int alarmSize = alarmModelList.size();
-                String[] events = new String[alarmSize];
-
-                for(int i=0; i<alarmSize; i++){
-                    AlarmModel alarmModel = alarmModelList.get(i);
-                    String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
-                    String standard         = titles[alarmModel.getStandardExchange()];
-                    double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
-                    String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
-
-                    events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
-                }
-
-                inboxStyle.setBigContentTitle("Event tracker details:");
-                inboxStyle.setSummaryText("Events summary");
-                for (String str : events) {
-                    inboxStyle.addLine(str);
-                }
-                //스타일 추가
-                mBuilder.setStyle(inboxStyle);
-                mBuilder.setContentIntent(createPendingIntent());
-
-
-                mNotificationManager.notify(1, mBuilder.build());
-            }finally {
-                realm.close();
-            }
-        }
-    }
+    
 }
