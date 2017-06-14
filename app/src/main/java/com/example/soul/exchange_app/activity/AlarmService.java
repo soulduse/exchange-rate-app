@@ -23,7 +23,6 @@ import com.example.soul.exchange_app.realm.RealmController;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,11 +69,6 @@ public class AlarmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
-
-//        ScheduledJob job = new ScheduledJob();
-//        jobScheduler = new Timer();
-//        jobScheduler.scheduleAtFixedRate(job, 1000, 10000);
-
 
         return START_REDELIVER_INTENT;
     }
@@ -138,34 +132,41 @@ public class AlarmService extends Service {
             try{
                 List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
                 int alarmSize = alarmModelList.size();
-                String[] events = new String[alarmSize];
 
-                for(int i=0; i<alarmSize; i++){
-                    AlarmModel alarmModel = alarmModelList.get(i);
-                    String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
-                    String standard         = titles[alarmModel.getStandardExchange()];
-                    double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
-                    String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+                // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
+                if(alarmSize!=0){
+                    String[] events = new String[alarmSize];
 
-                    events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+                    Log.d(TAG, "alarm Size : "+alarmSize);
+
+                    for(int i=0; i<alarmSize; i++){
+                        AlarmModel alarmModel = alarmModelList.get(i);
+                        String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
+                        String standard         = titles[alarmModel.getStandardExchange()];
+                        double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                        String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+
+                        events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
+                        Log.d(TAG, "Event text : "+events[i]);
+                    }
+
+                    inboxStyle.setBigContentTitle("Event tracker details:");
+                    inboxStyle.setSummaryText("Events summary");
+
+                    for (String str : events) {
+                        inboxStyle.addLine(str);
+                    }
+                    //스타일 추가
+                    mBuilder.setStyle(inboxStyle);
+                    mBuilder.setContentIntent(createPendingIntent());
+
+
+                    mNotificationManager.notify(1, mBuilder.build());
                 }
-
-
-                inboxStyle.setBigContentTitle("Event tracker details:");
-                inboxStyle.setSummaryText("Events summary");
-                for (String str : events) {
-                    inboxStyle.addLine(str);
-                }
-                //스타일 추가
-                mBuilder.setStyle(inboxStyle);
-                mBuilder.setContentIntent(createPendingIntent());
-
-
-                mNotificationManager.notify(1, mBuilder.build());
             }finally {
                 realm.close();
             }
         }
     };
-    
+
 }
