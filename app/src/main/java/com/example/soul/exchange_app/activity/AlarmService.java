@@ -134,7 +134,7 @@ public class AlarmService extends Service {
                 int alarmSize = alarmModelList.size();
 
                 // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
-                if(alarmSize!=0){
+               if(alarmSize!=0){
                     String[] events = new String[alarmSize];
 
                     Log.d(TAG, "alarm Size : "+alarmSize);
@@ -159,7 +159,6 @@ public class AlarmService extends Service {
                     //스타일 추가
                     mBuilder.setStyle(inboxStyle);
                     mBuilder.setContentIntent(createPendingIntent());
-
 
                     mNotificationManager.notify(1, mBuilder.build());
                 }
