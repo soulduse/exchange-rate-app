@@ -22,7 +22,6 @@ import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
 
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +36,9 @@ import io.realm.Realm;
 public class AlarmService extends Service {
 
     private static final String TAG = AlarmAdapter.class.getSimpleName();
-    private Timer jobScheduler;
+
+    private ScheduledExecutorService reloadScheduler;
+
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private NotificationCompat.InboxStyle inboxStyle;
@@ -67,7 +68,7 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor();
+        reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
 
         return START_REDELIVER_INTENT;
@@ -118,12 +119,11 @@ public class AlarmService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        jobScheduler.cancel();
-        jobScheduler = null;
+        reloadScheduler.shutdownNow();
         realm.close();
     }
 
-    Runnable scheduleJob = new Runnable() {
+    private Runnable scheduleJob = new Runnable() {
         @Override
         public void run() {
             // 데이터 갱신
@@ -150,7 +150,8 @@ public class AlarmService extends Service {
                         Log.d(TAG, "Event text : "+events[i]);
                     }
 
-                    inboxStyle.setBigContentTitle("Event tracker details:");
+                    inboxStyle  = new NotificationCompat.InboxStyle();
+                    inboxStyle.setBigContentTitle("환율 알람이("+alarmSize+") 있습니다.");
                     inboxStyle.setSummaryText("Events summary");
 
                     for (String str : events) {
