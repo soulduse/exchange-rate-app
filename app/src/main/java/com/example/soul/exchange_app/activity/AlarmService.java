@@ -69,7 +69,7 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.SECONDS);
+        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.MINUTES);
 
         return START_REDELIVER_INTENT;
     }
@@ -127,7 +127,7 @@ public class AlarmService extends Service {
         @Override
         public void run() {
             // 데이터 갱신
-//            DataManager.newInstance(getApplicationContext()).load();
+            DataManager.newInstance(getApplicationContext()).load();
             realm = Realm.getDefaultInstance();
             try{
                 List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
