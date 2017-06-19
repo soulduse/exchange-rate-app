@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -21,10 +22,19 @@ public class DateUtil {
     private final String TAG = getClass().getSimpleName();
     private static final String NEW_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public DateUtil(){}
+    private DateUtil(){}
 
-    public DateUtil(Context context){
+    private DateUtil(Context context){
         this.context = context;
+    }
+
+
+    public static DateUtil getInstance() {
+        return new DateUtil();
+    }
+
+    public static DateUtil getInstance(Context context) {
+        return new DateUtil(context);
     }
 
     public void getCountry(){
@@ -42,13 +52,22 @@ public class DateUtil {
         Log.d(TAG, "DisplayCountry : "+strDisplayCountry+" / Country : "+strCountry+" / Language : "+strLanguage);
     }
 
-
-
     public String getDate(){
         getCountry();
         Date date = new Date();
         SimpleDateFormat sdf= new SimpleDateFormat();
         sdf.applyPattern(NEW_DATE_FORMAT);
         return sdf.format(date);
+    }
+
+    public int getHourOfDay(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public boolean isRangeTime(int startTime, int stopTime){
+        int currentTime = getHourOfDay();
+        boolean result = (currentTime >= startTime && currentTime <= stopTime);
+        return result;
     }
 }

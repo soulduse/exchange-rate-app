@@ -23,7 +23,6 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.DateUtil;
 
-
 import io.realm.Realm;
 
 /**
@@ -63,7 +62,7 @@ public class OneFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // data initialization
         parserManager = new ParserManager();
-        dateUtil    = new DateUtil(getContext());
+        dateUtil    = DateUtil.getInstance(getContext());
     }
 
 
