@@ -22,19 +22,16 @@ public class DateUtil {
     private final String TAG = getClass().getSimpleName();
     private static final String NEW_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    private static final DateUtil dataUtil = new DateUtil();
+
     private DateUtil(){}
 
-    private DateUtil(Context context){
-        this.context = context;
-    }
-
-
     public static DateUtil getInstance() {
-        return new DateUtil();
+        return dataUtil;
     }
 
-    public static DateUtil getInstance(Context context) {
-        return new DateUtil(context);
+    public void init(Context context){
+        this.context = context;
     }
 
     public void getCountry(){

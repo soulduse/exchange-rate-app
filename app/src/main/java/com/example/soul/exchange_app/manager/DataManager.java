@@ -30,6 +30,8 @@ public class DataManager {
 
     private Context context;
 
+    private static final DataManager dataManager = new DataManager();
+
     private DataManager(Context context){
         this.context = context;
         realmController = RealmController.with(context);
@@ -43,8 +45,8 @@ public class DataManager {
         return new DataManager(context);
     }
 
-    public static DataManager newInstance() {
-        return new DataManager();
+    public static DataManager getInstance(){
+        return dataManager;
     }
 
 

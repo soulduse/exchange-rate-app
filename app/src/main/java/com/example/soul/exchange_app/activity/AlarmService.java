@@ -120,7 +120,7 @@ public class AlarmService extends Service {
     public void onDestroy() {
         super.onDestroy();
         reloadScheduler.shutdownNow();
-        realm.close();
+//        realm.close();
     }
 
     private Runnable scheduleJob = new Runnable() {
@@ -143,7 +143,7 @@ public class AlarmService extends Service {
                         AlarmModel alarmModel = alarmModelList.get(i);
                         String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
                         String standard         = titles[alarmModel.getStandardExchange()];
-                        double currentPrice     = DataManager.newInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                        double currentPrice     = DataManager.getInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
                         String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
 
                         events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";

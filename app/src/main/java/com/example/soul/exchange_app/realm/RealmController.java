@@ -390,7 +390,7 @@ public class RealmController {
                 for(AlarmModel alarmModel : alarmModelList) {
                     double setPrice = alarmModel.getPrice();
                     boolean isAbove = alarmModel.isAboveOrbelow();
-                    double currentPrice = DataManager.newInstance()
+                    double currentPrice = DataManager.getInstance()
                             .getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
 
                     boolean addAbove = setPrice <= currentPrice;

@@ -168,8 +168,8 @@ public class TwoFragment  extends Fragment {
                 String[] titles= res.getStringArray(R.array.price_options);
                 selectedPrice = which;
 
-                selectedPriceFirst  = DataManager.newInstance().getPrice(selectedPrice, exchangeList.get(dataSwapFirst));
-                selectedPriceSecond = DataManager.newInstance().getPrice(selectedPrice, exchangeList.get(dataSwapSecond));
+                selectedPriceFirst  = DataManager.getInstance().getPrice(selectedPrice, exchangeList.get(dataSwapFirst));
+                selectedPriceSecond = DataManager.getInstance().getPrice(selectedPrice, exchangeList.get(dataSwapSecond));
 
                 binding.selectOption.setText(titles[which]);
                 if(binding.editText.getText().length() != 0){
@@ -199,11 +199,11 @@ public class TwoFragment  extends Fragment {
             if(position == 0){
                 binding.name1.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
-                selectedPriceFirst  = DataManager.newInstance().getPrice(selectedPrice, result);
+                selectedPriceFirst  = DataManager.getInstance().getPrice(selectedPrice, result);
             }else{
                 binding.name2.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
-                selectedPriceSecond = DataManager.newInstance().getPrice(selectedPrice, result);
+                selectedPriceSecond = DataManager.getInstance().getPrice(selectedPrice, result);
             }
 
             if(binding.editText.getText().length() != 0){

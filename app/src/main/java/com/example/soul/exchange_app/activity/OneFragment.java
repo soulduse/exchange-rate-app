@@ -62,7 +62,8 @@ public class OneFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // data initialization
         parserManager = new ParserManager();
-        dateUtil    = DateUtil.getInstance(getContext());
+        dateUtil    = DateUtil.getInstance();
+        dateUtil.init(getContext());
     }
 
 
