@@ -20,6 +20,9 @@ import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.util.DateUtil;
+
+import org.jsoup.helper.DataUtil;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -126,6 +129,7 @@ public class AlarmService extends Service {
     private Runnable scheduleJob = new Runnable() {
         @Override
         public void run() {
+
             // 데이터 갱신
             DataManager.newInstance(getApplicationContext()).load();
             realm = Realm.getDefaultInstance();
