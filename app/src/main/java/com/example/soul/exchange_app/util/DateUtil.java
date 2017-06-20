@@ -6,6 +6,8 @@ import android.location.Geocoder;
 import android.os.Build;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,5 +68,18 @@ public class DateUtil {
         int currentTime = getHourOfDay();
         boolean result = (currentTime >= startTime && currentTime <= stopTime);
         return result;
+    }
+
+
+    public Date toDate(String dateString) {
+        Date date = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            date = formatter.parse(dateString);
+
+        } catch (ParseException e1) {
+            e1.printStackTrace();
+        }
+        return date;
     }
 }
