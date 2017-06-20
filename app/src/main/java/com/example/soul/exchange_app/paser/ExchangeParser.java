@@ -33,42 +33,19 @@ public class ExchangeParser implements ExchangeInfo{
     private List<String[]> exchangeArrList;
     private StringBuilder builder;
 
-    private Document getParserDoc(){
+    private Document getParserDoc(String url){
         try{
-            doc = Jsoup.connect(ExchangeInfo.BASE_URL).get();
+            doc = Jsoup.connect(url).get();
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
         return doc;
-
-    }
-
-    public List<String> getParserList(){
-        perConutryList = new ArrayList();
-
-        Document doc = getParserDoc();
-
-
-        Elements titleLinks = doc.select("thead span");
-        Elements links = doc.select("tbody tr");
-
-        Log.d(TAG, ""+titleLinks);
-        for(Element link : links){
-//                String perCountryData = builder.append(link.text()).append("\n").toString();
-            perConutryList.add(link.text());
-        }
-        Log.d(TAG, "Elements size 1: "+titleLinks.size()+" / size 2: "+perConutryList.size());
-
-        for(int i=0; i<perConutryList.size(); i++){
-            Log.d(TAG, perConutryList.get(i));
-        }
-        return perConutryList;
     }
 
     public List<String[]> getPerserArrList(){
         perCountryArrList = new ArrayList<>();
 
-        Document doc = getParserDoc();
+        Document doc = getParserDoc(ExchangeInfo.BASE_URL);
 
         Log.d(TAG, "getParserDoc : "+doc.toString());
 
@@ -117,15 +94,14 @@ public class ExchangeParser implements ExchangeInfo{
                 exchangeRate.setPriceSend((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]))/100);
                 exchangeRate.setPriceReceive((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]))/100);
                 exchangeRate.setPriceusExchange((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]))/100);
-            }else{
-                exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
-                exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
-                exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
-                exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
-                exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
-                exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
             }
 
+            exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
+            exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
+            exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
+            exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
+            exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
+            exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
             exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
             /*
@@ -145,17 +121,6 @@ public class ExchangeParser implements ExchangeInfo{
         }
 
         return perCountDats;
-    }
-
-    public String getParserString(){
-        Document doc = getParserDoc();
-        builder = new StringBuilder();
-        Elements links = doc.select("tbody tr");
-
-        for(Element link : links){
-            builder.append(link.text()).append("\n").toString();
-        }
-        return builder.toString();
     }
 
     // 예외처리 - HTML 파싱시 특정 나라의 값이 일정하게 들어오지 않음. 따라서 별도의 예외처리가 필요.
@@ -195,6 +160,25 @@ public class ExchangeParser implements ExchangeInfo{
         String sufUrl = FLAG_IMG_URL.substring(FLAG_IMG_URL.length()-4, FLAG_IMG_URL.length());
 
         return preUrl+flag+sufUrl;
+    }
+
+    public String gewExchangeDate(){
+        Document doc = getParserDoc(ExchangeInfo.SECOND_URL);
+        Elements titleLinks = doc.select(".graph_info");
+        Element element = titleLinks.get(0);
+        return element.text();
+    }
+
+    public String getExchangeDates(){
+        Document doc = getParserDoc(ExchangeInfo.SECOND_URL);
+        Elements link = doc.select(".graph_info");
+        Element element = link.get(0);
+        String time     = element.select(".time").text();
+        String source   = element.select(".source").text();
+        String count    = element.select(".count").text();
+        String num      = element.select(".num").text();
+
+        return element.text();
     }
 }
 
