@@ -2,7 +2,9 @@ package com.example.soul.exchange_app.activity;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
+import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.DateUtil;
 
@@ -43,6 +46,7 @@ public class OneFragment extends Fragment {
     // data
     private ParserManager parserManager;
     private DateUtil dateUtil;
+    private ExchangeParser ep;
 
     // Realm
     private Realm realm;
@@ -64,6 +68,7 @@ public class OneFragment extends Fragment {
         parserManager = new ParserManager();
         dateUtil    = DateUtil.getInstance();
         dateUtil.init(getContext());
+        ep = new ExchangeParser();
     }
 
 
@@ -121,9 +126,24 @@ public class OneFragment extends Fragment {
         adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        dateUpdateText.setText(dateUtil.getDate());
+        new Connection().execute("");
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
+    // 현재는 AsyncTask를 통해서 데이터를 가져오지만 앱이 실행되면 Network를 돌아 해당 데이터를 realm에 저정해두고 이 데이터를 사용하도록 변경한다
+    private class Connection extends AsyncTask<String, String,String> {
+        @Override
+        protected String doInBackground(String... arg0) {
+            return ep.getExchangeDate();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            dateUpdateText.setText(s);
+        }
+    }
+
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
         private int spanCount;

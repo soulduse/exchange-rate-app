@@ -162,7 +162,7 @@ public class ExchangeParser implements ExchangeInfo{
         return preUrl+flag+sufUrl;
     }
 
-    public String gewExchangeDate(){
+    public String getExchangeDate(){
         Document doc = getParserDoc(ExchangeInfo.SECOND_URL);
         Elements titleLinks = doc.select(".graph_info");
         Element element = titleLinks.get(0);
