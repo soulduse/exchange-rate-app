@@ -11,9 +11,10 @@
     <string name="send_text">보낼때 : </string>
     <string name="receive_text">받을때 : </string>
     <string name="set_actionbar_name">국가설정</string>
+    <string name="setting_actionbar_name">설정</string>
     <string name="warning_empty_price">환율 금액을 입력해주세요.</string>
-    <string name="warning_overlap_alarm">이미 등록한 알람입니다.</string>
-    <string name="notice_add_alarm">등록된 알람이 없습니다.</string>
+    <string name="warning_overlap_alarm">이미 등록한 알림입니다.</string>
+    <string name="notice_add_alarm">등록된 알림이 없습니다.</string>
 
     <string name="select_country">나라 선택</string>
     <string name="above">이상</string>
@@ -33,4 +34,10 @@
         <item>보낼때</item>
         <item>받을때</item>
     </string-array>
+
+    <!-- 설정 관련-->
+    <string name="set_basic">기본 설정</string>
+    <string name="set_alarm">알림 설정</string>
+    <string name="set_graph">그래프 보기 설정</string>
+    <string name="set_alarm_period">자동 알림 주기</string>
 </resources>
