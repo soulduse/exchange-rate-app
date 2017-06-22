@@ -57,6 +57,10 @@ public class DataManager {
      */
     public boolean load() {
         if(NetworkUtil.isNetworkConnected(context)){
+
+            // 언제 갱신된 환율 정보인지 Realm 에 저장한다.
+            realmController.setExchangeDate();
+
             Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
                 @Override
                 public List<ExchangeRate> call() throws Exception {
