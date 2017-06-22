@@ -22,7 +22,7 @@ public class DateUtil {
 
     private Context context;
     private final String TAG = getClass().getSimpleName();
-    private static final String NEW_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String NEW_DATE_FORMAT = "yyyy.MM.dd HH:mm";
 
     private static final DateUtil dataUtil = new DateUtil();
 
@@ -51,14 +51,6 @@ public class DateUtil {
         Log.d(TAG, "DisplayCountry : "+strDisplayCountry+" / Country : "+strCountry+" / Language : "+strLanguage);
     }
 
-    public String getDate(){
-        getCountry();
-        Date date = new Date();
-        SimpleDateFormat sdf= new SimpleDateFormat();
-        sdf.applyPattern(NEW_DATE_FORMAT);
-        return sdf.format(date);
-    }
-
     public int getHourOfDay(){
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.HOUR_OF_DAY);
@@ -73,7 +65,7 @@ public class DateUtil {
 
     public Date toDate(String dateString) {
         Date date = null;
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd hh:mm");
         try {
             date = formatter.parse(dateString);
 
@@ -81,5 +73,11 @@ public class DateUtil {
             e1.printStackTrace();
         }
         return date;
+    }
+
+
+    public String getDate(Date date){
+        SimpleDateFormat sdf= new SimpleDateFormat(NEW_DATE_FORMAT);
+        return sdf.format(date);
     }
 }
