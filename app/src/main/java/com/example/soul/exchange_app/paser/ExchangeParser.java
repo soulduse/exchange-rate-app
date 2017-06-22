@@ -27,11 +27,9 @@ public class ExchangeParser implements ExchangeInfo{
 
     private String TAG = this.getClass().getSimpleName();
     private Document doc;
-    private List<String> perConutryList;
     private List<String[]> perCountryArrList;
     private List<ExchangeRate> perCountDats;
     private List<String[]> exchangeArrList;
-    private StringBuilder builder;
 
     private Document getParserDoc(String url){
         try{
@@ -169,7 +167,8 @@ public class ExchangeParser implements ExchangeInfo{
         return element.text();
     }
 
-    public String getExchangeDates(){
+    public String[] getExchangeDates(){
+        String[] result = new String[4];
         Document doc = getParserDoc(ExchangeInfo.SECOND_URL);
         Elements link = doc.select(".graph_info");
         Element element = link.get(0);
@@ -178,7 +177,12 @@ public class ExchangeParser implements ExchangeInfo{
         String count    = element.select(".count").text();
         String num      = element.select(".num").text();
 
-        return element.text();
+        result[0] = time;
+        result[1] = source;
+        result[2] = count;
+        result[3] = num;
+
+        return result;
     }
 }
 
