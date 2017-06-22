@@ -15,7 +15,7 @@ public class ParserModel extends RealmObject{
     private Date date;
     private String source;
     private String count;
-    private String num;
+    private int num;
 
     public Date getDate() {
         return date;
@@ -41,11 +41,11 @@ public class ParserModel extends RealmObject{
         this.count = count;
     }
 
-    public String getNum() {
+    public int getNum() {
         return num;
     }
 
-    public void setNum(String num) {
+    public void setNum(int num) {
         this.num = num;
     }
 }
