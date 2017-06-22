@@ -94,7 +94,12 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         final ExchangeRate obj = getItem(position);
 
         holder.title.setText(obj.getCountryAbbr() + " " + obj.getCountryName());
-        holder.price.setText(MoneyUtil.addCommas(obj.getPriceBase()));
+        double price = obj.getPriceBase();
+        // 일본의 경우 일본 100으로 값이 다르게 잡혀있어 예외처리 해줌
+        if(obj.getCountryAbbr().equals(ExchangeInfo.JPY)){
+            price *= 100;
+        }
+        holder.price.setText(MoneyUtil.addCommas(price));
         holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(obj.getPriceBuy()));
         holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(obj.getPriceSell()));
         holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(obj.getPriceSend()));
