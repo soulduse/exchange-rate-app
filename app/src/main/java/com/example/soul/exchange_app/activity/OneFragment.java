@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,24 +126,9 @@ public class OneFragment extends Fragment {
         adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        new Connection().execute("");
+        dateUpdateText.setText(realmController.getExchangeDate());
         mSwipeRefreshLayout.setRefreshing(false);
     }
-
-    // 현재는 AsyncTask를 통해서 데이터를 가져오지만 앱이 실행되면 Network를 돌아 해당 데이터를 realm에 저정해두고 이 데이터를 사용하도록 변경한다
-    private class Connection extends AsyncTask<String, String,String> {
-        @Override
-        protected String doInBackground(String... arg0) {
-            return ep.getExchangeDate();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dateUpdateText.setText(s);
-        }
-    }
-
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
         private int spanCount;
