@@ -6,16 +6,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.soul.exchange_app.adapter.AlarmAdapter;
-import com.example.soul.exchange_app.databinding.DialogNotificationBinding;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
+import com.example.soul.exchange_app.model.ParserModel;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
-import com.example.soul.exchange_app.util.MoneyUtil;
+import com.example.soul.exchange_app.paser.ExchangeParser;
+import com.example.soul.exchange_app.util.DateUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -409,6 +408,33 @@ public class RealmController {
         });
 
         return realmList;
+    }
+
+
+    public void setExchangeDate(){
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                ParserModel parserModel = realm.where(ParserModel.class).findFirst();
+                ExchangeParser exchangeParser = new ExchangeParser();
+                String [] exchangeDatas = exchangeParser.getExchangeDates();
+                Log.d(TAG, "setExchangeDate parserModel"+parserModel);
+                if(parserModel == null) {
+                    parserModel = realm.createObject(ParserModel.class);
+                }
+                parserModel.setDate(DateUtil.getInstance().toDate(exchangeDatas[0]));
+                parserModel.setSource(exchangeDatas[1]);
+                parserModel.setCount(exchangeDatas[2]);
+                parserModel.setNum(Integer.parseInt(exchangeDatas[3]));
+            }
+        });
+    }
+
+    public String getExchangeDate(){
+        ParserModel parserModel = realm.where(ParserModel.class).findFirst();
+        String resultString = DateUtil.getInstance().getDate(parserModel.getDate())
+                +" "+parserModel.getSource()+" | 고시회차 "+parserModel.getNum()+"회";
+        return resultString;
     }
 
 
