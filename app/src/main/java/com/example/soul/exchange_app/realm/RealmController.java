@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
@@ -93,18 +94,6 @@ public class RealmController {
         realm.close();
     }
 
-    // clear all objects from class
-    public void clearAll(Class<? extends RealmModel> clazz){
-        realm.beginTransaction();
-        realm.delete(clazz);
-        realm.commitTransaction();
-    }
-
-    // find all objects in the ?.class
-    public RealmResults<? extends RealmModel> getExchangeData(Class<? extends RealmModel> clazz){
-        return realm.where(clazz).findAll();
-    }
-
     // find all objects in the ExchangeRate.class
     public RealmResults<ExchangeRate> getExchangeRate(){
         return realm.where(ExchangeRate.class).findAll();
@@ -117,12 +106,6 @@ public class RealmController {
     // find single object in the ExchangeRate.class
     public ExchangeRate isExchangeRate(String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
-    }
-
-    //query a single item with the given id
-    public Object getSingleData(long id, Class<? extends RealmModel> clazz) {
-
-        return realm.where(clazz).equalTo("id", id).findFirst();
     }
 
     public RealmResults<ExchangeRate> checkExchangeRate(long id, String countryAbbr){
@@ -140,32 +123,6 @@ public class RealmController {
                     .equalTo("countryAbbr", countryAbbr)
                 .endGroup()
                 .findFirst();
-    }
-
-    //check if xx.class is empty
-    public boolean hasDatas(Class<? extends RealmModel> clazz) {
-        return !realm.where(clazz).findAll().isEmpty();
-    }
-
-    //query example
-    public RealmResults<? extends RealmModel> queryedDatas(Class<? extends RealmModel> clazz) {
-
-        return realm.where(clazz)
-                .contains("author", "Author 0")
-                .or()
-                .contains("title", "Realm")
-                .findAll();
-    }
-
-    public long getNextKey(Class<? extends RealmModel> clazz)
-    {
-        try {
-            return realm.where(clazz).max("id").longValue() + 1;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return 0;
-        } catch (NullPointerException e){
-            return 0;
-        }
     }
 
     public void setRealmDatas(List<ExchangeRate> exchangeRateList){
@@ -192,7 +149,7 @@ public class RealmController {
                 exchangeRate.setPriceSend(datas.getPriceSend());
                 exchangeRate.setPriceReceive(datas.getPriceReceive());
                 exchangeRate.setPriceusExchange(datas.getPriceusExchange());
-                Log.d(TAG, "changed datas in realm");
+//                Log.d(TAG, "changed datas in realm");
             }
             realm.commitTransaction();
         }
@@ -411,13 +368,11 @@ public class RealmController {
     }
 
 
-    public void setExchangeDate(){
+    public void setExchangeDate(final String [] exchangeDatas){
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 ParserModel parserModel = realm.where(ParserModel.class).findFirst();
-                ExchangeParser exchangeParser = new ExchangeParser();
-                String [] exchangeDatas = exchangeParser.getExchangeDates();
                 Log.d(TAG, "setExchangeDate parserModel"+parserModel);
                 if(parserModel == null) {
                     parserModel = realm.createObject(ParserModel.class);
@@ -431,9 +386,14 @@ public class RealmController {
     }
 
     public String getExchangeDate(){
+        String resultString = null;
         ParserModel parserModel = realm.where(ParserModel.class).findFirst();
-        String resultString = DateUtil.getInstance().getDate(parserModel.getDate())
-                +" "+parserModel.getSource()+" | 고시회차 "+parserModel.getNum()+"회";
+        Log.d(TAG, "parserModel ?? "+parserModel);
+        if(parserModel!= null){
+            resultString = DateUtil.getInstance().getDate(parserModel.getDate())
+                    +" "+parserModel.getSource()+" | 고시회차 "+parserModel.getNum()+"회";
+        }
+
         return resultString;
     }
 
