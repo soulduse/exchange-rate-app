@@ -30,6 +30,9 @@
         <activity android:name=".activity.SetCountryActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
 
     </application>
 
