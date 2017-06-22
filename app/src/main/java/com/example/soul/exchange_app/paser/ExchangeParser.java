@@ -45,12 +45,12 @@ public class ExchangeParser implements ExchangeInfo{
 
         Document doc = getParserDoc(ExchangeInfo.BASE_URL);
 
-        Log.d(TAG, "getParserDoc : "+doc.toString());
+//        Log.d(TAG, "getParserDoc : "+doc.toString());
 
         Elements titleLinks = doc.select("thead span");
         Elements links = doc.select("tbody tr");
 
-        Log.d(TAG, ""+titleLinks);
+//        Log.d(TAG, ""+titleLinks);
         for(Element link : links){
             String [] parserArr = errorCheckAndRemoveArray(link.text().split(" "));
             perCountryArrList.add(parserArr);
@@ -66,7 +66,7 @@ public class ExchangeParser implements ExchangeInfo{
         exchangeArrList = getPerserArrList();
 
         // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
-        Log.d(TAG, "Create Korean Datas");
+//        Log.d(TAG, "Create Korean Datas");
         exchangeRate = new ExchangeRate();
         exchangeRate.setThumbnail(ExchangeInfo.KOREA_FLAG);
         exchangeRate.setCountryAbbr(ExchangeInfo.KRW);
@@ -92,15 +92,17 @@ public class ExchangeParser implements ExchangeInfo{
                 exchangeRate.setPriceSend((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]))/100);
                 exchangeRate.setPriceReceive((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]))/100);
                 exchangeRate.setPriceusExchange((Double) (MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]))/100);
+            }else{
+                exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
+                exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
+                exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
+                exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
+                exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
+                exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
+                exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
             }
 
-            exchangeRate.setPriceBase((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BASE]));
-            exchangeRate.setPriceBuy((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_BUY]));
-            exchangeRate.setPriceSell((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SELL]));
-            exchangeRate.setPriceSend((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_SEND]));
-            exchangeRate.setPriceReceive((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_RECEIVE]));
-            exchangeRate.setPriceusExchange((Double) MoneyUtil.changeStringToNumber(exchangeArrList.get(i)[PRICE_US_EXCHANGE]));
-            exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
+
 
             /*
             Log.w(
@@ -129,7 +131,7 @@ public class ExchangeParser implements ExchangeInfo{
         final String exceptionStr2 = "ZAR";
 
         if(arr.length >= 9){
-            Log.d(TAG, "errorCheckAndRemoveArray >> 비정상");
+//            Log.d(TAG, "errorCheckAndRemoveArray >> 비정상");
             copyArr = java.util.Arrays.copyOf(arr, arr.length);
 
             for(int i=2; i<copyArr.length-1; i++){
@@ -143,12 +145,12 @@ public class ExchangeParser implements ExchangeInfo{
             resultArr = new String[copyArr.length-1];
             for(int i=0; i<copyArr.length-1; i++){
                 resultArr[i] = copyArr[i];
-                Log.e(TAG, "resultArr["+i+"] : "+resultArr[i]);
+//                Log.e(TAG, "resultArr["+i+"] : "+resultArr[i]);
             }
             return resultArr;
 
         }else{
-            Log.d(TAG, "errorCheckAndRemoveArray >> 정상");
+//            Log.d(TAG, "errorCheckAndRemoveArray >> 정상");
             return arr;
         }
     }
