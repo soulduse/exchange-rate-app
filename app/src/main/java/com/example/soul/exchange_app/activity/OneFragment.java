@@ -98,13 +98,12 @@ public class OneFragment extends Fragment {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
-
         setCardAdapter();
-
+        setRefreshText();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                boolean parser = DataManager.newInstance(getContext()).load();
+                boolean parser = DataManager.newInstance(getActivity()).load();
                 if(!parser){
                     printSnackbar(getString(R.string.disconnect_internet));
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -122,11 +121,16 @@ public class OneFragment extends Fragment {
         super.onDestroyView();
     }
 
+    public void setRefreshText(){
+        String s = realmController.getExchangeDate();
+        if(s != null)
+            dateUpdateText.setText(s);
+    }
+
     private void setCardAdapter(){
         adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        dateUpdateText.setText(realmController.getExchangeDate());
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

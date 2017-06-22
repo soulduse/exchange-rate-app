@@ -30,12 +30,15 @@ public class DataManager {
 
     private Context context;
 
+    private ExchangeParser exchangeParser;
+
     private static final DataManager dataManager = new DataManager();
 
     private DataManager(Context context){
         this.context = context;
         realmController = RealmController.with(context);
         parserManager = new ParserManager();
+        exchangeParser = new ExchangeParser();
     }
 
     private DataManager(){
@@ -57,10 +60,6 @@ public class DataManager {
      */
     public boolean load() {
         if(NetworkUtil.isNetworkConnected(context)){
-
-            // 언제 갱신된 환율 정보인지 Realm 에 저장한다.
-            realmController.setExchangeDate();
-
             Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
                 @Override
                 public List<ExchangeRate> call() throws Exception {
@@ -68,30 +67,71 @@ public class DataManager {
                 }
             };
 
-            parserManager.getAsyncExecutor()
-                    .setCallable(callable)
-                    .setCallback(callback)
-                    .execute();
+            Callable<String[]> callRefreshText = new Callable<String[]>() {
+                @Override
+                public String[] call() throws Exception {
+                    return getRefreshTexts();
+                }
+            };
+
+            executeAsync(callRefreshText, refreshCallback);
+            executeAsync(callable, callback);
+
             return true;
         }
 
         return false;
     }
 
-    private List<ExchangeRate> getParserDataList(){
-        return new ExchangeParser().getParserDatas();
+    private void executeAsync(Callable callable, ParserManager.AsyncCallback callback){
+        parserManager.getAsyncExecutor()
+                .setCallable(callable)
+                .setCallback(callback)
+                .execute();
     }
+
+    // 환율 정보 받아오기
+    private List<ExchangeRate> getParserDataList(){
+        return exchangeParser.getParserDatas();
+    }
+
+    // 갱신 날짜 받아오기
+    private String[] getRefreshTexts(){
+        return exchangeParser.getExchangeDates();
+    }
+
+
+    // 비동기로 실행된 결과를 받아 처리하는 코드
+    private ParserManager.AsyncCallback<String[]> refreshCallback = new ParserManager.AsyncCallback<String[]>() {
+        @Override
+        public void onResult(String[] result) {
+            // 언제 갱신된 환율 정보인지 Realm 에 저장한다.
+            realmController.setExchangeDate(result);
+        }
+
+        @Override
+        public void exceptionOccured(Exception e) {
+            Log.d(TAG, "exceptionOccured : "+e.getMessage());
+        }
+
+        @Override
+        public void cancelled() {
+            Log.d(TAG, "cancelled");
+        }
+    };
 
     // 비동기로 실행된 결과를 받아 처리하는 코드
     private ParserManager.AsyncCallback<List<ExchangeRate>> callback = new ParserManager.AsyncCallback<List<ExchangeRate>>() {
         @Override
         public void onResult(List<ExchangeRate> result) {
             realmController.setRealmDatas(result);
+
             if(context instanceof MainActivity){
                 Log.d(TAG, "Parsed from MainActivity");
                 MainActivity activity = (MainActivity)context;
                 activity.initViewPager(true);
             }
+
         }
 
         @Override
