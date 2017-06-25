@@ -101,12 +101,8 @@ public class AlarmService extends Service {
      * @return
      */
     private NotificationCompat.Builder createNotification(){
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(icon)
-                .setContentTitle("StatusBar Title")
-                .setContentText("StatusBar subTitle")
                 .setSmallIcon(R.mipmap.ic_launcher/*스와이프 전 아이콘*/)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
@@ -136,12 +132,12 @@ public class AlarmService extends Service {
             try{
                 List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
                 int alarmSize = alarmModelList.size();
+                Log.d(TAG, "alarm Size : "+alarmSize);
 
                 // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
-               if(alarmSize!=0){
-                    String[] events = new String[alarmSize];
+                if(alarmSize!=0){
+                   String[] events = new String[alarmSize];
 
-                    Log.d(TAG, "alarm Size : "+alarmSize);
 
                     for(int i=0; i<alarmSize; i++){
                         AlarmModel alarmModel = alarmModelList.get(i);
@@ -155,8 +151,8 @@ public class AlarmService extends Service {
                     }
 
                     inboxStyle  = new NotificationCompat.InboxStyle();
-                    inboxStyle.setBigContentTitle("환율 알람이("+alarmSize+") 있습니다.");
-                    inboxStyle.setSummaryText("Events summary");
+                    inboxStyle.setBigContentTitle("환율 알림 "+alarmSize+"건");
+                    inboxStyle.setSummaryText(alarmSize+"개의 환율 알림 발생");
 
                     for (String str : events) {
                         inboxStyle.addLine(str);
