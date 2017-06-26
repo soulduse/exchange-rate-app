@@ -39,5 +39,5 @@
     <string name="set_basic">기본 설정</string>
     <string name="set_alarm">알림 설정</string>
     <string name="set_graph">그래프 보기 설정</string>
-    <string name="set_alarm_period">자동 알림 주기</string>
+    <string name="set_alarm_period">자동 업데이트 주기</string>
 </resources>

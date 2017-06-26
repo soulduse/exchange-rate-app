@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory
         android:title="@string/set_basic">
         <MultiSelectListPreference
@@ -13,7 +12,7 @@
     <PreferenceCategory
         android:title="@string/set_alarm">
         <MultiSelectListPreference
-            android:title="">
+            android:title="@string/set_alarm_period">
 
         </MultiSelectListPreference>
     </PreferenceCategory>
