@@ -40,4 +40,14 @@
     <string name="set_alarm">알림 설정</string>
     <string name="set_graph">그래프 보기 설정</string>
     <string name="set_alarm_period">자동 업데이트 주기</string>
+
+    <!-- 설정 그래프 -->
+    <string-array name="graph_options">
+        <item>1개월</item>
+        <item>3개</item>
+        <item>1년</item>
+        <item>3년</item>
+        <item>5년</item>
+        <item>10년</item>
+    </string-array>
 </resources>

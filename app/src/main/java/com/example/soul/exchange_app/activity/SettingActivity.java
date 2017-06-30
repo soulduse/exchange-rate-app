@@ -29,15 +29,11 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-
-
         toolbar = (Toolbar)findViewById(R.id.toolbar_setting);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getResources().getString(R.string.setting_actionbar_name));
-
-        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_preference);
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_preference, new SettingsFragment())
@@ -52,8 +48,12 @@ public class SettingActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
         }
+    }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

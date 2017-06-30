@@ -3,7 +3,9 @@
     <PreferenceCategory
         android:title="@string/set_basic">
         <MultiSelectListPreference
-            android:title="@string/set_graph">
+            android:dialogTitle="@string/set_graph"
+            android:entries="@array/price_options"
+            >
 
         </MultiSelectListPreference>
     </PreferenceCategory>
