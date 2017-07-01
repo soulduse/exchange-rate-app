@@ -6,10 +6,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -20,9 +19,6 @@ import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
-import com.example.soul.exchange_app.util.DateUtil;
-
-import org.jsoup.helper.DataUtil;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -59,9 +55,10 @@ public class AlarmService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         Resources res = getResources();
-        titles = res.getStringArray(R.array.price_options);
+        titles = res.getStringArray(R.array.pref_priceOptions);
 
         mBuilder    = createNotification();
         inboxStyle  = new NotificationCompat.InboxStyle();

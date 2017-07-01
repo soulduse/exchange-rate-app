@@ -82,7 +82,7 @@ public class CustomNotiDialog extends DialogFragment{
 
         DialogAdapter2 countryAdapter               = new DialogAdapter2(realmController.getExchangeRateExceptKorea(), getActivity());
         ArrayAdapter<CharSequence> exchangeAdapter  = ArrayAdapter.createFromResource(getContext(),
-                R.array.price_options, android.R.layout.simple_spinner_item);
+                R.array.pref_priceOptions, android.R.layout.simple_spinner_item);
         exchangeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         binding.spinner.setAdapter(countryAdapter);

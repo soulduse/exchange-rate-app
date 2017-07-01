@@ -27,7 +27,7 @@
     <string name="connect_internet">Update success!</string>
 
     <string name="select_option">기준 환율 선택</string>
-    <string-array name="price_options">
+    <string-array name="pref_priceOptions">
         <item>매매기준율</item>
         <item>살때</item>
         <item>팔때</item>
@@ -37,17 +37,52 @@
 
     <!-- 설정 관련-->
     <string name="set_basic">기본 설정</string>
-    <string name="set_alarm">알림 설정</string>
-    <string name="set_graph">그래프 보기 설정</string>
-    <string name="set_alarm_period">자동 업데이트 주기</string>
+    <string name="pref_alarmAndData">알림 및 데이터 설정</string>
+    <string name="pref_graph">그래프 보기 설정</string>
+    <string name="pref_refresh">자동 업데이트 주기</string>
+    <string name="pref_summaryGraph">표시할 그래프의 범위를 설정합니다</string>
+    <string name="pref_summaryRefresh">데이터 갱신 주기를 설정합니다</string>
+
+    <!-- 그래프 기본 설정 -->
+    <string name="pref_showGraph_default">3개월</string>
 
     <!-- 설정 그래프 -->
-    <string-array name="graph_options">
+    <string-array name="pref_graphOption">
         <item>1개월</item>
-        <item>3개</item>
+        <item>3개월</item>
         <item>1년</item>
         <item>3년</item>
         <item>5년</item>
         <item>10년</item>
     </string-array>
+
+    <string-array name="pref_graphOption_values">
+        <item>month</item>
+        <item>month3</item>
+        <item>year</item>
+        <item>year3</item>
+        <item>year5</item>
+        <item>year10</item>
+    </string-array>
+
+    <!-- 알림 설정 -->
+    <string name="pref_alarmSwitch">환율 알림</string>
+    <string name="pref_alarmSet">알림 방법 선택</string>
+    <string name="pref_alarmSound">알림 소리</string>
+    <string name="pref_alarmVibe">알림 진동</string>
+    <string name="pref_refresh_default">1시간</string>
+
+    <string-array name="pref_refreshOption">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>2시간</item>
+    </string-array>
+
+    <string-array name="pref_refreshOption_values">
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </string-array>
+
+
 </resources>

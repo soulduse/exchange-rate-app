@@ -160,12 +160,12 @@ public class TwoFragment  extends Fragment {
     private void selectOptions(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.select_option);
-        builder.setItems(R.array.price_options, new DialogInterface.OnClickListener() {
+        builder.setItems(R.array.pref_priceOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 0-매매기준율, 1-살때, 2-팔때, 3-보낼때, 4-받을때
                 Resources res = getResources();
-                String[] titles= res.getStringArray(R.array.price_options);
+                String[] titles= res.getStringArray(R.array.pref_priceOptions);
                 selectedPrice = which;
 
                 selectedPriceFirst  = DataManager.getInstance().getPrice(selectedPrice, exchangeList.get(dataSwapFirst));

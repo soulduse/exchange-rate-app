@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/set_basic">
-        <MultiSelectListPreference
-            android:dialogTitle="@string/set_graph"
-            android:entries="@array/price_options"
-            >
+    <PreferenceCategory android:title="@string/set_basic">
 
-        </MultiSelectListPreference>
+        <ListPreference
+            android:defaultValue="@string/pref_showGraph_default"
+            android:dialogTitle="@string/pref_graph"
+            android:entries="@array/pref_graphOption"
+            android:entryValues="@array/pref_graphOption_values"
+            android:key="pref_showGraphType"
+            android:summary="@string/pref_summaryGraph"
+            android:title="@string/pref_graph" />
     </PreferenceCategory>
 
 
-    <PreferenceCategory
-        android:title="@string/set_alarm">
-        <MultiSelectListPreference
-            android:title="@string/set_alarm_period">
+    <PreferenceCategory android:title="@string/pref_alarmAndData">
+        <ListPreference
+            android:defaultValue="@string/pref_refresh_default"
+            android:dialogTitle="@string/pref_refresh"
+            android:entries="@array/pref_refreshOption"
+            android:entryValues="@array/pref_refreshOption_values"
+            android:key="pref_refreshTimeType"
+            android:summary="@string/pref_summaryRefresh"
+            android:title="@string/pref_refresh" />
 
-        </MultiSelectListPreference>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_alarmSwitch"
+            android:title="@string/pref_alarmSwitch" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_alarmSound"
+            android:title="@string/pref_alarmSound"
+            android:dependency="pref_alarmSwitch"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_alarmVibe"
+            android:title="@string/pref_alarmVibe"
+            android:dependency="pref_alarmSwitch"/>
     </PreferenceCategory>
+
 </PreferenceScreen>

@@ -52,7 +52,7 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
         final AlarmModel obj = getItem(position);
         ExchangeRate exchangeRate = obj.getExchangeRate();
         Resources res = context.getResources();
-        String[] titles= res.getStringArray(R.array.price_options);
+        String[] titles= res.getStringArray(R.array.pref_priceOptions);
         final String title = exchangeRate.getCountryAbbr() + " " + exchangeRate.getCountryName();
         holder.title.setText(title);
 
