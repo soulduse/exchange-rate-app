@@ -40,8 +40,6 @@
     <string name="pref_alarmAndData">알림 및 데이터 설정</string>
     <string name="pref_graph">그래프 보기 설정</string>
     <string name="pref_refresh">자동 업데이트 주기</string>
-    <string name="pref_summaryGraph">표시할 그래프의 범위를 설정합니다</string>
-    <string name="pref_summaryRefresh">데이터 갱신 주기를 설정합니다</string>
 
     <!-- 그래프 기본 설정 -->
     <string name="pref_showGraph_default">3개월</string>
