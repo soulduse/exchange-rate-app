@@ -2,16 +2,12 @@ package com.example.soul.exchange_app.activity;
 
 
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.example.soul.exchange_app.R;
 
@@ -23,6 +19,7 @@ import com.example.soul.exchange_app.R;
 public class SettingActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    public static final String KEY_PREF_SYNC_CONN = "pref_syncConnectionType";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,4 +53,20 @@ public class SettingActivity extends AppCompatActivity {
         return true;
     }
 
+    private Preference.OnPreferenceChangeListener onPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            String stringValue = newValue.toString();
+
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int index = listPreference.findIndexOfValue(stringValue);
+
+                preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
+            }
+            return true;
+        }
+
+    };
 }
