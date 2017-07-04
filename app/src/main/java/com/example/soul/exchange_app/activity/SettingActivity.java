@@ -1,10 +1,12 @@
 package com.example.soul.exchange_app.activity;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +21,6 @@ import com.example.soul.exchange_app.R;
 public class SettingActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    public static final String KEY_PREF_SYNC_CONN = "pref_syncConnectionType";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,15 +36,47 @@ public class SettingActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_preference, new SettingsFragment())
                 .commit();
+
     }
 
     // PreferenceFragment 클래스 사용
-    public static class SettingsFragment extends
-            PreferenceFragment {
+    public class SettingsFragment extends
+            PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        public static final String KEY_PREF_SHOW_GRAPH_TYPE     = "pref_showGraphType";
+        public static final String KEY_PREF_REFRESH_TIME_TYPE   = "pref_refreshTimeType";
+        public static final String KEY_PREF_ALARM_SWITCH        = "pref_alarmSwitch";
+        public static final String KEY_PREF_ALARM_SOUND         = "pref_alarmSound";
+        public static final String KEY_PREF_ALARM_VIBE          = "pref_alarmVibe";
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+
+//            setOnPreferenceChange(findPreference("pref_showGraphType"));
+//            setOnPreferenceChange(findPreference("pref_refreshTimeType"));
+//            setOnPreferenceChange(findPreference("pref_alarmSwitch"));
+//            setOnPreferenceChange(findPreference("pref_alarmSound"));
+//            setOnPreferenceChange(findPreference("pref_alarmVibe"));
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(KEY_PREF_SHOW_GRAPH_TYPE)) {
+                Preference connectionPref = findPreference(key);
+                // Set summary to be the user-description for the selected value
+                connectionPref.setSummary(sharedPreferences.getString(key, ""));
+            }else if(key.equals(KEY_PREF_REFRESH_TIME_TYPE)){
+
+            }else if(key.equals(KEY_PREF_ALARM_SWITCH)){
+
+            }else if(key.equals(KEY_PREF_ALARM_SOUND)){
+
+            }else if(key.equals(KEY_PREF_ALARM_VIBE)){
+
+            }
+
         }
     }
 
@@ -51,6 +84,13 @@ public class SettingActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void setOnPreferenceChange(Preference mPreference) {
+        mPreference.setOnPreferenceChangeListener(onPreferenceChangeListener);
+
+        onPreferenceChangeListener.onPreferenceChange(mPreference,
+                PreferenceManager.getDefaultSharedPreferences(mPreference.getContext()).getString(mPreference.getKey(), ""));
     }
 
     private Preference.OnPreferenceChangeListener onPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
@@ -67,6 +107,5 @@ public class SettingActivity extends AppCompatActivity {
             }
             return true;
         }
-
     };
 }
