@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
@@ -64,12 +65,27 @@ public class AlarmService extends Service {
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         realmController = new RealmController();
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.MINUTES);
+        SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
+        String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
+        boolean alarmSwitch             = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
+        boolean alarmSound              = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
+        boolean alarmVibe               = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
+        Log.d(TAG, "SharedPreferences values : " +
+                "showGraphType : "+showGraphType+", " +
+                "refreshTime : "+refreshTime+", " +
+                "alarmSwitch : "+alarmSwitch+", " +
+                "alarmSound : "+alarmSound+", " +
+                "alarmVibe : "+alarmVibe);
 
         return START_REDELIVER_INTENT;
     }
