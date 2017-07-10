@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -127,10 +128,12 @@ public class AlarmService extends Service {
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
 
-        if(alarmSound){
+        if(alarmSound && alarmVibe) {
+            builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        }else if(alarmSound){
+//            builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
             builder.setDefaults(Notification.DEFAULT_SOUND);
-        }
-        if(alarmVibe){
+        }else if(alarmVibe){
             builder.setDefaults(Notification.DEFAULT_VIBRATE);
         }
 

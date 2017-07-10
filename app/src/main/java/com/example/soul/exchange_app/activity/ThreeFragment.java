@@ -1,31 +1,20 @@
 package com.example.soul.exchange_app.activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
-import com.example.soul.exchange_app.adapter.SetCountryAdapter;
 import com.example.soul.exchange_app.realm.RealmController;
 
-import java.util.List;
+import io.realm.Realm;
 
 /**
  * Created by soul on 2017. 2. 24..
@@ -33,8 +22,9 @@ import java.util.List;
 
 public class ThreeFragment  extends Fragment {
 
-    private RealmController realmController;
     private static final String TAG = ThreeFragment.class.getSimpleName();
+    private RealmController realmController;
+    private Realm realm;
 
     public ThreeFragment() {
     }
@@ -45,8 +35,7 @@ public class ThreeFragment  extends Fragment {
 
         realmController = RealmController.getInstance();
         realmController.setRealm();
-
-
+        realm = realmController.getRealm();
     }
 
     @Nullable
@@ -73,5 +62,11 @@ public class ThreeFragment  extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        realm.close();
+        super.onDestroyView();
     }
 }

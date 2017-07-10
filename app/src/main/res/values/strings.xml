@@ -46,20 +46,16 @@
 
     <!-- 설정 그래프 -->
     <string-array name="pref_graphOption">
-        <item>1개월</item>
         <item>3개월</item>
         <item>1년</item>
         <item>3년</item>
-        <item>5년</item>
         <item>10년</item>
     </string-array>
 
     <string-array name="pref_graphOption_values">
-        <item>month</item>
         <item>month3</item>
         <item>year</item>
         <item>year3</item>
-        <item>year5</item>
         <item>year10</item>
     </string-array>
 

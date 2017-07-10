@@ -1,6 +1,8 @@
 package com.example.soul.exchange_app.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.activity.MainActivity;
+import com.example.soul.exchange_app.activity.SettingActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
@@ -84,6 +87,8 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.exchange_card, parent, false);
+
+        PreferenceManager.setDefaultValues(mContext, R.xml.preferences, false);
         // create a new view
         Log.d(TAG, "onCreateViewHolder");
         return new MyViewHolder(itemView);
@@ -105,8 +110,11 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(obj.getPriceSend()));
         holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(obj.getPriceReceive()));
 //        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
+        SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
+
         Glide.with(mContext)
-                .load("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"
+                .load(ExchangeInfo.GRAPH_BASE_URL+showGraphType+"/FX_"
                         +obj.getCountryAbbr()+"KRW_search.png?sidcode=1476753629698?"+makeCurrentTime(1))
                 .into(holder.graph);
 
