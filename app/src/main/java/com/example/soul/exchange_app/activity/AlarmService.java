@@ -45,6 +45,9 @@ public class AlarmService extends Service {
     private RealmController realmController;
     private String[] titles = null;
     private Realm realm;
+    private boolean alarmSwitch;
+    private boolean alarmSound;
+    private boolean alarmVibe;
 
     @Nullable
     @Override
@@ -61,7 +64,6 @@ public class AlarmService extends Service {
         Resources res = getResources();
         titles = res.getStringArray(R.array.pref_priceOptions);
 
-        mBuilder    = createNotification();
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         realmController = new RealmController();
@@ -71,21 +73,26 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, 30, TimeUnit.MINUTES);
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
-        
+
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
         String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
-        boolean alarmSwitch             = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
-        boolean alarmSound              = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
-        boolean alarmVibe               = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
+        alarmSwitch             = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
+        alarmSound              = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
+        alarmVibe               = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
         Log.d(TAG, "SharedPreferences values : " +
                 "showGraphType : "+showGraphType+", " +
                 "refreshTime : "+refreshTime+", " +
                 "alarmSwitch : "+alarmSwitch+", " +
                 "alarmSound : "+alarmSound+", " +
                 "alarmVibe : "+alarmVibe);
+        int repeatTime = Integer.parseInt(refreshTime);
+
+        mBuilder    = createNotification();
+        reloadScheduler = Executors.newSingleThreadScheduledExecutor();
+        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
+
+
 
         return START_REDELIVER_INTENT;
     }
@@ -118,8 +125,15 @@ public class AlarmService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setSmallIcon(R.mipmap.ic_launcher/*스와이프 전 아이콘*/)
                 .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_ALL);
+                .setWhen(System.currentTimeMillis());
+
+        if(alarmSound){
+            builder.setDefaults(Notification.DEFAULT_SOUND);
+        }
+        if(alarmVibe){
+            builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        }
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
@@ -141,6 +155,11 @@ public class AlarmService extends Service {
 
             // 데이터 갱신
             DataManager.newInstance(getApplicationContext()).load();
+
+            if(!alarmSwitch){
+                return;
+            }
+
             realm = Realm.getDefaultInstance();
             try{
                 List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
