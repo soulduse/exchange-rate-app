@@ -34,6 +34,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b9f858ffa35efde3250514c6e0f40c8c3b4397f0" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

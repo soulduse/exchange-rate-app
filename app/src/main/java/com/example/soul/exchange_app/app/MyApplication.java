@@ -2,6 +2,8 @@ package com.example.soul.exchange_app.app;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -14,6 +16,7 @@ public class MyApplication extends Application {
     public void onCreate() {
 
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
