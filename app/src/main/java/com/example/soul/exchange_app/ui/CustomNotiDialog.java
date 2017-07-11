@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 /**
@@ -29,6 +32,12 @@ import io.realm.Realm;
 public class CustomNotiDialog extends DialogFragment{
 
     private static final String TAG = CustomNotiDialog.class.getSimpleName();
+    private static final int FLAG_PRICE_BASE    = 0;
+    private static final int FLAG_PRICE_BUY     = 1;
+    private static final int FLAG_PRICE_SELL    = 2;
+    private static final int FLAG_PRICE_SEND    = 3;
+    private static final int FLAG_PRICE_RECEIVE = 4;
+
     private Realm realm;
     private RealmController realmController;
     private DialogNotificationBinding binding;
@@ -36,8 +45,17 @@ public class CustomNotiDialog extends DialogFragment{
     private int position = -1;
     private OnChangeDataListener onChangeDataListener;
 
+    private CustomNotiDialog(){}
+    private CustomNotiDialog(int position){
+        this.position = position;
+    }
+
     public static CustomNotiDialog newInstance() {
         return new CustomNotiDialog();
+    }
+
+    public static CustomNotiDialog newInstance(int position) {
+        return new CustomNotiDialog(position);
     }
 
     public static CustomNotiDialog newInstance(AlarmModel alarmModel, int position) {
@@ -50,6 +68,10 @@ public class CustomNotiDialog extends DialogFragment{
         customDialog.setArguments(args);
 
         return customDialog;
+    }
+
+    public void setPosition(int position){
+        this.position = position;
     }
 
     @Override
@@ -80,13 +102,45 @@ public class CustomNotiDialog extends DialogFragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_notification, container, false);
         binding.setDialog(this);
 
-        DialogAdapter2 countryAdapter               = new DialogAdapter2(realmController.getExchangeRateExceptKorea(), getActivity());
-        ArrayAdapter<CharSequence> exchangeAdapter  = ArrayAdapter.createFromResource(getContext(),
+        final RealmResults<ExchangeRate> realmResults = realmController.getExchangeRateExceptKorea();
+
+        DialogAdapter2 countryAdapter               = new DialogAdapter2(realmResults, getActivity());
+        final ArrayAdapter<CharSequence> exchangeAdapter  = ArrayAdapter.createFromResource(getContext(),
                 R.array.pref_priceOptions, android.R.layout.simple_spinner_item);
         exchangeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         binding.spinner.setAdapter(countryAdapter);
         binding.spinner2.setAdapter(exchangeAdapter);
+
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ExchangeRate exchangeRate = realmResults.get(position);
+                int spinnerTwoPosition = binding.spinner2.getSelectedItemPosition();
+                String price = getSelectedPrice(spinnerTwoPosition, exchangeRate);
+                binding.alarmPriceEdit.setHint(price);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        binding.spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ExchangeRate exchangeRate = realmResults.get(binding.spinner.getSelectedItemPosition());
+                String price = getSelectedPrice(position, exchangeRate);
+                binding.alarmPriceEdit.setHint(price);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         if(alarmModel!=null){
             binding.alarmPriceEdit.setText(MoneyUtil.fmt(alarmModel.getPrice()));
@@ -97,12 +151,40 @@ public class CustomNotiDialog extends DialogFragment{
             binding.spinner2.setSelection(alarmModel.getStandardExchange());
             binding.deleteAlarm.setVisibility(View.VISIBLE);
             binding.deleteAlarm.setOnClickListener(clickListener);
+            binding.alarmPriceEdit.setHint(MoneyUtil.fmt(alarmModel.getPrice()));
+        }
+
+        if(alarmModel == null && position!=-1){
+            binding.spinner.setSelection(position);
         }
 
 
         View view = binding.getRoot();
         setListener();
         return view;
+    }
+
+    private String getSelectedPrice(int position, ExchangeRate exchangeRate){
+        String price = null;
+        switch (position){
+            case FLAG_PRICE_BASE:
+                price = MoneyUtil.fmt(exchangeRate.getPriceBase());
+                break;
+            case FLAG_PRICE_BUY:
+                price = MoneyUtil.fmt(exchangeRate.getPriceBuy());
+                break;
+            case FLAG_PRICE_SELL:
+                price = MoneyUtil.fmt(exchangeRate.getPriceSell());
+                break;
+            case FLAG_PRICE_SEND:
+                price = MoneyUtil.fmt(exchangeRate.getPriceSend());
+                break;
+            case FLAG_PRICE_RECEIVE:
+                price = MoneyUtil.fmt(exchangeRate.getPriceReceive());
+                break;
+        }
+
+        return "기준환율 : "+MoneyUtil.fmt(price);
     }
 
     private void setListener(){
@@ -118,14 +200,17 @@ public class CustomNotiDialog extends DialogFragment{
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            Log.d(TAG, "beforeTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count+" / after : "+after);
+            Log.d(TAG, "beforeTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count+" / after : "+after);
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            Log.d(TAG, "onTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count);
+            Log.d(TAG, "onTextChanged charSequence : "+s.toString()+" / start : "+start+" / count : "+count);
             if(!s.toString().equals(result) && !s.toString().isEmpty()){     // StackOverflow를 막기위해,
-                result = MoneyUtil.fmt(MoneyUtil.removeCommas(s.toString()));
+                if(s.toString().length() == 1 && ".".equals(s.toString())){
+                    return;
+                }
+                result = MoneyUtil.fmt(s.toString());
                 binding.alarmPriceEdit.setText(result);                 // 결과 텍스트 셋팅.
                 binding.alarmPriceEdit.setSelection(result.length());   // 커서를 제일 끝으로 보냄.
             }
@@ -133,7 +218,7 @@ public class CustomNotiDialog extends DialogFragment{
 
         @Override
         public void afterTextChanged(Editable s) {
-//            Log.d(TAG, "afterTextChanged Editable : "+s.toString());
+            Log.d(TAG, "afterTextChanged Editable : "+s.toString());
         }
     };
 

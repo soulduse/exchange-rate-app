@@ -61,8 +61,6 @@ public class SettingActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-            Toast.makeText(getApplicationContext(), key, Toast.LENGTH_SHORT).show();
             Preference connectionPref = settingsFragment.findPreference(key);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 

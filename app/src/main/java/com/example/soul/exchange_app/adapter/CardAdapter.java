@@ -22,6 +22,7 @@ import com.example.soul.exchange_app.activity.SettingActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 
@@ -128,7 +129,17 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
                 realmController.setCalcuCountry(obj.getCountryAbbr(), ExchangeInfo.KRW);
                 MainActivity activity = (MainActivity)mContext;
                 activity.moveViewPager(1);
-                Toast.makeText(mContext, realmController.getCalcuCountriesName()[0]+"/"+realmController.getCalcuCountriesName()[1], Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        holder.alarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity activity = (MainActivity)mContext;
+                activity.moveViewPager(2);
+                CustomNotiDialog notiDialog = CustomNotiDialog.newInstance(position);
+                notiDialog.show(((MainActivity) mContext).getSupportFragmentManager(), "dialog");
             }
         });
 
