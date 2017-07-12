@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -75,19 +76,42 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
-
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
         String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
         alarmSwitch             = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
         alarmSound              = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
         alarmVibe               = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
+
         Log.d(TAG, "SharedPreferences values : " +
                 "showGraphType : "+showGraphType+", " +
                 "refreshTime : "+refreshTime+", " +
                 "alarmSwitch : "+alarmSwitch+", " +
                 "alarmSound : "+alarmSound+", " +
                 "alarmVibe : "+alarmVibe);
-        int repeatTime = Integer.parseInt(refreshTime);
+        int repeatTime = 0;
+        try{
+            repeatTime = Integer.parseInt(refreshTime);
+        }catch (Exception e){
+            Resources res = getApplicationContext().getResources();
+
+            String [] prefGraphArr      = res.getStringArray(R.array.pref_graphOption);
+            String [] prefGraphArrValueArr   = res.getStringArray(R.array.pref_refreshOption_values);
+
+            String [] prefRefreshArr    = res.getStringArray(R.array.pref_refreshOption);
+            String [] prefRefreshValueArr    = res.getStringArray(R.array.pref_refreshOption_values);
+
+
+            int foundItemPosition = -1;
+            for(int i=0; i<prefRefreshArr.length; i++){
+                if(prefRefreshArr[i].equals(refreshTime)){
+                    foundItemPosition = i;
+                    break;
+                }
+            }
+
+            repeatTime = Integer.parseInt(prefRefreshValueArr[foundItemPosition]);
+        }
+
 
         mBuilder    = createNotification();
         reloadScheduler = Executors.newSingleThreadScheduledExecutor();
