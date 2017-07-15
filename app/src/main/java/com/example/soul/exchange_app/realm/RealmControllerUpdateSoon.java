@@ -1,9 +1,5 @@
 package com.example.soul.exchange_app.realm;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Fragment;
-import android.content.Context;
 import android.util.Log;
 
 import com.example.soul.exchange_app.manager.DataManager;
@@ -28,48 +24,34 @@ import io.realm.RealmResults;
 
 public class RealmControllerUpdateSoon {
 
-    private final String TAG = getClass().getSimpleName();
-    private static RealmControllerUpdateSoon instance;
-    private Realm realm;
+    private static final String TAG = RealmControllerUpdateSoon.class.getSimpleName();
 
     private enum FieldNames{
         id, countryAbbr
     }
 
-    public RealmControllerUpdateSoon(Realm realm){
-        this.realm = realm;
-    }
-    // Refresh the realm instance
-    public void refresh(){
-        realm.waitForChange();
-    }
-
-    public void close(){
-        realm.close();
-    }
-
     // find all objects in the ExchangeRate.class
-    public RealmResults<ExchangeRate> getExchangeRate(){
+    public static RealmResults<ExchangeRate> getExchangeRate(Realm realm){
         return realm.where(ExchangeRate.class).findAll();
     }
 
-    public RealmResults<ExchangeRate> getExchangeRateExceptKorea(){
+    public static RealmResults<ExchangeRate> getExchangeRateExceptKorea(Realm realm){
         return realm.where(ExchangeRate.class).not().equalTo(FieldNames.countryAbbr.name(), ExchangeInfo.KRW).findAll();
     }
 
     // find single object in the ExchangeRate.class
-    public ExchangeRate isExchangeRate(String keyword){
+    public static ExchangeRate isExchangeRate(Realm realm, String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
     }
 
-    public RealmResults<ExchangeRate> checkExchangeRate(long id, String countryAbbr){
+    public static RealmResults<ExchangeRate> checkExchangeRate(Realm realm, long id, String countryAbbr){
         return realm.where(ExchangeRate.class)
                 .equalTo("id", id)
                 .equalTo("countryAbbr", countryAbbr)
                 .findAll();
     }
 
-    public ExchangeRate isExchangeRate(long id, String countryAbbr){
+    public static ExchangeRate isExchangeRate(Realm realm, long id, String countryAbbr){
         return realm.where(ExchangeRate.class)
                 .not()
                 .beginGroup()
@@ -79,7 +61,7 @@ public class RealmControllerUpdateSoon {
                 .findFirst();
     }
 
-    public void setRealmDatas(List<ExchangeRate> exchangeRateList){
+    public static void setRealmDatas(Realm realm, List<ExchangeRate> exchangeRateList){
 //        Log.d(TAG, "realm Size >> "+getExchangeRate().size());
 
         for(ExchangeRate datas : exchangeRateList){
@@ -87,12 +69,12 @@ public class RealmControllerUpdateSoon {
 //            Log.d(TAG, "realm countryAbbr is null? >> "+(isExchangeRate(datas.getCountryAbbr()) != null));
             realm.beginTransaction();
 
-            ExchangeRate exchangeRate = isExchangeRate(datas.getCountryAbbr());
+            ExchangeRate exchangeRate = isExchangeRate(realm, datas.getCountryAbbr());
 
             // Realm 에 데이터가 없는 상태
             if(exchangeRate == null){
                 // add object
-                datas.setId(getAutoIncrement(ExchangeRate.class));
+                datas.setId(getAutoIncrement(realm, ExchangeRate.class));
                 realm.copyToRealm(datas);
             }
             // realm 에 기존의 데이터가 있는 상태로 데이터를 갱신한다.
@@ -109,7 +91,7 @@ public class RealmControllerUpdateSoon {
         }
     }
 
-    private int getAutoIncrement(Class<? extends RealmModel> clazz){
+    private static int getAutoIncrement(Realm realm, Class<? extends RealmModel> clazz){
         Number currentIdNum = realm.where(clazz).max("id");
         int nextId;
         if(currentIdNum == null) {
@@ -122,7 +104,7 @@ public class RealmControllerUpdateSoon {
     }
 
     // 사용자가 클릭한 CheckBox 값 바꾸기
-    public void changeCheckCounties(final boolean isChecked, final String key){
+    public static void changeCheckCounties(Realm realm, final boolean isChecked, final String key){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -136,7 +118,7 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public void changeAllSelected(final boolean selected){
+    public static void changeAllSelected(Realm realm, final boolean selected){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -149,7 +131,7 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public RealmResults<ExchangeRate> getCheckedItems(){
+    public static RealmResults<ExchangeRate> getCheckedItems(Realm realm){
         return realm.where(ExchangeRate.class)
                 .equalTo("checkState", true)
                 .not()
@@ -157,12 +139,12 @@ public class RealmControllerUpdateSoon {
                 .findAll();
     }
 
-    public int getCheckedItemSize(){
+    public static int getCheckedItemSize(Realm realm){
         return realm.where(ExchangeRate.class).equalTo("checkState", true).findAll().size();
     }
 
     // RecyclerView에 아이템중 계산하기를 눌렀을때 fragment2 화면에서는 선택한 나라와 우리나라간에 비교를 기본으로 한다.
-    public void setCalcuCountry(final String countryOne, final String countryTwo){
+    public static void setCalcuCountry(Realm realm, final String countryOne, final String countryTwo){
         Log.w(TAG, "setCalcuCountry 진입");
         realm.executeTransaction(new Realm.Transaction(){
 
@@ -171,7 +153,7 @@ public class RealmControllerUpdateSoon {
 
                 Log.w(TAG, "setCalcuCountry execute 진입");
                 CalcuCountries calcuCountries;
-                if(getSizeOfCalcu() == 0){
+                if(getSizeOfCalcu(realm) == 0){
                     calcuCountries = realm.createObject(CalcuCountries.class);
                 }else{
                     calcuCountries = realm.where(CalcuCountries.class).findFirst();
@@ -181,7 +163,7 @@ public class RealmControllerUpdateSoon {
                 if(calcuCountries.getExchangeRates().size() > 0){
                     calcuCountries.getExchangeRates().clear();
                 }
-                calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(getCalcuCountriesName()));
+                calcuCountries.getExchangeRates().addAll(getExchangeRateEqualToAbbr(realm, getCalcuCountriesName(realm)));
 
                 Log.w(TAG, "결과 >>>> "+calcuCountries.toString());
                 Log.w(TAG, "결과 >>>> "+calcuCountries.getExchangeRates().get(0).getCountryAbbr()+" / "+calcuCountries.getExchangeRates().get(1).getCountryAbbr());
@@ -190,16 +172,16 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public int getSizeOfCalcu(){
+    public static int getSizeOfCalcu(Realm realm){
         return realm.where(CalcuCountries.class).findAll().size();
     }
 
-    public CalcuCountries getCalcuCountries(){
+    public static CalcuCountries getCalcuCountries(Realm realm){
         CalcuCountries calcuCountries = realm.where(CalcuCountries.class).findFirst();
         return calcuCountries;
     }
 
-    public String[] getCalcuCountriesName(){
+    public static String[] getCalcuCountriesName(Realm realm){
         String[] countries = new String[2];
         CalcuCountries calcuCountries = realm.where(CalcuCountries.class).findFirst();
         countries[0] = calcuCountries.getCalOne();
@@ -207,7 +189,7 @@ public class RealmControllerUpdateSoon {
         return countries;
     }
 
-    private RealmResults<ExchangeRate> getExchangeRateEqualToAbbr(String[] countries){
+    private static RealmResults<ExchangeRate> getExchangeRateEqualToAbbr(Realm realm, String[] countries){
         Log.d(TAG, "countries data : "+countries[0]+" / "+countries[1]);
         return realm.where(ExchangeRate.class)
                 .equalTo("countryAbbr", countries[0])
@@ -218,7 +200,7 @@ public class RealmControllerUpdateSoon {
 
 
     // 알람 등록
-    public void addAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position){
+    public static void addAlarm(Realm realm, final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position){
         realm.executeTransaction(new Realm.Transaction() {
              @Override
              public void execute(Realm realm) {
@@ -234,7 +216,7 @@ public class RealmControllerUpdateSoon {
     }
 
     // 알람 수정
-    public void updateAlarm(final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position, final int itemPosition){
+    public static void updateAlarm(Realm realm, final ExchangeRate exchangeRate, final boolean aboveOrBelow, final double price, final int standard, final int position, final int itemPosition){
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -251,7 +233,7 @@ public class RealmControllerUpdateSoon {
     }
 
     // 이미 값이 있는지 체크
-    public boolean isOverlap(ExchangeRate exchangeRate, boolean aboveOrBelow, double price, int standard){
+    public static boolean isOverlap(Realm realm, ExchangeRate exchangeRate, boolean aboveOrBelow, double price, int standard){
         AlarmModel alarmModel = realm.where(AlarmModel.class)
                 .equalTo("exchangeRate.countryAbbr", exchangeRate.getCountryAbbr())
                 .equalTo("aboveOrbelow", aboveOrBelow)
@@ -262,11 +244,11 @@ public class RealmControllerUpdateSoon {
         return alarmModel != null;
     }
 
-    public RealmResults<AlarmModel> getAlarmModelList(){
+    public static RealmResults<AlarmModel> getAlarmModelList(Realm realm){
         return realm.where(AlarmModel.class).findAll();
     }
 
-    public void deleteAlarm(final int position){
+    public static void deleteAlarm(Realm realm, final int position){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -276,7 +258,7 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public void turnAlarm(final boolean alarmSwitch, final int position){
+    public static void turnAlarm(Realm realm, final boolean alarmSwitch, final int position){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -286,7 +268,7 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public RealmList<AlarmModel> getAlarms(final Realm inputRealm){
+    public static RealmList<AlarmModel> getAlarms(Realm realm, final Realm inputRealm){
         final RealmList<AlarmModel> realmList = new RealmList<>();
 
         inputRealm.executeTransaction(new Realm.Transaction() {
@@ -322,7 +304,7 @@ public class RealmControllerUpdateSoon {
     }
 
 
-    public void setExchangeDate(final String [] exchangeDatas){
+    public static void setExchangeDate(Realm realm, final String [] exchangeDatas){
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -339,7 +321,7 @@ public class RealmControllerUpdateSoon {
         });
     }
 
-    public String getExchangeDate(){
+    public static String getExchangeDate(Realm realm){
         String resultString = null;
         ParserModel parserModel = realm.where(ParserModel.class).findFirst();
         Log.d(TAG, "parserModel ?? "+parserModel);
