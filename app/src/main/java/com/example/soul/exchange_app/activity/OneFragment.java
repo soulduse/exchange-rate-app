@@ -2,7 +2,6 @@ package com.example.soul.exchange_app.activity;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,7 @@ import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.paser.ExchangeParser;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 import com.example.soul.exchange_app.util.DateUtil;
 
 import io.realm.Realm;
@@ -50,7 +48,6 @@ public class OneFragment extends Fragment {
 
     // Realm
     private Realm realm;
-    private RealmController realmController;
 
     public OneFragment() {
     }
@@ -76,10 +73,7 @@ public class OneFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        realmController = RealmController.getInstance();
-        realmController.setRealm();
-        realm = realmController.getRealm();
+        realm = Realm.getDefaultInstance();
 
         view = inflater.inflate(R.layout.fragment_one, container, false);
 
@@ -122,13 +116,13 @@ public class OneFragment extends Fragment {
     }
 
     public void setRefreshText(){
-        String s = realmController.getExchangeDate();
+        String s = RealmControllerU.getExchangeDate(realm);
         if(s != null)
             dateUpdateText.setText(s);
     }
 
     private void setCardAdapter(){
-        adapter = new CardAdapter(realmController.getCheckedItems(), getContext());
+        adapter = new CardAdapter(RealmControllerU.getCheckedItems(realm), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         mSwipeRefreshLayout.setRefreshing(false);

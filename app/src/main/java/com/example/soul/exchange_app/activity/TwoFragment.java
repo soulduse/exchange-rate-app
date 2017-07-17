@@ -24,7 +24,7 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 import com.example.soul.exchange_app.ui.CountryDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
@@ -39,7 +39,6 @@ import io.realm.Realm;
 
 public class TwoFragment  extends Fragment {
 
-    private RealmController realmController;
     private Realm realm;
     private final String TAG = getClass().getSimpleName();
     private FragmentTwoBinding binding;
@@ -67,20 +66,18 @@ public class TwoFragment  extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
         binding.setFragment(this);
 
-        realmController = RealmController.getInstance();
-        realmController.setRealm();
-        realm = realmController.getRealm();
+        realm = Realm.getDefaultInstance();
 
-        Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ realmController.getSizeOfCalcu());
-        if(realmController.getSizeOfCalcu() == 0){
-            realmController.setCalcuCountry(ExchangeInfo.USD, ExchangeInfo.KRW);
+        Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ RealmControllerU.getSizeOfCalcu(realm));
+        if(RealmControllerU.getSizeOfCalcu(realm) == 0){
+            RealmControllerU.setCalcuCountry(realm, ExchangeInfo.USD, ExchangeInfo.KRW);
         }else{
-            String [] counties = realmController.getCalcuCountriesName();
-            realmController.setCalcuCountry(counties[0], counties[1]);
+            String [] counties = RealmControllerU.getCalcuCountriesName(realm);
+            RealmControllerU.setCalcuCountry(realm, counties[0], counties[1]);
             Log.d(TAG, "getCalcuCountriesName >> " +counties[0]+"/"+counties[1]);
         }
 
-        CalcuCountries calcuCountries = realmController.getCalcuCountries();
+        CalcuCountries calcuCountries = RealmControllerU.getCalcuCountries(realm);
         exchangeList = calcuCountries.getExchangeRates();
 //        setDataofKorea(exchangeList);
         Log.d(TAG, "exchangeList size : "+ exchangeList.size());

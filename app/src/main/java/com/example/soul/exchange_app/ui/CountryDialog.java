@@ -1,10 +1,6 @@
 package com.example.soul.exchange_app.ui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +13,7 @@ import android.view.Window;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.DialogAdapter;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 
 import io.realm.Realm;
 
@@ -29,7 +25,6 @@ public class CountryDialog extends DialogFragment {
     private RecyclerView mRecyclerView;
     private DialogAdapter adapter;
     private Realm realm;
-    private RealmController realmController;
     private DialogAdapter.OnItemClickListener mListener;
 
     public CountryDialog(DialogAdapter.OnItemClickListener mListener){
@@ -44,12 +39,11 @@ public class CountryDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_dialog, container, false);
 
         realm = Realm.getDefaultInstance();
-        realmController = RealmController.getInstance();
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_dialog);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //setadapter
-        adapter = new DialogAdapter(realmController.getExchangeRate(), getActivity(), mListener);
+        adapter = new DialogAdapter(RealmControllerU.getExchangeRate(realm), getActivity(), mListener);
         mRecyclerView.setAdapter(adapter);
         //get your recycler view and populate it.
         return v;

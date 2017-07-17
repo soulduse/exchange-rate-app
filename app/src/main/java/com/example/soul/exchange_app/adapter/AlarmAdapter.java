@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
@@ -31,13 +32,13 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
     private static final String TAG = AlarmAdapter.class.getSimpleName();
     private Context context;
     private FragmentManager fragmentManager;
-    private RealmController realmController;
+    private Realm realm;
 
     public AlarmAdapter(@Nullable OrderedRealmCollection data, boolean autoUpdate, Context context, FragmentManager fragmentManager) {
         super(data, autoUpdate);
         this.context = context;
         this.fragmentManager = fragmentManager;
-        realmController = RealmController.getInstance();
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -73,7 +74,7 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
         holder.alarmIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realmController.turnAlarm(!alarmSwitch, position);
+                RealmControllerU.turnAlarm(realm, !alarmSwitch, position);
             }
         });
 

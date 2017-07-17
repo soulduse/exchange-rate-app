@@ -9,9 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -21,7 +19,7 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -44,7 +42,6 @@ public class AlarmService extends Service {
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private NotificationCompat.InboxStyle inboxStyle;
-    private RealmController realmController;
     private String[] titles = null;
     private Realm realm;
     private boolean alarmSwitch;
@@ -68,7 +65,6 @@ public class AlarmService extends Service {
 
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        realmController = new RealmController();
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
@@ -166,6 +162,9 @@ public class AlarmService extends Service {
                     .setPriority(Notification.PRIORITY_HIGH)
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
         }
+
+
+
         return builder;
     }
 
@@ -189,7 +188,7 @@ public class AlarmService extends Service {
 
             realm = Realm.getDefaultInstance();
             try{
-                List<AlarmModel> alarmModelList = realmController.getAlarms(realm);
+                List<AlarmModel> alarmModelList = RealmControllerU.getAlarms(realm);
                 int alarmSize = alarmModelList.size();
                 Log.d(TAG, "alarm Size : "+alarmSize);
 

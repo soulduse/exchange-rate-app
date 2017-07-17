@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.SetCountryAdapter;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 
 import io.realm.Realm;
 
@@ -27,7 +27,6 @@ public class SetCountryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SetCountryAdapter adapter;
     private Realm realm;
-    private RealmController realmController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class SetCountryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_country);
 
         realm = Realm.getDefaultInstance();
-        realmController = RealmController.getInstance();
 
         // view initialization
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_second);
@@ -49,7 +47,7 @@ public class SetCountryActivity extends AppCompatActivity {
         mLayoutManager.supportsPredictiveItemAnimations();
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new SetCountryAdapter(realmController.getExchangeRateExceptKorea(), getApplicationContext());
+        adapter = new SetCountryAdapter(RealmControllerU.getExchangeRateExceptKorea(realm), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
     }
@@ -66,12 +64,12 @@ public class SetCountryActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.select_all:
                 Log.d(TAG, "selected option item");
-                realmController.changeAllSelected(true);
+                RealmControllerU.changeAllSelected(realm, true);
                 break;
 
             case R.id.deselect_all:
                 Log.d(TAG, "deselected option item");
-                realmController.changeAllSelected(false);
+                RealmControllerU.changeAllSelected(realm, false);
 
                 break;
         }

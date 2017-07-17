@@ -15,9 +15,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
@@ -28,18 +29,18 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
 
     private Context context;
     private final String TAG = getClass().getSimpleName();
-    private RealmController realmController;
+    private Realm realm;
 
     public SetCountryAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context) {
         super(data, true);
         setHasStableIds(true);
         this.context = context;
-        realmController = RealmController.getInstance();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "SetCountryAdapter - onCreateViewHolder");
+        realm = Realm.getDefaultInstance();
         View view = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.set_country_item, parent, false);
 
@@ -76,7 +77,7 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                realmController.changeCheckCounties(isChecked, key);
+                RealmControllerU.changeCheckCounties(realm, isChecked, key);
             }
         });
     }

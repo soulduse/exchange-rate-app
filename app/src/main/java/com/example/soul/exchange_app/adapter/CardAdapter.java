@@ -12,23 +12,20 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.activity.SettingActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -45,7 +42,6 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
     private int mExpandedPosition = -1;
     private final String TAG = getClass().getSimpleName();
     private Realm realm;
-    private RealmController realmController;
 
     private static final int ROTATE_0_DEGREE    = 0;
     private static final int ROTATE_180_DEGREE  = 180;
@@ -80,12 +76,11 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         super(data, true);
         setHasStableIds(true);
         this.mContext = context;
-        realmController = RealmController.getInstance();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        realm = Realm.getDefaultInstance();
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.exchange_card, parent, false);
 
@@ -126,7 +121,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Move to second viewPager.");
-                realmController.setCalcuCountry(obj.getCountryAbbr(), ExchangeInfo.KRW);
+                RealmControllerU.setCalcuCountry(realm, obj.getCountryAbbr(), ExchangeInfo.KRW);
                 MainActivity activity = (MainActivity)mContext;
                 activity.moveViewPager(1);
             }

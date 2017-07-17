@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 
 import io.realm.Realm;
 
@@ -23,7 +23,6 @@ import io.realm.Realm;
 public class ThreeFragment  extends Fragment {
 
     private static final String TAG = ThreeFragment.class.getSimpleName();
-    private RealmController realmController;
     private Realm realm;
 
     public ThreeFragment() {
@@ -33,9 +32,7 @@ public class ThreeFragment  extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realmController = RealmController.getInstance();
-        realmController.setRealm();
-        realm = realmController.getRealm();
+        realm = Realm.getDefaultInstance();
     }
 
     @Nullable
@@ -47,7 +44,7 @@ public class ThreeFragment  extends Fragment {
 //        noticeTextView.setText(R.string.notice_add_alarm);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.alarmRecyclerView);
-        AlarmAdapter adapter = new AlarmAdapter(realmController.getAlarmModelList(), true, getContext(), getFragmentManager());
+        AlarmAdapter adapter = new AlarmAdapter(RealmControllerU.getAlarmModelList(realm), true, getContext(), getFragmentManager());
 //        if(adapter.getItemCount() <= 0){
 //            noticeTextView.setVisibility(View.VISIBLE);
 //        }else{

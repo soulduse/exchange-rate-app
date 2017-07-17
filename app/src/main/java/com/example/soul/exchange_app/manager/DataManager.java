@@ -6,11 +6,13 @@ import android.util.Log;
 import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
-import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.realm.RealmControllerU;
 import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import io.realm.Realm;
 
 
 /**
@@ -26,7 +28,7 @@ public class DataManager {
     private ParserManager parserManager;
 
     // Realm
-    private RealmController realmController;
+    private Realm realm;
 
     private Context context;
 
@@ -36,7 +38,6 @@ public class DataManager {
 
     private DataManager(Context context){
         this.context = context;
-        realmController = RealmController.with(context);
         parserManager = new ParserManager();
         exchangeParser = new ExchangeParser();
     }
@@ -106,7 +107,8 @@ public class DataManager {
         @Override
         public void onResult(String[] result) {
             // 언제 갱신된 환율 정보인지 Realm 에 저장한다.
-            realmController.setExchangeDate(result);
+            realm = Realm.getDefaultInstance();
+            RealmControllerU.setExchangeDate(realm, result);
         }
 
         @Override
@@ -124,7 +126,8 @@ public class DataManager {
     private ParserManager.AsyncCallback<List<ExchangeRate>> callback = new ParserManager.AsyncCallback<List<ExchangeRate>>() {
         @Override
         public void onResult(List<ExchangeRate> result) {
-            realmController.setRealmDatas(result);
+            realm = Realm.getDefaultInstance();
+            RealmControllerU.setRealmDatas(realm, result);
 
             if(context instanceof MainActivity){
                 Log.d(TAG, "Parsed from MainActivity");

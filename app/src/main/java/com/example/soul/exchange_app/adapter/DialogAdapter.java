@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
@@ -25,14 +25,12 @@ import io.realm.RealmRecyclerViewAdapter;
 public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, DialogAdapter.MyViewHolder> {
 
     private final String TAG = getClass().getSimpleName();
-    private RealmController realmController;
     private Context context;
     private OnItemClickListener mListener;
 
     public DialogAdapter(@Nullable OrderedRealmCollection<ExchangeRate> data, Context context, OnItemClickListener mListener) {
         super(data, true);
         setHasStableIds(true);
-        realmController = RealmController.getInstance();
         this.context    = context;
         this.mListener  = mListener;
     }

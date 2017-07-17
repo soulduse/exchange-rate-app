@@ -20,10 +20,7 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
 import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
-import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
-
-import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     // data
     private ParserManager parserManager;
-
-    // Realm
-    private Realm realm;
-    private RealmController realmController;
 
     @Override
 
@@ -58,14 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         parserManager = new ParserManager();
-
-        realmController = RealmController.with(getApplicationContext());
-        realm = realmController.getRealm();
-
-        if(realm.isClosed()){
-            realmController.setRealm();
-            realm = realmController.getRealm();
-        }
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -218,15 +203,6 @@ public class MainActivity extends AppCompatActivity {
         if (!(mPagerAdapter == null)) {
             mPagerAdapter.notifyDataSetChanged();
             Log.d(TAG, "onResume notifyDataSetChanged!");
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (realm != null) {
-            realm.close();
-            realm = null;
         }
     }
 }
