@@ -108,7 +108,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 //        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(mContext);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
-
+        
         Glide.with(mContext)
                 .load(ExchangeInfo.GRAPH_BASE_URL+showGraphType+"/FX_"
                         +obj.getCountryAbbr()+"KRW_search.png?sidcode=1476753629698?"+makeCurrentTime(1))

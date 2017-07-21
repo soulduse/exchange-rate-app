@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/text_notice_none_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="@string/notice_none_items"
+        android:visibility="gone"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
@@ -17,19 +26,18 @@
 
             <TextView
                 android:id="@+id/text_view_update_date"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/update_date_top_margin"
-                />
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_frag_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:scrollbars="vertical"
-                />
+                android:scrollbars="vertical" />
 
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

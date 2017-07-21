@@ -42,7 +42,7 @@
     <string name="pref_refresh">자동 업데이트 주기</string>
 
     <!-- 그래프 기본 설정 -->
-    <string name="pref_showGraph_default">3개월</string>
+    <string name="pref_showGraph_default">month3</string>
 
     <!-- 설정 그래프 -->
     <string-array name="pref_graphOption">
@@ -64,7 +64,7 @@
     <string name="pref_alarmSet">알림 방법 선택</string>
     <string name="pref_alarmSound">알림 소리</string>
     <string name="pref_alarmVibe">알림 진동</string>
-    <string name="pref_refresh_default">1시간</string>
+    <string name="pref_refresh_default">60</string>
 
     <string-array name="pref_refreshOption">
         <item>30분</item>
@@ -78,5 +78,6 @@
         <item>120</item>
     </string-array>
 
-
+    <!-- 관심환율 페이지 -->
+    <string name="notice_none_items">등록된 관심환율이 없습니다. \n 오른쪽 하단 (+) 버튼을 눌러 관심환율을 추가해보세요!</string>
 </resources>

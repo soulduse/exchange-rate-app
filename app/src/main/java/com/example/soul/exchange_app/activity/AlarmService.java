@@ -84,30 +84,7 @@ public class AlarmService extends Service {
                 "alarmSwitch : "+alarmSwitch+", " +
                 "alarmSound : "+alarmSound+", " +
                 "alarmVibe : "+alarmVibe);
-        int repeatTime = 0;
-        try{
-            repeatTime = Integer.parseInt(refreshTime);
-        }catch (Exception e){
-            Resources res = getApplicationContext().getResources();
-
-            String [] prefGraphArr      = res.getStringArray(R.array.pref_graphOption);
-            String [] prefGraphArrValueArr   = res.getStringArray(R.array.pref_refreshOption_values);
-
-            String [] prefRefreshArr    = res.getStringArray(R.array.pref_refreshOption);
-            String [] prefRefreshValueArr    = res.getStringArray(R.array.pref_refreshOption_values);
-
-
-            int foundItemPosition = -1;
-            for(int i=0; i<prefRefreshArr.length; i++){
-                if(prefRefreshArr[i].equals(refreshTime)){
-                    foundItemPosition = i;
-                    break;
-                }
-            }
-
-            repeatTime = Integer.parseInt(prefRefreshValueArr[foundItemPosition]);
-        }
-
+        int repeatTime = Integer.parseInt(refreshTime);
 
         mBuilder    = createNotification();
         reloadScheduler = Executors.newSingleThreadScheduledExecutor();

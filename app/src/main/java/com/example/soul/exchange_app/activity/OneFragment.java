@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class OneFragment extends Fragment {
     // view
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
-    private TextView dateUpdateText;
+    private TextView dateUpdateText, noneItemText;
     private View view;
     private CardAdapter adapter;
 
@@ -55,7 +56,7 @@ public class OneFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        visibleTextNoneItems();
     }
 
     @Override
@@ -80,6 +81,7 @@ public class OneFragment extends Fragment {
         recyclerView    = (RecyclerView)view.findViewById(R.id.recycler_view_frag_one);
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_layout);
         dateUpdateText = (TextView)view.findViewById(R.id.text_view_update_date);
+        noneItemText = (TextView)view.findViewById(R.id.text_notice_none_items);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         mLayoutManager.supportsPredictiveItemAnimations();
@@ -104,8 +106,8 @@ public class OneFragment extends Fragment {
                 }
             }
         });
-
         return view;
+
     }
 
 
@@ -126,6 +128,18 @@ public class OneFragment extends Fragment {
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    // 관심 환율이 없을 경우 사용자에게 등록된 아이템이 없음을 알린다.
+    private void visibleTextNoneItems(){
+        Log.d(TAG, "adapter count ==> "+adapter.getItemCount());
+        if(adapter.getItemCount() == 0){
+            noneItemText.setVisibility(View.VISIBLE);
+            dateUpdateText.setVisibility(View.GONE);
+        }else{
+            noneItemText.setVisibility(View.GONE);
+            dateUpdateText.setVisibility(View.VISIBLE);
+        }
     }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
