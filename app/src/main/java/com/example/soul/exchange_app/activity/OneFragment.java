@@ -22,7 +22,7 @@ import com.example.soul.exchange_app.adapter.CardAdapter;
 import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.paser.ExchangeParser;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.DateUtil;
 
 import io.realm.Realm;
@@ -118,13 +118,13 @@ public class OneFragment extends Fragment {
     }
 
     public void setRefreshText(){
-        String s = RealmControllerU.getExchangeDate(realm);
+        String s = RealmController.getExchangeDate(realm);
         if(s != null)
             dateUpdateText.setText(s);
     }
 
     private void setCardAdapter(){
-        adapter = new CardAdapter(RealmControllerU.getCheckedItems(realm), getContext());
+        adapter = new CardAdapter(RealmController.getCheckedItems(realm), getContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         mSwipeRefreshLayout.setRefreshing(false);

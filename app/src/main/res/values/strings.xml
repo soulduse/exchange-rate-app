@@ -79,5 +79,11 @@
     </string-array>
 
     <!-- 관심환율 페이지 -->
-    <string name="notice_none_items">등록된 관심환율이 없습니다. \n 오른쪽 하단 (+) 버튼을 눌러 관심환율을 추가해보세요!</string>
+    <string name="notice_none_items">등록된 관심환율이 없습니다. \n\n 오른쪽 하단 (+) 버튼을 눌러 \n\n 관심환율을 추가 해보세요.</string>
+
+    <!-- 계산기 페이지 -->
+    <string name="trade_price">매매기준율</string>
+
+    <!-- 환율알림 페이지 -->
+    <string name="notice_none_alarms">등록된 환율알림이 없습니다. \n\n 오른쪽 하단 (+) 버튼을 눌러 \n\n 환율알림을 추가 해보세요.</string>
 </resources>

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -77,7 +77,7 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RealmControllerU.changeCheckCounties(realm, isChecked, key);
+                RealmController.changeCheckCounties(realm, isChecked, key);
             }
         });
     }

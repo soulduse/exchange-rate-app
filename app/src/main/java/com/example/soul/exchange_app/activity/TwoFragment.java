@@ -24,7 +24,7 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.CalcuCountries;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.ui.CountryDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
@@ -68,16 +68,16 @@ public class TwoFragment  extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-        Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ RealmControllerU.getSizeOfCalcu(realm));
-        if(RealmControllerU.getSizeOfCalcu(realm) == 0){
-            RealmControllerU.setCalcuCountry(realm, ExchangeInfo.USD, ExchangeInfo.KRW);
+        Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ RealmController.getSizeOfCalcu(realm));
+        if(RealmController.getSizeOfCalcu(realm) == 0){
+            RealmController.setCalcuCountry(realm, ExchangeInfo.USD, ExchangeInfo.KRW);
         }else{
-            String [] counties = RealmControllerU.getCalcuCountriesName(realm);
-            RealmControllerU.setCalcuCountry(realm, counties[0], counties[1]);
+            String [] counties = RealmController.getCalcuCountriesName(realm);
+            RealmController.setCalcuCountry(realm, counties[0], counties[1]);
             Log.d(TAG, "getCalcuCountriesName >> " +counties[0]+"/"+counties[1]);
         }
 
-        CalcuCountries calcuCountries = RealmControllerU.getCalcuCountries(realm);
+        CalcuCountries calcuCountries = RealmController.getCalcuCountries(realm);
         exchangeList = calcuCountries.getExchangeRates();
 //        setDataofKorea(exchangeList);
         Log.d(TAG, "exchangeList size : "+ exchangeList.size());

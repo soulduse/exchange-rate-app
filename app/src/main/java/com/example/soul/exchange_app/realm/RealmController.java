@@ -22,9 +22,9 @@ import io.realm.RealmResults;
  * Created by soul on 2017. 3. 21..
  */
 
-public class RealmControllerU {
+public class RealmController {
 
-    private static final String TAG = RealmControllerU.class.getSimpleName();
+    private static final String TAG = RealmController.class.getSimpleName();
 
     private enum FieldNames{
         id, countryAbbr

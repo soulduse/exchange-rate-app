@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.SetCountryAdapter;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.Realm;
 
@@ -47,7 +47,7 @@ public class SetCountryActivity extends AppCompatActivity {
         mLayoutManager.supportsPredictiveItemAnimations();
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new SetCountryAdapter(RealmControllerU.getExchangeRateExceptKorea(realm), getApplicationContext());
+        adapter = new SetCountryAdapter(RealmController.getExchangeRateExceptKorea(realm), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
     }
@@ -64,12 +64,12 @@ public class SetCountryActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.select_all:
                 Log.d(TAG, "selected option item");
-                RealmControllerU.changeAllSelected(realm, true);
+                RealmController.changeAllSelected(realm, true);
                 break;
 
             case R.id.deselect_all:
                 Log.d(TAG, "deselected option item");
-                RealmControllerU.changeAllSelected(realm, false);
+                RealmController.changeAllSelected(realm, false);
 
                 break;
         }

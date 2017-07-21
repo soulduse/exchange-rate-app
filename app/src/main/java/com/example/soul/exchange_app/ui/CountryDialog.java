@@ -13,7 +13,7 @@ import android.view.Window;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.DialogAdapter;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 
 import io.realm.Realm;
 
@@ -43,7 +43,7 @@ public class CountryDialog extends DialogFragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_dialog);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //setadapter
-        adapter = new DialogAdapter(RealmControllerU.getExchangeRate(realm), getActivity(), mListener);
+        adapter = new DialogAdapter(RealmController.getExchangeRate(realm), getActivity(), mListener);
         mRecyclerView.setAdapter(adapter);
         //get your recycler view and populate it.
         return v;

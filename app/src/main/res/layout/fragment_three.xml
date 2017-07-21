@@ -11,14 +11,12 @@
        android:layout_height="wrap_content"/>
 
    <TextView
-       android:id="@+id/noticeText"
-       android:layout_width="wrap_content"
+       android:id="@+id/text_notice_none_alarms"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_centerHorizontal="true"
        android:layout_centerVertical="true"
-       android:textSize="@dimen/text_size"
-       android:textStyle="bold"
-       android:visibility="invisible"
-       android:text="TextView" />
+       android:gravity="center"
+       android:text="@string/notice_none_alarms"
+       android:visibility="gone"/>
 
 </RelativeLayout>

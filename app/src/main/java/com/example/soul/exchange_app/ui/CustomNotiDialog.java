@@ -18,7 +18,7 @@ import com.example.soul.exchange_app.adapter.DialogAdapter2;
 import com.example.soul.exchange_app.databinding.DialogNotificationBinding;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
 import io.realm.Realm;
@@ -99,7 +99,7 @@ public class CustomNotiDialog extends DialogFragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_notification, container, false);
         binding.setDialog(this);
 
-        final RealmResults<ExchangeRate> realmResults = RealmControllerU.getExchangeRateExceptKorea(realm);
+        final RealmResults<ExchangeRate> realmResults = RealmController.getExchangeRateExceptKorea(realm);
 
         DialogAdapter2 countryAdapter               = new DialogAdapter2(realmResults, getActivity());
         final ArrayAdapter<CharSequence> exchangeAdapter  = ArrayAdapter.createFromResource(getContext(),
@@ -181,7 +181,7 @@ public class CustomNotiDialog extends DialogFragment{
                 break;
         }
 
-        return "기준환율 : "+MoneyUtil.fmt(price);
+        return "현재 : "+MoneyUtil.fmt(price);
     }
 
     private void setListener(){
@@ -232,7 +232,7 @@ public class CustomNotiDialog extends DialogFragment{
 
                 // 환율 알림 제거
                 case R.id.deleteAlarm:
-                    RealmControllerU.deleteAlarm(realm, position);
+                    RealmController.deleteAlarm(realm, position);
                     onChangeDataListener.eventListener();
                     dismiss();
                     break;
@@ -252,18 +252,18 @@ public class CustomNotiDialog extends DialogFragment{
                     int countryPosition = binding.spinner.getSelectedItemPosition();
 
                     // 중복된 알람이 있는지 검증
-                    if(RealmControllerU.isOverlap(realm, exchangeRate, state, price, standardExchange)){
+                    if(RealmController.isOverlap(realm, exchangeRate, state, price, standardExchange)){
                         Toast.makeText(getContext(), R.string.warning_overlap_alarm, Toast.LENGTH_SHORT).show();
                         break;
                     }
 
                     if(alarmModel != null){
-                        RealmControllerU.updateAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition, position);
+                        RealmController.updateAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition, position);
                         dismiss();
                         break;
                     }
                     // 알람을 Realm에 저장한다.
-                    RealmControllerU.addAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition);
+                    RealmController.addAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition);
                     // 데이터가 등록되었으니 Dialog 창을 닫는다.
                     dismiss();
                     break;

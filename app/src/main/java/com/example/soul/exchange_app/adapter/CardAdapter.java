@@ -19,7 +19,7 @@ import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.activity.SettingActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeInfo;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
@@ -108,7 +108,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
 //        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(mContext);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
-        
+
         Glide.with(mContext)
                 .load(ExchangeInfo.GRAPH_BASE_URL+showGraphType+"/FX_"
                         +obj.getCountryAbbr()+"KRW_search.png?sidcode=1476753629698?"+makeCurrentTime(1))
@@ -121,7 +121,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Move to second viewPager.");
-                RealmControllerU.setCalcuCountry(realm, obj.getCountryAbbr(), ExchangeInfo.KRW);
+                RealmController.setCalcuCountry(realm, obj.getCountryAbbr(), ExchangeInfo.KRW);
                 MainActivity activity = (MainActivity)mContext;
                 activity.moveViewPager(1);
             }

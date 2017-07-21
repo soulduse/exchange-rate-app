@@ -19,7 +19,7 @@ import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -165,7 +165,7 @@ public class AlarmService extends Service {
 
             realm = Realm.getDefaultInstance();
             try{
-                List<AlarmModel> alarmModelList = RealmControllerU.getAlarms(realm);
+                List<AlarmModel> alarmModelList = RealmController.getAlarms(realm);
                 int alarmSize = alarmModelList.size();
                 Log.d(TAG, "alarm Size : "+alarmSize);
 

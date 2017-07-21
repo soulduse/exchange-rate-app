@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.util.NetworkUtil;
 
 import java.util.List;
@@ -108,7 +108,7 @@ public class DataManager {
         public void onResult(String[] result) {
             // 언제 갱신된 환율 정보인지 Realm 에 저장한다.
             realm = Realm.getDefaultInstance();
-            RealmControllerU.setExchangeDate(realm, result);
+            RealmController.setExchangeDate(realm, result);
         }
 
         @Override
@@ -127,7 +127,7 @@ public class DataManager {
         @Override
         public void onResult(List<ExchangeRate> result) {
             realm = Realm.getDefaultInstance();
-            RealmControllerU.setRealmDatas(realm, result);
+            RealmController.setRealmDatas(realm, result);
 
             if(context instanceof MainActivity){
                 Log.d(TAG, "Parsed from MainActivity");

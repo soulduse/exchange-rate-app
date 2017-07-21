@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.model.ExchangeRate;
-import com.example.soul.exchange_app.realm.RealmControllerU;
+import com.example.soul.exchange_app.realm.RealmController;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.example.soul.exchange_app.util.MoneyUtil;
 
@@ -74,7 +74,7 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
         holder.alarmIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RealmControllerU.turnAlarm(realm, !alarmSwitch, position);
+                RealmController.turnAlarm(realm, !alarmSwitch, position);
             }
         });
 

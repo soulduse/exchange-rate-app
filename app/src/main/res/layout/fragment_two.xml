@@ -308,7 +308,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:background="@drawable/shape_round_btn"
-            android:text="기준환율선택"
+            android:text="@string/trade_price"
             android:textColor="@color/calcu_numbers_background"
             android:textSize="15dp"
             app:layout_constraintBottom_toTopOf="@+id/button_nine"
