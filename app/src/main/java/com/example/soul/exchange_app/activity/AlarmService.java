@@ -86,11 +86,11 @@ public class AlarmService extends Service {
                 "alarmVibe : "+alarmVibe);
         int repeatTime = Integer.parseInt(refreshTime);
 
+        Log.w(TAG, intent.toString()+" / flags : "+flags+" / startId : "+startId);
+
         mBuilder    = createNotification();
         reloadScheduler = Executors.newSingleThreadScheduledExecutor();
         reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
-
-
 
         return START_REDELIVER_INTENT;
     }
@@ -134,13 +134,11 @@ public class AlarmService extends Service {
             builder.setDefaults(Notification.DEFAULT_VIBRATE);
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
         }
-
-
 
         return builder;
     }
@@ -167,7 +165,6 @@ public class AlarmService extends Service {
             try{
                 List<AlarmModel> alarmModelList = RealmController.getAlarms(realm);
                 int alarmSize = alarmModelList.size();
-                Log.d(TAG, "alarm Size : "+alarmSize);
 
                 // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
                 if(alarmSize!=0){
@@ -194,6 +191,9 @@ public class AlarmService extends Service {
                     }
                     //스타일 추가
                     mBuilder.setStyle(inboxStyle);
+                    mBuilder.setContentTitle("환율");
+                    mBuilder.setContentText("환율 알림 "+alarmSize+"건");
+                    mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                     mBuilder.setContentIntent(createPendingIntent());
 
                     mNotificationManager.notify(1, mBuilder.build());

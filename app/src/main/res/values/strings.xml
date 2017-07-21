@@ -67,12 +67,16 @@
     <string name="pref_refresh_default">60</string>
 
     <string-array name="pref_refreshOption">
+        <item>5분</item>
+        <item>15분</item>
         <item>30분</item>
         <item>1시간</item>
         <item>2시간</item>
     </string-array>
 
     <string-array name="pref_refreshOption_values">
+        <item>5</item>
+        <item>15</item>
         <item>30</item>
         <item>60</item>
         <item>120</item>
@@ -86,4 +90,7 @@
 
     <!-- 환율알림 페이지 -->
     <string name="notice_none_alarms">등록된 환율알림이 없습니다. \n\n 오른쪽 하단 (+) 버튼을 눌러 \n\n 환율알림을 추가 해보세요.</string>
+
+    <!-- 환율알림 -->
+    <string name="notice_exchange_alarm">설정한 수치에 도달한 환율이 있습니다.</string>
 </resources>
