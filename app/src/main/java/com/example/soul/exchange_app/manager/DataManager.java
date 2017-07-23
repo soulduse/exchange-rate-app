@@ -7,7 +7,7 @@ import com.example.soul.exchange_app.activity.MainActivity;
 import com.example.soul.exchange_app.model.ExchangeRate;
 import com.example.soul.exchange_app.paser.ExchangeParser;
 import com.example.soul.exchange_app.realm.RealmController;
-import com.example.soul.exchange_app.util.NetworkUtil;
+import com.example.soul.exchange_app.util.SystemUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -60,7 +60,7 @@ public class DataManager {
      - network disconnect    : Realm DB에서 내용을 가져온다.
      */
     public boolean load() {
-        if(NetworkUtil.isNetworkConnected(context)){
+        if(SystemUtil.isNetworkConnected(context)){
             Callable<List<ExchangeRate>> callable = new Callable<List<ExchangeRate>>() {
                 @Override
                 public List<ExchangeRate> call() throws Exception {

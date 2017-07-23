@@ -20,10 +20,12 @@ import com.example.soul.exchange_app.adapter.AlarmAdapter;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.model.AlarmModel;
 import com.example.soul.exchange_app.realm.RealmController;
+import com.example.soul.exchange_app.util.SystemUtil;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -38,6 +40,7 @@ public class AlarmService extends Service {
     private static final String TAG = AlarmAdapter.class.getSimpleName();
 
     private ScheduledExecutorService reloadScheduler;
+    private ScheduledFuture scheduledFuture;
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -89,8 +92,14 @@ public class AlarmService extends Service {
         Log.w(TAG, intent.toString()+" / flags : "+flags+" / startId : "+startId);
 
         mBuilder    = createNotification();
-        reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-        reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
+
+        if(reloadScheduler == null){
+            reloadScheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
+        }else{
+            scheduledFuture.cancel(false);
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
+        }
 
         return START_REDELIVER_INTENT;
     }
@@ -157,7 +166,8 @@ public class AlarmService extends Service {
             // 데이터 갱신
             DataManager.newInstance(getApplicationContext()).load();
 
-            if(!alarmSwitch){
+            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isRunningProcess(getApplicationContext(), "com.example.soul.exchange_app"));
+            if(!alarmSwitch || SystemUtil.isRunningProcess(getApplicationContext(), "com.example.soul.exchange_app")){
                 return;
             }
 
