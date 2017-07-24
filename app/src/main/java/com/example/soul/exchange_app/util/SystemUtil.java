@@ -1,6 +1,7 @@
 package com.example.soul.exchange_app.util;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.util.Log;
@@ -35,20 +36,32 @@ public class SystemUtil {
         return isRunning;
     }
 
-    public boolean isRunningActivity(Context context, String packageName){
-        boolean result = false;
+    public static boolean isRunningActivity(Context context, String packageName){
         ActivityManager activityManager = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> info;
         info = activityManager.getRunningTasks(7);
         for (Iterator iterator = info.iterator(); iterator.hasNext();)  {
             ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo) iterator.next();
             if(runningTaskInfo.topActivity.getClassName().equals(packageName)) {
-                Log.e("ABCApplication","ABCApplication is running");
-                result = true;
+                return true;
             }
         }
 
-        return result;
+        return false;
+    }
+
+    public static boolean isAppForground(Context mContext) {
+
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (!tasks.isEmpty()) {
+            ComponentName topActivity = tasks.get(0).topActivity;
+            if (!topActivity.getPackageName().equals(mContext.getPackageName())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static boolean isNetworkConnected(Context context) {

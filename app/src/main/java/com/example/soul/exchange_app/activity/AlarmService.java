@@ -68,7 +68,6 @@ public class AlarmService extends Service {
 
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
@@ -95,10 +94,10 @@ public class AlarmService extends Service {
 
         if(reloadScheduler == null){
             reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
         }else{
             scheduledFuture.cancel(false);
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
         }
 
         return START_REDELIVER_INTENT;
@@ -166,8 +165,9 @@ public class AlarmService extends Service {
             // 데이터 갱신
             DataManager.newInstance(getApplicationContext()).load();
 
-            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isRunningProcess(getApplicationContext(), "com.example.soul.exchange_app"));
-            if(!alarmSwitch || SystemUtil.isRunningProcess(getApplicationContext(), "com.example.soul.exchange_app")){
+//            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isRunningActivity(getApplicationContext(), "com.example.soul.exchange_app"));
+            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isAppForground(getApplicationContext()));
+            if(!alarmSwitch || SystemUtil.isAppForground(getApplicationContext())){
                 return;
             }
 
@@ -205,7 +205,7 @@ public class AlarmService extends Service {
                     mBuilder.setContentText("환율 알림 "+alarmSize+"건");
                     mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                     mBuilder.setContentIntent(createPendingIntent());
-
+                    startForeground(0, mBuilder.build());
                     mNotificationManager.notify(1, mBuilder.build());
                 }
             }finally {
