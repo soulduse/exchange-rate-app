@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -15,12 +16,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
 import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private final String TAG = getClass().getSimpleName();
     private ViewPagerAdapter mPagerAdapter;
+
+    private AdView mAdView;
+
 
     // data
     private ParserManager parserManager;
@@ -54,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        mAdView = (AdView)findViewById(R.id.adView1);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         load();
@@ -205,4 +218,34 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onResume notifyDataSetChanged!");
         }
     }
+
+    // [START add_lifecycle_methods]
+    /** Called when leaving the activity */
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    /** Called when returning to the activity */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    /** Called before the activity is destroyed */
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+    // [END add_lifecycle_methods]
 }
+
