@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
-
     // data
     private ParserManager parserManager;
 
