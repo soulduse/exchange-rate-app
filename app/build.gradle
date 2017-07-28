@@ -9,7 +9,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.google.gms.google-services'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -77,8 +76,9 @@ dependencies {
 
     // constraint-layout
     compile 'com.android.support.constraint:constraint-layout:1.0.0'
-    compile 'com.google.android.gms:play-services-ads:10.2.1'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
 }
+
+apply plugin: 'com.google.gms.google-services'

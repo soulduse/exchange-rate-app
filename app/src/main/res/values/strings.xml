@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Exchange-app</string>
+    <string name="app_name">환율알리미</string>
     <string name="action_settings">Settings</string>
     <string name="viewpager_tap_name_1">관심환율</string>
     <string name="viewpager_tap_name_2">계산기</string>
@@ -93,4 +93,7 @@
 
     <!-- 환율알림 -->
     <string name="notice_exchange_alarm">설정한 수치에 도달한 환율이 있습니다.</string>
+
+    <!-- admob -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
