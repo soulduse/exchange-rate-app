@@ -25,6 +25,7 @@ import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -53,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 //        String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
 
-
         // view initialization
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_unit_id));
+
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         parserManager = new ParserManager();
 
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         mAdView = (AdView)findViewById(R.id.adView1);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         load();

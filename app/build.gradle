@@ -79,6 +79,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
