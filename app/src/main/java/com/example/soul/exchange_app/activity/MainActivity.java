@@ -1,5 +1,7 @@
 package com.example.soul.exchange_app.activity;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -78,19 +80,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // start service
+        Log.d(TAG, "onStart");
         initService();
     }
 
     // 서비스 시작
     private void startService(){
-        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
+        Intent intent = new Intent(this, AlarmService.class);
         startService(intent);
+        Log.d(TAG, "startService()");
     }
 
     // 서비스 종료
     private void stopService(){
-        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
+        Intent intent = new Intent(this, AlarmService.class);
         stopService(intent);
+    }
+
+    public boolean isServiceRunningCheck() {
+        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("AlarmService".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -118,13 +132,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initService(){
+        // 서비스 시작
+        startService();
+
         //리스타트 서비스 생성
         restartService = new RestartService();
         IntentFilter intentFilter = new IntentFilter("com.example.soul.exchange_app.activity.AlarmService");
         //브로드 캐스트에 등록
         registerReceiver(restartService,intentFilter);
-        // 서비스 시작
-        startService();
+
     }
 
     private void setupViewPager(ViewPager viewPager){

@@ -26,8 +26,10 @@
         <service
             android:name=".activity.AlarmService"
             android:enabled="true"
-            android:process=":remote">
+            >
         </service>
+        <!--android:enabled="true"-->
+        <!--android:process=":remote"-->
 
         <!-- SetCountryActivity -->
         <activity android:name=".activity.SetCountryActivity"
