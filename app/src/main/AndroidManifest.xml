@@ -23,7 +23,10 @@
         </activity>
         
         <!-- service -->
-        <service android:name=".activity.AlarmService">
+        <service
+            android:name=".activity.AlarmService"
+            android:enabled="true"
+            android:process=":remote">
         </service>
 
         <!-- SetCountryActivity -->
@@ -32,6 +35,19 @@
 
         <activity android:name=".activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+
+        <receiver
+            android:name="com.example.soul.exchange_app.activity.RestartService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="RestartService"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="ACTION.RESTART.AlarmService" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
 
         <meta-data
@@ -43,5 +59,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.activity;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -69,10 +71,15 @@ public class AlarmService extends Service {
         inboxStyle  = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        unregisterRestartAlarm();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+//        startForeground(0, new Notification());
+
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
         String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
@@ -155,7 +162,10 @@ public class AlarmService extends Service {
     public void onDestroy() {
         super.onDestroy();
         reloadScheduler.shutdownNow();
-//        realm.close();
+        /**
+         * 서비스 종료 시 알람 등록을 통해 서비스 재 실행
+         */
+        registerRestartAlarm();
     }
 
     private Runnable scheduleJob = new Runnable() {
@@ -179,7 +189,6 @@ public class AlarmService extends Service {
                 // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
                 if(alarmSize!=0){
                    String[] events = new String[alarmSize];
-
 
                     for(int i=0; i<alarmSize; i++){
                         AlarmModel alarmModel = alarmModelList.get(i);
@@ -207,11 +216,59 @@ public class AlarmService extends Service {
                     mBuilder.setContentIntent(createPendingIntent());
                     startForeground(0, mBuilder.build());
                     mNotificationManager.notify(1, mBuilder.build());
+                    try{
+                        Thread.sleep(4500);
+                    }catch (InterruptedException ie){
+                        ie.printStackTrace();
+                    }
+                    mNotificationManager.cancel(1);
                 }
             }finally {
                 realm.close();
             }
         }
     };
+
+
+
+
+    /**
+     * 알람 매니져에 서비스 등록
+     */
+    private void registerRestartAlarm(){
+
+        Log.i("000 AlarmService" , "registerRestartAlarm" );
+        Intent intent = new Intent(AlarmService.this,RestartService.class);
+        intent.setAction("ACTION.RESTART.AlarmService");
+        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this,0,intent,0);
+
+        long firstTime = SystemClock.elapsedRealtime();
+        firstTime += 1*1000;
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        /**
+         * 알람 등록
+         */
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firstTime,1*1000,sender);
+
+    }
+
+    /**
+     * 알람 매니져에 서비스 해제
+     */
+    private void unregisterRestartAlarm(){
+        Log.i("000 AlarmService" , "unregisterRestartAlarm" );
+        Intent intent = new Intent(AlarmService.this,RestartService.class);
+        intent.setAction("ACTION.RESTART.PersistentService");
+        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this,0,intent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        /**
+         * 알람 취소
+         */
+        alarmManager.cancel(sender);
+    }
 
 }

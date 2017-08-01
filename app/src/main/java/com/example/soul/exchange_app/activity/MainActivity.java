@@ -1,6 +1,7 @@
 package com.example.soul.exchange_app.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
-    // data
-    private ParserManager parserManager;
+    private RestartService restartService;
+
 
     @Override
 
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_unit_id));
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        parserManager = new ParserManager();
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // start service
-        startService();
+        initService();
     }
 
     // 서비스 시작
@@ -115,6 +115,16 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         String msg = internet ? getString(R.string.connect_internet) : getString(R.string.disconnect_internet);
         showSnackBar(msg);
+    }
+
+    private void initService(){
+        //리스타트 서비스 생성
+        restartService = new RestartService();
+        IntentFilter intentFilter = new IntentFilter("com.example.soul.exchange_app.activity.AlarmService");
+        //브로드 캐스트에 등록
+        registerReceiver(restartService,intentFilter);
+        // 서비스 시작
+        startService();
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -246,6 +256,9 @@ public class MainActivity extends AppCompatActivity {
         if (mAdView != null) {
             mAdView.destroy();
         }
+
+        //브로드 캐스트 해제
+        unregisterReceiver(restartService);
         super.onDestroy();
     }
     // [END add_lifecycle_methods]
