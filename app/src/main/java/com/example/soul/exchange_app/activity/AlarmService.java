@@ -77,7 +77,7 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground(0 , new Notification());
+        startForeground(1 , new Notification());
 
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
@@ -214,8 +214,8 @@ public class AlarmService extends Service {
                     mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                     mBuilder.setContentIntent(createPendingIntent());
 //                    startForeground(0, mBuilder.build());
-                    mNotificationManager.notify(1, mBuilder.build());
-//                    mNotificationManager.cancel(1);
+                    mNotificationManager.notify(2130, mBuilder.build());
+                    mNotificationManager.cancel(1);
                 }
             }finally {
                 realm.close();
