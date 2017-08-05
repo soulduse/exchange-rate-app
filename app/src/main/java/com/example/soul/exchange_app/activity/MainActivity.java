@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -19,18 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.example.soul.exchange_app.R;
 import com.example.soul.exchange_app.adapter.ViewPagerAdapter;
-import com.example.soul.exchange_app.manager.ParserManager;
 import com.example.soul.exchange_app.manager.DataManager;
 import com.example.soul.exchange_app.ui.CustomNotiDialog;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         load();
+        initBroadCast();
     }
 
     @Override
@@ -81,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // start service
         Log.d(TAG, "onStart");
-        initService();
+        // 서비스 시작
+        startService();
     }
 
     // 서비스 시작
@@ -131,10 +127,7 @@ public class MainActivity extends AppCompatActivity {
         showSnackBar(msg);
     }
 
-    private void initService(){
-        // 서비스 시작
-        startService();
-
+    private void initBroadCast(){
         //리스타트 서비스 생성
         restartService = new RestartService();
         IntentFilter intentFilter = new IntentFilter("com.example.soul.exchange_app.activity.AlarmService");

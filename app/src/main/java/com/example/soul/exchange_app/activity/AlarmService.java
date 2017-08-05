@@ -77,8 +77,6 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground(1 , new Notification());
-
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
         String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
@@ -100,10 +98,10 @@ public class AlarmService extends Service {
 
         if(reloadScheduler == null){
             reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
         }else{
             scheduledFuture.cancel(false);
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
+            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.SECONDS);
         }
 
         return START_REDELIVER_INTENT;
@@ -136,8 +134,8 @@ public class AlarmService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon)
                 .setSmallIcon(R.mipmap.icon/*스와이프 전 아이콘*/)
-                .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis());
+                .setAutoCancel(true);
+
 
         if(alarmSound && alarmVibe) {
             builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -213,9 +211,13 @@ public class AlarmService extends Service {
                     mBuilder.setContentText("환율 알림 "+alarmSize+"건");
                     mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                     mBuilder.setContentIntent(createPendingIntent());
+                    mBuilder.setWhen(System.currentTimeMillis());
 //                    startForeground(0, mBuilder.build());
+                    startForeground(1 , new Notification());
                     mNotificationManager.notify(2130, mBuilder.build());
                     mNotificationManager.cancel(1);
+                    stopSelf(1);
+//                    stopForeground(false);
                 }
             }finally {
                 realm.close();

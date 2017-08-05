@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,11 +28,12 @@ public class CountryDialog extends DialogFragment {
     private Realm realm;
     private DialogAdapter.OnItemClickListener mListener;
 
+    public CountryDialog(){}
+
+    @SuppressLint("ValidFragment")
     public CountryDialog(DialogAdapter.OnItemClickListener mListener){
         this.mListener = mListener;
     }
-
-
 
     // this method create view for your Dialog
     @Override

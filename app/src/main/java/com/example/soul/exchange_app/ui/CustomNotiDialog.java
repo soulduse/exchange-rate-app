@@ -1,5 +1,6 @@
 package com.example.soul.exchange_app.ui;
 
+import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -44,7 +45,9 @@ public class CustomNotiDialog extends DialogFragment{
     private int position = -1;
     private OnChangeDataListener onChangeDataListener;
 
+    @SuppressLint("ValidFragment")
     private CustomNotiDialog(){}
+    @SuppressLint("ValidFragment")
     private CustomNotiDialog(int position){
         this.position = position;
     }

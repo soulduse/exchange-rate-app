@@ -111,7 +111,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     // PreferenceFragment 클래스 사용
-    public class SettingsFragment extends PreferenceFragment  {
+    static public class SettingsFragment extends PreferenceFragment  {
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
