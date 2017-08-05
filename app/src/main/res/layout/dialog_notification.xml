@@ -6,7 +6,7 @@
     <data>
         <variable
             name="dialog"
-            type="com.example.soul.exchange_app.ui.CustomNotiDialog"/>
+            type="com.dave.soul.exchange_app.ui.CustomNotiDialog"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="fragment"
-            type="com.example.soul.exchange_app.activity.TwoFragment"/>
+            type="com.dave.soul.exchange_app.activity.TwoFragment"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
