@@ -2,6 +2,7 @@ package com.dave.soul.exchange_app.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.paser.ExchangeInfo;
 import com.dave.soul.exchange_app.realm.RealmController;
 import com.dave.soul.exchange_app.ui.CountryDialog;
+import com.dave.soul.exchange_app.util.KakaoLinkUtil;
 import com.dave.soul.exchange_app.util.MoneyUtil;
 
 import java.util.List;
@@ -265,7 +267,30 @@ public class TwoFragment  extends Fragment {
 
                 break;
             case R.id.button_share:
-                printSnackbar("준비중인 기능입니다.");
+                if(isEmptyNumber()){
+                    printSnackbar("공유할 데이터를 입력해주세요.");
+                    break;
+                }
+
+                // 카카오톡 사용이 가능하다면 카카오 링크로 공유
+                if(KakaoLinkUtil.getInstance().isKakaoLinkAvailable(getContext())){
+                    KakaoLinkUtil.getInstance().sendLink(getContext(), getLinkTitle(), getLinkDiscription());
+                }else{
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    // Set default text message
+                    // 카톡, 이메일, MMS 다 이걸로 설정 가능
+                    String subject = "환율 알리미 ["+getLinkTitle()+"]";
+                    String discription = "\n"+getLinkDiscription().replace("-","");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                    intent.putExtra(Intent.EXTRA_TEXT, discription+"\n 자세히 보기 \n"+KakaoLinkUtil.getInstance().PLAY_STORE_URL);
+
+                    // Title of intent
+                    Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
+                    startActivity(chooser);
+                }
+
 
 
                 break;
@@ -276,6 +301,25 @@ public class TwoFragment  extends Fragment {
                 selectCountry(1);
                 break;
         }
+    }
+
+    private boolean isEmptyNumber(){
+        if(binding.editText.getText().length() <= 0 || binding.editText2.getText().length() <= 0){
+            return true;
+        }
+        return false;
+    }
+
+    private String getLinkTitle(){
+        return binding.selectOption.getText().toString();
+    }
+
+    private String getLinkDiscription(){
+        String firstCountryValue    = binding.name1.getText().toString()+" : "+binding.editText.getText();
+        String secondCountryValue   = binding.name2.getText().toString()+" : "+binding.editText2.getText();
+
+        return firstCountryValue+"\n"+
+                secondCountryValue;
     }
 
     private void setupButtons() {

@@ -23,6 +23,7 @@ import com.dave.soul.exchange_app.R;
 import com.dave.soul.exchange_app.adapter.ViewPagerAdapter;
 import com.dave.soul.exchange_app.manager.DataManager;
 import com.dave.soul.exchange_app.ui.CustomNotiDialog;
+import com.dave.soul.exchange_app.util.KeyUtil;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 //        String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
 
