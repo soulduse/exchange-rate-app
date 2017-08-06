@@ -81,6 +81,9 @@ dependencies {
     }
 
     compile 'com.google.android.gms:play-services-ads:10.0.1'
+
+    // 카카오링크 sdk를 사용하기 위해 필요.
+    compile group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
 }
 
 apply plugin: 'com.google.gms.google-services'

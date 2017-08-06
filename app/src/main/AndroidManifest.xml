@@ -19,6 +19,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <!-- 카카오톡 링크를 사용하기 위한 설정 값 1 -->
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/kakao_scheme"
+                    android:host="@string/kakaolink_host" />
             </intent-filter>
         </activity>
         
@@ -55,6 +63,11 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b9f858ffa35efde3250514c6e0f40c8c3b4397f0" />
+
+        <!-- 카카오톡 링크를 사용하기 위한 설정 값 1 -->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

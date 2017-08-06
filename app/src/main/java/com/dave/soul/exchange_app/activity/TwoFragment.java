@@ -266,6 +266,8 @@ public class TwoFragment  extends Fragment {
                 break;
             case R.id.button_share:
                 printSnackbar("준비중인 기능입니다.");
+
+
                 break;
             case R.id.flag1:
                 selectCountry(0);
