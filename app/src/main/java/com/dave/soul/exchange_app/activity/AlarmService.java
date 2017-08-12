@@ -232,7 +232,6 @@ public class AlarmService extends Service {
      * 알람 매니져에 서비스 등록
      */
     private void registerRestartAlarm(){
-
         Log.i("000 AlarmService" , "registerRestartAlarm" );
         Intent intent = new Intent(AlarmService.this,RestartService.class);
         intent.setAction("ACTION.RESTART.AlarmService");
