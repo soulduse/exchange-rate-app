@@ -93,16 +93,6 @@ public class MainActivity extends AppCompatActivity {
         stopService(intent);
     }
 
-    public boolean isServiceRunningCheck() {
-        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("AlarmService".equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * 1. 데이터 파싱 요청을 한다.
      * 2. Network 연결 상태 체크

@@ -140,7 +140,6 @@ public class AlarmService extends Service {
         if(alarmSound && alarmVibe) {
             builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
         }else if(alarmSound){
-//            builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
             builder.setDefaults(Notification.DEFAULT_SOUND);
         }else if(alarmVibe){
             builder.setDefaults(Notification.DEFAULT_VIBRATE);
@@ -172,7 +171,6 @@ public class AlarmService extends Service {
             // 데이터 갱신
             DataManager.newInstance(getApplicationContext()).load();
 
-//            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isRunningActivity(getApplicationContext(), "com.example.soul.exchange_app"));
             Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isAppForground(getApplicationContext()));
             if(!alarmSwitch || SystemUtil.isAppForground(getApplicationContext())){
                 return;
@@ -212,12 +210,7 @@ public class AlarmService extends Service {
                     mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                     mBuilder.setContentIntent(createPendingIntent());
                     mBuilder.setWhen(System.currentTimeMillis());
-//                    startForeground(0, mBuilder.build());
-                    startForeground(1 , new Notification());
                     mNotificationManager.notify(2130, mBuilder.build());
-                    mNotificationManager.cancel(1);
-                    stopSelf(1);
-//                    stopForeground(false);
                 }
             }finally {
                 realm.close();
