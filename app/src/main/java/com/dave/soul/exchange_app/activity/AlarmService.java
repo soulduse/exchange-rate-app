@@ -255,7 +255,7 @@ public class AlarmService extends Service {
     private void unregisterRestartAlarm(){
         Log.i("000 AlarmService" , "unregisterRestartAlarm" );
         Intent intent = new Intent(AlarmService.this,RestartService.class);
-        intent.setAction("ACTION.RESTART.PersistentService");
+        intent.setAction("ACTION.RESTART.AlarmService");
         PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this,0,intent,0);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
