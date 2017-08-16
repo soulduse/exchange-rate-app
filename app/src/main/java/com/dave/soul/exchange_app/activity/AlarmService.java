@@ -104,7 +104,7 @@ public class AlarmService extends Service {
                 "alarmSwitch : " + alarmSwitch + ", " +
                 "alarmSound : " + alarmSound + ", " +
                 "alarmVibe : " + alarmVibe);
-        countInterval = Integer.parseInt(refreshTime);
+        countInterval = Integer.parseInt(refreshTime) * 1000 * 60;
     }
 
     private void initNotification() {
