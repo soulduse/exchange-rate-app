@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -25,10 +26,6 @@ import com.dave.soul.exchange_app.realm.RealmController;
 import com.dave.soul.exchange_app.util.SystemUtil;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 
@@ -40,9 +37,7 @@ import io.realm.Realm;
 public class AlarmService extends Service {
 
     private static final String TAG = AlarmAdapter.class.getSimpleName();
-
-    private ScheduledExecutorService reloadScheduler;
-    private ScheduledFuture scheduledFuture;
+    private static final int MILLISINFUTURE = 86400 * 1000;
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -52,6 +47,9 @@ public class AlarmService extends Service {
     private boolean alarmSwitch;
     private boolean alarmSound;
     private boolean alarmVibe;
+    private int countInterval;
+
+    private CountDownTimer countDownTimer;
 
     @Nullable
     @Override
@@ -62,58 +60,128 @@ public class AlarmService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        Resources res = getResources();
-        titles = res.getStringArray(R.array.pref_priceOptions);
-
-        inboxStyle  = new NotificationCompat.InboxStyle();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         unregisterRestartAlarm();
+        super.onCreate();
+
+        initData();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(this);
-        String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
-        String refreshTime              = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
-        alarmSwitch             = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
-        alarmSound              = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
-        alarmVibe               = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
+    public void onDestroy() {
+        super.onDestroy();
+        countDownTimer.cancel();
+        /**
+         * 서비스 종료 시 알람 등록을 통해 서비스 재 실행
+         */
+        registerRestartAlarm();
+    }
+
+    /**
+     * 데이터 초기화
+     */
+    private void initData() {
+        initPreference();
+        initNotification();
+        countDownTimer();
+        countDownTimer.start();
+    }
+
+    private void initPreference() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        Resources res = getResources();
+        titles = res.getStringArray(R.array.pref_priceOptions);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String showGraphType = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
+        String refreshTime = sharedPref.getString(SettingActivity.KEY_PREF_REFRESH_TIME_TYPE, "");
+        alarmSwitch = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SWITCH, false);
+        alarmSound = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
+        alarmVibe = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
 
         Log.d(TAG, "SharedPreferences values : " +
-                "showGraphType : "+showGraphType+", " +
-                "refreshTime : "+refreshTime+", " +
-                "alarmSwitch : "+alarmSwitch+", " +
-                "alarmSound : "+alarmSound+", " +
-                "alarmVibe : "+alarmVibe);
-        int repeatTime = Integer.parseInt(refreshTime);
+                "showGraphType : " + showGraphType + ", " +
+                "refreshTime : " + refreshTime + ", " +
+                "alarmSwitch : " + alarmSwitch + ", " +
+                "alarmSound : " + alarmSound + ", " +
+                "alarmVibe : " + alarmVibe);
+        countInterval = Integer.parseInt(refreshTime);
+    }
 
-        Log.w(TAG, intent.toString()+" / flags : "+flags+" / startId : "+startId);
+    private void initNotification() {
+        inboxStyle = new NotificationCompat.InboxStyle();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = createNotification();
+    }
 
-        mBuilder    = createNotification();
+    private void countDownTimer() {
+        countDownTimer = new CountDownTimer(MILLISINFUTURE, countInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // 데이터 갱신
+                DataManager.newInstance(getApplicationContext()).load();
 
-        if(reloadScheduler == null){
-            reloadScheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
-        }else{
-            scheduledFuture.cancel(false);
-            scheduledFuture = reloadScheduler.scheduleAtFixedRate(scheduleJob, 0, repeatTime, TimeUnit.MINUTES);
-        }
+                Log.d(TAG, "isRunningProcess ===> " + SystemUtil.isAppForground(getApplicationContext()));
+                if (!alarmSwitch || SystemUtil.isAppForground(getApplicationContext())) {
+                    return;
+                }
 
-        return START_REDELIVER_INTENT;
+                realm = Realm.getDefaultInstance();
+                try {
+                    List<AlarmModel> alarmModelList = RealmController.getAlarms(realm);
+                    int alarmSize = alarmModelList.size();
+
+                    // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
+                    if (alarmSize != 0) {
+                        String[] events = new String[alarmSize];
+
+                        for (int i = 0; i < alarmSize; i++) {
+                            AlarmModel alarmModel = alarmModelList.get(i);
+                            String abbr = alarmModel.getExchangeRate().getCountryAbbr();
+                            String standard = titles[alarmModel.getStandardExchange()];
+                            double currentPrice = DataManager.getInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                            String aboveOrBelow = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+
+                            events[i] = abbr + " " + standard + " : " + currentPrice + "원 - (" + aboveOrBelow + ")";
+                            Log.d(TAG, "Event text : " + events[i]);
+                        }
+
+                        inboxStyle = new NotificationCompat.InboxStyle();
+                        inboxStyle.setBigContentTitle("환율 알림 " + alarmSize + "건");
+                        inboxStyle.setSummaryText(alarmSize + "개의 환율 알림 발생");
+
+                        for (String str : events) {
+                            inboxStyle.addLine(str);
+                        }
+                        //스타일 추가
+                        mBuilder.setStyle(inboxStyle);
+                        mBuilder.setContentTitle("환율");
+                        mBuilder.setContentText("환율 알림 " + alarmSize + "건");
+                        mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
+                        mBuilder.setContentIntent(createPendingIntent());
+                        mBuilder.setWhen(System.currentTimeMillis());
+                        mNotificationManager.notify(2130, mBuilder.build());
+                    }
+                } finally {
+                    realm.close();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                countDownTimer();
+                countDownTimer.start();
+            }
+        };
     }
 
     /**
      * 노티피케이션을 누르면 실행되는 기능을 가져오는 노티피케이션
-     *
+     * <p>
      * 실제 기능을 추가하는 것
+     *
      * @return
      */
-    private PendingIntent createPendingIntent(){
+    private PendingIntent createPendingIntent() {
         Intent resultIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
@@ -125,138 +193,67 @@ public class AlarmService extends Service {
         );
     }
 
-
     /**
      * 노티피케이션 빌드
+     *
      * @return
      */
-    private NotificationCompat.Builder createNotification(){
+    private NotificationCompat.Builder createNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon)
                 .setSmallIcon(R.mipmap.icon/*스와이프 전 아이콘*/)
                 .setAutoCancel(true);
 
-
-        if(alarmSound && alarmVibe) {
+        if (alarmSound && alarmVibe) {
             builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-        }else if(alarmSound){
+        } else if (alarmSound) {
             builder.setDefaults(Notification.DEFAULT_SOUND);
-        }else if(alarmVibe){
+        } else if (alarmVibe) {
             builder.setDefaults(Notification.DEFAULT_VIBRATE);
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
         }
-
         return builder;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        reloadScheduler.shutdownNow();
-        /**
-         * 서비스 종료 시 알람 등록을 통해 서비스 재 실행
-         */
-        registerRestartAlarm();
-    }
-
-    private Runnable scheduleJob = new Runnable() {
-        @Override
-        public void run() {
-
-            // 데이터 갱신
-            DataManager.newInstance(getApplicationContext()).load();
-
-            Log.d(TAG, "isRunningProcess ===> "+SystemUtil.isAppForground(getApplicationContext()));
-            if(!alarmSwitch || SystemUtil.isAppForground(getApplicationContext())){
-                return;
-            }
-
-            realm = Realm.getDefaultInstance();
-            try{
-                List<AlarmModel> alarmModelList = RealmController.getAlarms(realm);
-                int alarmSize = alarmModelList.size();
-
-                // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
-                if(alarmSize!=0){
-                   String[] events = new String[alarmSize];
-
-                    for(int i=0; i<alarmSize; i++){
-                        AlarmModel alarmModel = alarmModelList.get(i);
-                        String abbr             = alarmModel.getExchangeRate().getCountryAbbr();
-                        String standard         = titles[alarmModel.getStandardExchange()];
-                        double currentPrice     = DataManager.getInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
-                        String aboveOrBelow     = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
-
-                        events[i] = abbr+" "+standard+" : "+currentPrice+"원 - ("+aboveOrBelow+")";
-                        Log.d(TAG, "Event text : "+events[i]);
-                    }
-
-                    inboxStyle  = new NotificationCompat.InboxStyle();
-                    inboxStyle.setBigContentTitle("환율 알림 "+alarmSize+"건");
-                    inboxStyle.setSummaryText(alarmSize+"개의 환율 알림 발생");
-
-                    for (String str : events) {
-                        inboxStyle.addLine(str);
-                    }
-                    //스타일 추가
-                    mBuilder.setStyle(inboxStyle);
-                    mBuilder.setContentTitle("환율");
-                    mBuilder.setContentText("환율 알림 "+alarmSize+"건");
-                    mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
-                    mBuilder.setContentIntent(createPendingIntent());
-                    mBuilder.setWhen(System.currentTimeMillis());
-                    mNotificationManager.notify(2130, mBuilder.build());
-                }
-            }finally {
-                realm.close();
-            }
-        }
-    };
-
-
-
 
     /**
      * 알람 매니져에 서비스 등록
      */
-    private void registerRestartAlarm(){
-        Log.i("000 AlarmService" , "registerRestartAlarm" );
-        Intent intent = new Intent(AlarmService.this,RestartService.class);
+    private void registerRestartAlarm() {
+        Log.i("000 AlarmService", "registerRestartAlarm");
+        Intent intent = new Intent(AlarmService.this, RestartService.class);
         intent.setAction("ACTION.RESTART.AlarmService");
-        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this,0,intent,0);
+        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this, 0, intent, 0);
 
         long firstTime = SystemClock.elapsedRealtime();
-        firstTime += 1*1000;
+        firstTime += 1 * 1000;
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         /**
          * 알람 등록
          */
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firstTime,1*1000,sender);
-
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, 1 * 1000, sender);
     }
 
     /**
      * 알람 매니져에 서비스 해제
      */
-    private void unregisterRestartAlarm(){
-        Log.i("000 AlarmService" , "unregisterRestartAlarm" );
-        Intent intent = new Intent(AlarmService.this,RestartService.class);
+    private void unregisterRestartAlarm() {
+        Log.i("000 AlarmService", "unregisterRestartAlarm");
+        Intent intent = new Intent(AlarmService.this, RestartService.class);
         intent.setAction("ACTION.RESTART.AlarmService");
-        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this,0,intent,0);
+        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this, 0, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         /**
          * 알람 취소
          */
         alarmManager.cancel(sender);
     }
-
 }
