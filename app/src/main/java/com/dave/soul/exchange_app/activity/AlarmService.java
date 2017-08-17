@@ -1,6 +1,5 @@
 package com.dave.soul.exchange_app.activity;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,7 +10,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -23,6 +21,7 @@ import com.dave.soul.exchange_app.adapter.AlarmAdapter;
 import com.dave.soul.exchange_app.manager.DataManager;
 import com.dave.soul.exchange_app.model.AlarmModel;
 import com.dave.soul.exchange_app.realm.RealmController;
+import com.dave.soul.exchange_app.util.RestartAlarm;
 import com.dave.soul.exchange_app.util.SystemUtil;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class AlarmService extends Service {
 
     @Override
     public void onCreate() {
-        unregisterRestartAlarm();
+        RestartAlarm.Companion.getInstance().unregisterRestartAlarm(this);
         super.onCreate();
 
         initData();
@@ -73,7 +72,7 @@ public class AlarmService extends Service {
         /**
          * 서비스 종료 시 알람 등록을 통해 서비스 재 실행
          */
-        registerRestartAlarm();
+        RestartAlarm.Companion.getInstance().registerRestartAlarm(this);
     }
 
     /**
@@ -218,42 +217,5 @@ public class AlarmService extends Service {
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
         }
         return builder;
-    }
-
-    /**
-     * 알람 매니져에 서비스 등록
-     */
-    private void registerRestartAlarm() {
-        Log.i("000 AlarmService", "registerRestartAlarm");
-        Intent intent = new Intent(AlarmService.this, RestartService.class);
-        intent.setAction("ACTION.RESTART.AlarmService");
-        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this, 0, intent, 0);
-
-        long firstTime = SystemClock.elapsedRealtime();
-        firstTime += 1 * 1000;
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        /**
-         * 알람 등록
-         */
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, 1 * 1000, sender);
-    }
-
-    /**
-     * 알람 매니져에 서비스 해제
-     */
-    private void unregisterRestartAlarm() {
-        Log.i("000 AlarmService", "unregisterRestartAlarm");
-        Intent intent = new Intent(AlarmService.this, RestartService.class);
-        intent.setAction("ACTION.RESTART.AlarmService");
-        PendingIntent sender = PendingIntent.getBroadcast(AlarmService.this, 0, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        /**
-         * 알람 취소
-         */
-        alarmManager.cancel(sender);
     }
 }

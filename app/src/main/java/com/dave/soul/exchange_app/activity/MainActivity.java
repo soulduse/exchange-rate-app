@@ -23,7 +23,7 @@ import com.dave.soul.exchange_app.R;
 import com.dave.soul.exchange_app.adapter.ViewPagerAdapter;
 import com.dave.soul.exchange_app.manager.DataManager;
 import com.dave.soul.exchange_app.ui.CustomNotiDialog;
-import com.dave.soul.exchange_app.util.KeyUtil;
+import com.dave.soul.exchange_app.util.RestartAlarm;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -82,15 +82,20 @@ public class MainActivity extends AppCompatActivity {
 
     // 서비스 시작
     private void startService(){
-        Intent intent = new Intent(this, AlarmService.class);
-        startService(intent);
+        RestartAlarm.Companion.getInstance().registerRestartAlarm(this);
+
+
+//
+//        Intent intent = new Intent(this, AlarmService.class);
+//        startService(intent);
         Log.d(TAG, "startService()");
     }
 
     // 서비스 종료
     private void stopService(){
-        Intent intent = new Intent(this, AlarmService.class);
-        stopService(intent);
+        RestartAlarm.Companion.getInstance().unregisterRestartAlarm(this);
+//        Intent intent = new Intent(this, AlarmService.class);
+//        stopService(intent);
     }
 
     /**
@@ -255,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         if (mAdView != null) {
             mAdView.destroy();
         }
-
+        stopService();
         //브로드 캐스트 해제
         unregisterReceiver(restartService);
         super.onDestroy();
