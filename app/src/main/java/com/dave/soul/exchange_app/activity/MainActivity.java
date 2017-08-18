@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
-
-        // view initialization
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_unit_id));
@@ -74,28 +70,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // start service
         Log.d(TAG, "onStart");
-        // 서비스 시작
         startService();
     }
 
     // 서비스 시작
     private void startService(){
         RestartAlarm.Companion.getInstance().registerRestartAlarm(this);
-
-
-//
-//        Intent intent = new Intent(this, AlarmService.class);
-//        startService(intent);
         Log.d(TAG, "startService()");
     }
 
     // 서비스 종료
     private void stopService(){
         RestartAlarm.Companion.getInstance().unregisterRestartAlarm(this);
-//        Intent intent = new Intent(this, AlarmService.class);
-//        stopService(intent);
     }
 
     /**
@@ -195,19 +182,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
             startActivity(intent);
@@ -222,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar
                 .make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
                 .setAction("Action", null);
-        // Changing message text color
         snackbar.setActionTextColor(Color.RED);
         snackbar.show();
     }
@@ -235,8 +216,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // [START add_lifecycle_methods]
-    /** Called when leaving the activity */
     @Override
     public void onPause() {
         if (mAdView != null) {
@@ -245,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    /** Called when returning to the activity */
     @Override
     public void onResume() {
         super.onResume();
@@ -254,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Called before the activity is destroyed */
     @Override
     public void onDestroy() {
         if (mAdView != null) {
@@ -265,6 +242,5 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(restartService);
         super.onDestroy();
     }
-    // [END add_lifecycle_methods]
 }
 
