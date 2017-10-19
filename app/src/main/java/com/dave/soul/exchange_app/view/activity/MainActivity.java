@@ -17,15 +17,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.dave.soul.exchange_app.R;
-import com.dave.soul.exchange_app.view.adapter.ViewPagerAdapter;
 import com.dave.soul.exchange_app.manager.DataManager;
+import com.dave.soul.exchange_app.util.RestartAlarm;
+import com.dave.soul.exchange_app.view.adapter.ViewPagerAdapter;
 import com.dave.soul.exchange_app.view.fragment.OneFragment;
 import com.dave.soul.exchange_app.view.fragment.ThreeFragment;
 import com.dave.soul.exchange_app.view.fragment.TwoFragment;
 import com.dave.soul.exchange_app.view.ui.CustomNotificationDialog;
-import com.dave.soul.exchange_app.util.RestartAlarm;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter mPagerAdapter;
 
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     private RestartService restartService;
 
@@ -51,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_unit_id));
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.ad_interstitial_ad));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener(){
+            public void onAdLoaded(){
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
 
@@ -115,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("com.dave.soul.exchange_app.view.service.AlarmService");
         //브로드 캐스트에 등록
         registerReceiver(restartService,intentFilter);
-
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -221,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
         if (mAdView != null) {
             mAdView.pause();
         }
+
         super.onPause();
     }
 

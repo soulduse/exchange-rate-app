@@ -103,7 +103,7 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
 
-            //*
+            /*
             Log.w(
                     TAG,
                     "COUNTRY_NAME       : "+exchangeArrList.get(i)[COUNTRY_NAME]+" :: length : "+exchangeArrList.get(i).length+"\n"+
