@@ -39,8 +39,14 @@ public class RealmController {
         return realm.where(ExchangeRate.class).not().equalTo(FieldNames.countryAbbr.name(), ExchangeInfo.KRW).findAll();
     }
 
+    public static long findSelectedPositionByAbbr(Realm realm, String abbr){
+        return realm.where(ExchangeRate.class)
+                .equalTo(FieldNames.countryAbbr.name(), abbr)
+                .findFirst().getId();
+    }
+
     // find single object in the ExchangeRate.class
-    public static ExchangeRate isExchangeRate(Realm realm, String keyword){
+    public static ExchangeRate findExchangeRateByCountryAbbr(Realm realm, String keyword){
         return realm.where(ExchangeRate.class).equalTo(FieldNames.countryAbbr.name(), keyword).findFirst();
     }
 
@@ -51,25 +57,15 @@ public class RealmController {
                 .findAll();
     }
 
-    public static ExchangeRate isExchangeRate(Realm realm, long id, String countryAbbr){
-        return realm.where(ExchangeRate.class)
-                .not()
-                .beginGroup()
-                    .equalTo("id", id)
-                    .equalTo("countryAbbr", countryAbbr)
-                .endGroup()
-                .findFirst();
-    }
-
     public static void setRealmDatas(Realm realm, List<ExchangeRate> exchangeRateList){
 //        Log.d(TAG, "realm Size >> "+getExchangeRate().size());
 
         for(ExchangeRate datas : exchangeRateList){
-//            Log.d(TAG, "realm object >> "+isExchangeRate(datas.getCountryAbbr()));
-//            Log.d(TAG, "realm countryAbbr is null? >> "+(isExchangeRate(datas.getCountryAbbr()) != null));
+//            Log.d(TAG, "realm object >> "+findExchangeRateByCountryAbbr(datas.getCountryAbbr()));
+//            Log.d(TAG, "realm countryAbbr is null? >> "+(findExchangeRateByCountryAbbr(datas.getCountryAbbr()) != null));
             realm.beginTransaction();
 
-            ExchangeRate exchangeRate = isExchangeRate(realm, datas.getCountryAbbr());
+            ExchangeRate exchangeRate = findExchangeRateByCountryAbbr(realm, datas.getCountryAbbr());
 
             // Realm 에 데이터가 없는 상태
             if(exchangeRate == null){
