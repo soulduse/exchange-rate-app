@@ -3,7 +3,7 @@
     package="com.dave.soul.exchange_app">
 
     <application
-        android:name="com.dave.soul.exchange_app.app.MyApplication"
+        android:name="com.dave.soul.exchange_app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -12,7 +12,7 @@
 
         <!-- MainActivity -->
         <activity
-            android:name="com.dave.soul.exchange_app.activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -35,7 +35,7 @@
         
         <!-- service -->
         <service
-            android:name="com.dave.soul.exchange_app.activity.AlarmService"
+            android:name=".view.service.AlarmService"
             android:enabled="true"
             >
         </service>
@@ -43,15 +43,15 @@
         <!--android:process=":remote"-->
 
         <!-- SetCountryActivity -->
-        <activity android:name="com.dave.soul.exchange_app.activity.SetCountryActivity"
+        <activity android:name=".view.activity.SetCountryActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name="com.dave.soul.exchange_app.activity.SettingActivity"
+        <activity android:name=".view.activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
 
         <receiver
-            android:name="com.dave.soul.exchange_app.activity.RestartService"
+            android:name=".view.activity.RestartService"
             android:enabled="true"
             android:exported="false"
             android:label="RestartService"
