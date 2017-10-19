@@ -20,8 +20,8 @@ public interface ExchangeInfo {
     int COUNTRY_NAME        = 0;
     int COUNTRY_ABBR        = 1; // Abbreviations
     int PRICE_BASE          = 2;
-    int PRICE_SELL          = 3;
-    int PRICE_BUY           = 4;
+    int PRICE_BUY           = 3;
+    int PRICE_SELL          = 4;
     int PRICE_SEND          = 5;
     int PRICE_RECEIVE       = 6;
     int PRICE_US_EXCHANGE   = 7;
