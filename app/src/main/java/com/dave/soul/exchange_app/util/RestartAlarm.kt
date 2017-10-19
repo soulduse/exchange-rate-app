@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
-import com.dave.soul.exchange_app.activity.RestartService
+import com.dave.soul.exchange_app.view.activity.RestartService
 
 /**
  * Created by soul on 2017. 8. 17..

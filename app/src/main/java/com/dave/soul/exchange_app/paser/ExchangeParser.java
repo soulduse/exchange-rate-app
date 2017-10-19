@@ -1,5 +1,7 @@
 package com.dave.soul.exchange_app.paser;
 
+import android.util.Log;
+
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.util.MoneyUtil;
 
@@ -101,7 +103,7 @@ public class ExchangeParser implements ExchangeInfo{
             exchangeRate.setThumbnail(combineThumbnailUrl(exchangeArrList.get(i)[COUNTRY_ABBR]));
 
 
-            /*
+            //*
             Log.w(
                     TAG,
                     "COUNTRY_NAME       : "+exchangeArrList.get(i)[COUNTRY_NAME]+" :: length : "+exchangeArrList.get(i).length+"\n"+
@@ -113,7 +115,7 @@ public class ExchangeParser implements ExchangeInfo{
                     "PRICE_RECEIVE      : "+exchangeArrList.get(i)[PRICE_RECEIVE]+"\n"+
                     "PRICE_US_EXCHANGE  : "+exchangeArrList.get(i)[PRICE_US_EXCHANGE]
             );
-            */
+            //*/
             perCountDats.add(exchangeRate);
         }
 

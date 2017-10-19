@@ -3,7 +3,7 @@ package com.dave.soul.exchange_app.manager;
 import android.content.Context;
 import android.util.Log;
 
-import com.dave.soul.exchange_app.activity.MainActivity;
+import com.dave.soul.exchange_app.view.activity.MainActivity;
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.paser.ExchangeParser;
 import com.dave.soul.exchange_app.realm.RealmController;
