@@ -26,5 +26,8 @@
 
     <dimen name="notification_size">36dp</dimen>
 
+    <dimen name="dialog_button_width">65dp</dimen>
+    <dimen name="dialog_button_height">30dp</dimen>
+
     <dimen name="z_card">5dp</dimen>
 </resources>
