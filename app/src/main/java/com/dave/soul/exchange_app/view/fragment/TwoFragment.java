@@ -69,6 +69,8 @@ public class TwoFragment  extends Fragment {
         binding.setFragment(this);
 
         realm = Realm.getDefaultInstance();
+        binding.editText.setTextDirection(View.TEXT_DIRECTION_RTL);
+        binding.editText2.setTextDirection(View.TEXT_DIRECTION_RTL);
 
         Log.d(TAG, "realmController.getSizeOfCalcu() ?? "+ RealmController.getSizeOfCalcu(realm));
         if(RealmController.getSizeOfCalcu(realm) == 0){
