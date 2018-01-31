@@ -120,7 +120,7 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         holder.calcu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Move to second viewPager.");
+                Log.d(TAG, "Move to second viewPager."+obj.getCountryAbbr());
                 RealmController.setCalcuCountry(realm, obj.getCountryAbbr(), ExchangeInfo.KRW);
                 MainActivity activity = (MainActivity)mContext;
                 activity.moveViewPager(1);

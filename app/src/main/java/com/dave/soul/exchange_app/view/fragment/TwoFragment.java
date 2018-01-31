@@ -194,17 +194,19 @@ public class TwoFragment  extends Fragment {
 
     DialogAdapter.OnItemClickListener mListener = new DialogAdapter.OnItemClickListener() {
         @Override
-        public void onItemClicked(ExchangeRate result) {
+        public void onItemClicked(ExchangeRate result, int itemPosition) {
             Log.d(TAG, "이벤트 리스너 받다 : "+result.getCountryAbbr());
 
             if(position == 0){
                 binding.name1.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
                 selectedPriceFirst  = DataManager.getInstance().getPrice(selectedPrice, result);
+                dataSwapFirst = itemPosition;
             }else{
                 binding.name2.setText(result.getCountryAbbr());
                 Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
                 selectedPriceSecond = DataManager.getInstance().getPrice(selectedPrice, result);
+                dataSwapSecond = itemPosition;
             }
 
             if(binding.editText.getText().length() != 0){
@@ -239,17 +241,20 @@ public class TwoFragment  extends Fragment {
                 break;
             // 위아래 스왑
             case R.id.button_swap:
-                if(dataSwapFirst != 0){
-                    dataSwapFirst = 0;
-                }else{
-                    dataSwapFirst = 1;
-                }
-
-                if(dataSwapSecond != 0){
-                    dataSwapSecond = 0;
-                }else{
-                    dataSwapSecond = 1;
-                }
+                int tempSwapNum = dataSwapFirst;
+                dataSwapFirst = dataSwapSecond;
+                dataSwapSecond = tempSwapNum;
+//                if(dataSwapFirst != 0){
+//                    dataSwapFirst = 0;
+//                }else{
+//                    dataSwapFirst = 1;
+//                }
+//
+//                if(dataSwapSecond != 0){
+//                    dataSwapSecond = 0;
+//                }else{
+//                    dataSwapSecond = 1;
+//                }
 
                 selectedPriceFirst   = exchangeList.get(dataSwapFirst).getPriceBase();
                 selectedPriceSecond = exchangeList.get(dataSwapSecond).getPriceBase();

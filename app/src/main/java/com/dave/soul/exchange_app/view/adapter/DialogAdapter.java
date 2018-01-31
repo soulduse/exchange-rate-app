@@ -44,7 +44,7 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         final ExchangeRate obj = getItem(position);
         final String title = obj.getCountryAbbr() + " " + obj.getCountryName();
         holder.title.setText(title);
@@ -55,7 +55,7 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onItemClicked(obj);
+                mListener.onItemClicked(obj, position);
             }
         });
 
@@ -72,6 +72,6 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
     }
 
     public interface OnItemClickListener {
-        void onItemClicked(ExchangeRate result);
+        void onItemClicked(ExchangeRate result, int position);
     }
 }

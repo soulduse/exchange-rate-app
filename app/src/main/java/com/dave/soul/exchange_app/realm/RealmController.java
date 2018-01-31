@@ -163,7 +163,7 @@ public class RealmController {
 
                 Log.w(TAG, "결과 >>>> "+calcuCountries.toString());
                 Log.w(TAG, "결과 >>>> "+calcuCountries.getExchangeRates().get(0).getCountryAbbr()+" / "+calcuCountries.getExchangeRates().get(1).getCountryAbbr());
-
+                Log.e(TAG, "결과 >>>> "+calcuCountries.getExchangeRates().get(0).getPriceBase()+" / "+calcuCountries.getExchangeRates().get(1).getPriceBase());
             }
         });
     }
