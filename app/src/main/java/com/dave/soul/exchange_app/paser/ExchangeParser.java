@@ -64,7 +64,6 @@ public class ExchangeParser implements ExchangeInfo{
         ExchangeRate exchangeRate;
 
         exchangeArrList = getPerserArrList();
-
         // 한국 데이터는 없기 때문에 임의로 하나 넣어줌.
 //        Log.d(TAG, "Create Korean Datas");
         exchangeRate = new ExchangeRate();

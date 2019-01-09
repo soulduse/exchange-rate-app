@@ -21,14 +21,14 @@ repositories {
 
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.dave.soul.exchange_app"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 7
-        versionName "1.6"
+        targetSdkVersion 26
+        versionCode 8
+        versionName "1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

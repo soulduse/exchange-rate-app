@@ -100,11 +100,17 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         if(obj.getCountryAbbr().equals(ExchangeInfo.JPY)){
             price *= 100;
         }
+
+        String buy = MoneyUtil.addCommas(obj.getPriceBuy());
+        String sell = MoneyUtil.addCommas(obj.getPriceSell());
+        String send = MoneyUtil.addCommas(obj.getPriceSend());
+        String receive = MoneyUtil.addCommas(obj.getPriceReceive());
+
         holder.price.setText(MoneyUtil.addCommas(price));
-        holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + MoneyUtil.addCommas(obj.getPriceBuy()));
-        holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + MoneyUtil.addCommas(obj.getPriceSell()));
-        holder.send.setText(mContext.getResources().getString(R.string.send_text) + MoneyUtil.addCommas(obj.getPriceSend()));
-        holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + MoneyUtil.addCommas(obj.getPriceReceive()));
+        holder.buy.setText(mContext.getResources().getString(R.string.buy_text) + buy);
+        holder.sell.setText(mContext.getResources().getString(R.string.sell_text) + sell);
+        holder.send.setText(mContext.getResources().getString(R.string.send_text) + send);
+        holder.receive.setText(mContext.getResources().getString(R.string.receive_text) + receive);
 //        holder.webView.loadUrl("https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/month3/FX_"+obj.getCountryAbbr()+"KRW_search.png");
         SharedPreferences sharedPref    = PreferenceManager.getDefaultSharedPreferences(mContext);
         String showGraphType            = sharedPref.getString(SettingActivity.KEY_PREF_SHOW_GRAPH_TYPE, "");
