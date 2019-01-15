@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeMaterial">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/banner_app_unit_id"/>
+
         <!-- MainActivity -->
         <activity
             android:name=".view.activity.MainActivity"

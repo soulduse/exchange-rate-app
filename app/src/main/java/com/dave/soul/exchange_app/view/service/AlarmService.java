@@ -1,12 +1,15 @@
 package com.dave.soul.exchange_app.view.service;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -39,6 +42,7 @@ public class AlarmService extends Service {
 
     private static final String TAG = AlarmAdapter.class.getSimpleName();
     private static final int MILLISINFUTURE = 86400 * 1000;
+    private static final String CHANNEL_ID = "channel_id";
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -111,6 +115,9 @@ public class AlarmService extends Service {
     private void initNotification() {
         inboxStyle = new NotificationCompat.InboxStyle();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mNotificationManager.createNotificationChannel(getNotificationChannel());
+        }
         mBuilder = createNotification();
     }
 
@@ -175,6 +182,18 @@ public class AlarmService extends Service {
         };
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannel getNotificationChannel() {
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "환율", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.setDescription("설정한 수치에 도달한 환율이 있습니다.");
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.BLUE);
+        notificationChannel.enableVibration(true);
+        notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        return notificationChannel;
+    }
+
     /**
      * 노티피케이션을 누르면 실행되는 기능을 가져오는 노티피케이션
      * <p>
@@ -200,7 +219,7 @@ public class AlarmService extends Service {
      * @return
      */
     private NotificationCompat.Builder createNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.icon)
                 .setSmallIcon(R.mipmap.icon/*스와이프 전 아이콘*/)
                 .setAutoCancel(true);
