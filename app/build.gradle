@@ -30,6 +30,8 @@ android {
 }
 
 dependencies {
+    def anko_version = '0.10.8'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -56,6 +58,7 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
 
     implementation 'io.realm:android-adapters:2.0.0'
 

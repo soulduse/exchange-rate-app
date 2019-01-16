@@ -62,11 +62,14 @@ public class AlarmService extends Service {
         return null;
     }
 
-
     @Override
     public void onCreate() {
         RestartAlarm.Companion.getInstance().unregisterRestartAlarm(this);
         super.onCreate();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, new Notification());
+        }
 
         initData();
     }
