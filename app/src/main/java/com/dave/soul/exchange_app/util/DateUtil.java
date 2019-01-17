@@ -20,6 +20,7 @@ public class DateUtil {
     private Context context;
     private final String TAG = getClass().getSimpleName();
     private static final String NEW_DATE_FORMAT = "yyyy.MM.dd HH:mm";
+    static final String DATE_PATTERN_YEAR_MONTH_DAY_ADD_DASH = "yyyy-MM-dd";
 
     private static final DateUtil dataUtil = new DateUtil();
 

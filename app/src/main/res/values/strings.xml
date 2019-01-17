@@ -104,6 +104,7 @@
     <string name="ad_interstitial_app">ca-app-pub-1908860913688060~3760538434</string>
     <string name="ad_interstitial_ad">ca-app-pub-1908860913688060/2186144132</string>
 
+    <string name="thanks_for_clicked_ad">감사합니다! 오늘 하루동안은 광고가 노출되지 않습니다. :)\n즐거운 하루되세요!</string>
 
     <string name="apology_ad_title">
         광고 때문에 불편하셨나요? 개발자의\n
