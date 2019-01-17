@@ -35,12 +35,12 @@ class AdProvider private constructor(private val context: Context): KoinComponen
 
                 override fun onAdClosed() {
                     DLog.w("admob onAdClosed !!")
-                    goToMainListener!!.invoke()
+                    goToMainListener?.invoke()
                 }
 
                 override fun onAdFailedToLoad(p0: Int) {
                     DLog.w("admob onAdFailedToLoad !! $p0")
-                    goToMainListener!!.invoke()
+                    goToMainListener?.invoke()
                 }
 
                 override fun onAdClicked() {

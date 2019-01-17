@@ -12,8 +12,8 @@ android {
         applicationId "com.dave.soul.exchange_app"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 10
-        versionName "1.8.1"
+        versionCode 11
+        versionName "1.8.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
