@@ -17,16 +17,12 @@ import android.view.MenuItem
 import android.view.View
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.manager.DataManager
-import com.dave.soul.exchange_app.util.AdProvider
-import com.dave.soul.exchange_app.util.RemoteConfigUtil
 import com.dave.soul.exchange_app.util.RestartAlarm
 import com.dave.soul.exchange_app.view.adapter.ViewPagerAdapter
 import com.dave.soul.exchange_app.view.fragment.OneFragment
 import com.dave.soul.exchange_app.view.fragment.ThreeFragment
 import com.dave.soul.exchange_app.view.fragment.TwoFragment
 import com.dave.soul.exchange_app.view.ui.CustomNotificationDialog
-import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,13 +35,10 @@ class MainActivity : AppCompatActivity() {
 
     private var restartService: RestartService? = null
 
-    private val adProvider: AdProvider by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initSettings()
-        initAd()
         load()
         initBroadCast()
         initLayout()
@@ -62,12 +55,6 @@ class MainActivity : AppCompatActivity() {
         tabLayout = findViewById<View>(R.id.tabs) as TabLayout
         tabLayout!!.setupWithViewPager(viewPager)
         fab = findViewById<View>(R.id.fab) as FloatingActionButton
-    }
-
-    private fun initAd() {
-        adProvider.init()
-                .loadInterstitialAd()
-                .loadBannerAd(banner_ad_container)
     }
 
     override fun onStart() {

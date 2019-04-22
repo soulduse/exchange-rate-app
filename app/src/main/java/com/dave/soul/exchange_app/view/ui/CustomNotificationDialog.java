@@ -15,12 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.dave.soul.exchange_app.R;
+import com.dave.soul.exchange_app.util.DLog;
 import com.dave.soul.exchange_app.view.adapter.DialogAdapter2;
 import com.dave.soul.exchange_app.databinding.DialogNotificationBinding;
 import com.dave.soul.exchange_app.model.AlarmModel;
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.realm.RealmController;
 import com.dave.soul.exchange_app.util.MoneyUtil;
+
+import java.util.StringTokenizer;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -198,20 +201,92 @@ public class CustomNotificationDialog extends DialogFragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!s.toString().equals(result) && !s.toString().isEmpty()) {     // StackOverflow를 막기위해,
-                if (s.toString().length() == 1 && ".".equals(s.toString())) {
-                    return;
-                }
-                result = MoneyUtil.fmt(s.toString());
-                binding.alarmPriceEdit.setText(result);                 // 결과 텍스트 셋팅.
-                binding.alarmPriceEdit.setSelection(result.length());   // 커서를 제일 끝으로 보냄.
-            }
+//            DLog.INSTANCE.w("data =====> "+s);
+//            if (!s.toString().equals(result) && !s.toString().isEmpty()) {     // StackOverflow를 막기위해,
+////                if (s.toString().length() == 1 && ".".equals(s.toString())) {
+////                    return;
+////                }
+//                result = MoneyUtil.fmt(s.toString());
+//            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+//            binding.alarmPriceEdit.setText(result);                 // 결과 텍스트 셋팅.
+//            binding.alarmPriceEdit.setSelection(result.length());   // 커서를 제일 끝으로 보냄.
+            try {
+                binding.alarmPriceEdit.removeTextChangedListener(this);
+                String value = binding.alarmPriceEdit.getText().toString();
+
+                if (value != null && !value.equals("")) {
+                    if (value.startsWith(".")) {
+                        binding.alarmPriceEdit.setText("0.");
+                    }
+                    if (value.startsWith("0") && !value.startsWith("0.")) {
+                        binding.alarmPriceEdit.setText("");
+                    }
+
+                    String str = binding.alarmPriceEdit.getText().toString().replace(",", "");
+                    if (!value.equals("")) {
+                        binding.alarmPriceEdit.setText(getDecimalFormattedString(str));
+                        binding.alarmPriceEdit.setSelection(binding.alarmPriceEdit.getText().toString().length());
+                    }
+                }
+                binding.alarmPriceEdit.addTextChangedListener(this);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                binding.alarmPriceEdit.addTextChangedListener(this);
+            }
         }
     };
+
+    public static String getDecimalFormattedString(String value)
+    {
+        StringTokenizer lst = new StringTokenizer(value, ".");
+        String str1 = value;
+        String str2 = "";
+        if (lst.countTokens() > 1)
+        {
+            str1 = lst.nextToken();
+            str2 = lst.nextToken();
+        }
+        String str3 = "";
+        int i = 0;
+        int j = -1 + str1.length();
+        if (str1.charAt( -1 + str1.length()) == '.')
+        {
+            j--;
+            str3 = ".";
+        }
+        for (int k = j;; k--)
+        {
+            if (k < 0)
+            {
+                if (str2.length() > 0)
+                    str3 = str3 + "." + str2;
+                return str3;
+            }
+            if (i == 3)
+            {
+                str3 = "," + str3;
+                i = 0;
+            }
+            str3 = str1.charAt(k) + str3;
+            i++;
+        }
+
+    }
+
+    public static String trimCommaOfString(String string) {
+//        String returnString;
+        if(string.contains(",")){
+            return string.replace(",","");}
+        else {
+            return string;
+        }
+
+    }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
