@@ -1,108 +1,152 @@
 package com.dave.soul.exchange_app.util
 
+import android.app.Activity
 import android.content.Context
-import android.widget.RelativeLayout
+import android.content.res.Resources
+import android.os.Build
+import android.util.DisplayMetrics
+import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowManager
 import com.dave.soul.exchange_app.BuildConfig
 import com.dave.soul.exchange_app.R
-import com.google.android.gms.ads.*
-import org.jetbrains.anko.longToast
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import javax.inject.Singleton
 
-class AdProvider private constructor(private val context: Context): KoinComponent {
-    private lateinit var mInterstitialAd: InterstitialAd
-    private var goToMainListener: (() -> Unit)? = null
-    private lateinit var adRequest: AdRequest
-    private val adChecker: AdChecker by inject()
-    private var isAdOnce: Boolean = false
+/**
+ * InterstitialAd Usages
+ *
+ * adProvider
+ *      .with(activity)
+ *      .fallback { do something }
+ *      .dismissCallback { do something }
+ *      .loadInterstitialAd()
+ *      .afterLoaded { adProvider.show() }
+ *
+ * BannerAd Usages
+ *
+ * adProvider
+ *      .loadBannerAd(view)
+ */
 
-    fun init(): AdProvider {
-        RemoteConfigUtil.initialize()
-        MobileAds.initialize(context, context.getString(R.string.banner_app_unit_id))
-        isAdOnce = RemoteConfigUtil.getConfigBoolean("ad_once")
-        adRequest = AdRequest.Builder().build()
-        mInterstitialAd = InterstitialAd(context).apply {
-            adUnitId = TEST_INTERSTITIAL_ID or context.getString(R.string.ad_interstitial_ad)
-            adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    DLog.w("admob onAdLoaded !!")
-                    DLog.w("isClicked AD ---> ${adChecker.isClickedAd()}")
-                    if (isAdOnce && adChecker.isClickedAd()) {
-                        return
-                    }
-                    showAd()
-                }
+@Singleton
+class AdProvider(private val context: Context) {
+    private val adRequest by lazy { AdRequest.Builder().build() }
+    private var interstitialAd: InterstitialAd? = null
+    private var activity: Activity? = null
+    private var fallback: (() -> Unit)? = null
+    private var dismissCallback: (() -> Unit)? = null
+    private var afterLoadedCallback: (() -> Unit)? = null
 
-                override fun onAdClosed() {
-                    DLog.w("admob onAdClosed !!")
-                    goToMainListener?.invoke()
-                }
+    fun with(activity: Activity): AdProvider {
+        this.activity = activity
+        return this
+    }
 
-                override fun onAdFailedToLoad(p0: Int) {
-                    DLog.w("admob onAdFailedToLoad !! $p0")
-                    goToMainListener?.invoke()
-                }
+    fun fallback(fallback: (() -> Unit)?): AdProvider {
+        this.fallback = fallback
+        return this
+    }
 
-                override fun onAdClicked() {
-                    super.onAdClicked()
-                    DLog.w("admob click ad onAdClicked !![InterstitialAd]")
-                    if (isAdOnce) {
-                        clickedAd()
-                    }
-                }
-            }
-        }
+    fun dismissCallback(dismissCallback: (() -> Unit)?): AdProvider {
+        this.dismissCallback = dismissCallback
         return this
     }
 
     fun loadInterstitialAd(): AdProvider {
-        mInterstitialAd.loadAd(adRequest)
+        InterstitialAd.load(
+            context,
+            TEST_INTERSTITIAL_ID or context.getString(R.string.ad_interstitial_id),
+            adRequest,
+            getInterstitialAdLoadCallback()
+        )
         return this
     }
 
-    fun loadBannerAd(bannerContainerView: RelativeLayout) {
-        val bannerAd = initBanner()
-        if (isAdOnce && adChecker.isClickedAd()) {
-            return
-        }
-
-        bannerContainerView.addView(bannerAd)
+    fun afterLoaded(afterLoadedCallback: (() -> Unit)? = null): AdProvider {
+        this.afterLoadedCallback = afterLoadedCallback
+        return this
     }
 
-    private fun initBanner(): AdView = AdView(context).apply {
-        adSize = AdSize.SMART_BANNER
-        adUnitId = TEST_BANNER_ID or context.getString(R.string.banner_ad_unit_id)
-        adListener = object : AdListener() {
-            override fun onAdOpened() {
-                DLog.w("admob click ad onAdOpened !![BANNER]")
-                if(isAdOnce) {
-                    clickedAd()
+    fun show() {
+        if (interstitialAd != null && activity != null) {
+            interstitialAd!!.show(activity!!)
+        }
+    }
+
+    fun loadBannerAd(adView: ViewGroup) {
+        adView.addView(
+            AdView(context).apply {
+                adUnitId = TEST_BANNER_ID or context.getString(R.string.ad_banner_id)
+                setAdSize(getBannerSize(adView))
+                loadAd(adRequest)
+            }
+        )
+    }
+
+    private fun getBannerSize(adView: ViewGroup): AdSize {
+        val adViewWidth = getAdWidth(adView)
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adViewWidth)
+    }
+
+    private fun getInterstitialAdLoadCallback() =
+        object : InterstitialAdLoadCallback() {
+
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                fallback?.invoke()
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                this@AdProvider.interstitialAd = interstitialAd.apply {
+                    fullScreenContentCallback = initFullScreenContentCallback()
                 }
+                afterLoadedCallback?.invoke()
             }
         }
-        loadAd(adRequest)
-    }
 
-    private fun clickedAd() {
-        adChecker.clickedAd()
-        context.longToast(R.string.thanks_for_clicked_ad)
-    }
-
-    fun listener(goToMainListener: () -> Unit): AdProvider {
-        this.goToMainListener = goToMainListener
-        return this
-    }
-
-    private fun showAd() {
-        if (mInterstitialAd.isLoaded) {
-            mInterstitialAd.show()
+    private fun initFullScreenContentCallback() =
+        object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                dismissCallback?.invoke()
+            }
         }
+
+    private fun getAdWidth(view: ViewGroup): Int {
+        var viewWidthPixels = view.width.toFloat()
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            val windowMetrics = windowManager.currentWindowMetrics
+            val insets = windowMetrics.windowInsets
+                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            val insetsWidth = insets.left + insets.right
+            val density = Resources.getSystem().displayMetrics.density
+            val width = (windowMetrics.bounds.width() - insetsWidth)
+            if (viewWidthPixels == 0F) {
+                viewWidthPixels = width.toFloat()
+            }
+            return (viewWidthPixels / density).toInt()
+        }
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val density = displayMetrics.density
+        if (viewWidthPixels == 0F) {
+            viewWidthPixels = displayMetrics.widthPixels.toFloat()
+        }
+        return (viewWidthPixels / density).toInt()
     }
 
-    private infix fun String.or(that: String): String = if (BuildConfig.DEBUG) this else that
+    private infix fun String.or(that: String) = if (BuildConfig.DEBUG) this else that
 
-    companion object : SingletonHolder<AdProvider, Context>(::AdProvider) {
+    companion object {
         private const val TEST_BANNER_ID = "ca-app-pub-3940256099942544/6300978111"
         private const val TEST_INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712"
+        private const val TEST_NATIVE_ID = "ca-app-pub-3940256099942544/2247696110"
     }
 }

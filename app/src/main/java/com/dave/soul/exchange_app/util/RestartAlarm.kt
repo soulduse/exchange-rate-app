@@ -16,11 +16,11 @@ class RestartAlarm {
     /**
      * 알람 매니져에 서비스 등록
      */
-    fun registerRestartAlarm(context :Context) {
+    fun registerRestartAlarm(context: Context) {
         Log.i("000 AlarmService", "registerRestartAlarm")
         val intent = Intent(context, RestartService::class.java)
         intent.action = "ACTION.RESTART.AlarmService"
-        val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         var firstTime = SystemClock.elapsedRealtime()
         firstTime += (1 * 1000).toLong()
@@ -30,17 +30,22 @@ class RestartAlarm {
         /**
          * 알람 등록
          */
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, (1 * 1000).toLong(), sender)
+        alarmManager.setRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            firstTime,
+            (1 * 1000).toLong(),
+            sender
+        )
     }
 
     /**
      * 알람 매니져에 서비스 해제
      */
-    fun unregisterRestartAlarm(context :Context) {
+    fun unregisterRestartAlarm(context: Context) {
         Log.i("000 AlarmService", "unregisterRestartAlarm")
         val intent = Intent(context, RestartService::class.java)
         intent.action = "ACTION.RESTART.AlarmService"
-        val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -50,7 +55,9 @@ class RestartAlarm {
         alarmManager.cancel(sender)
     }
 
-    private object Holder { val INSTANCE = RestartAlarm() }
+    private object Holder {
+        val INSTANCE = RestartAlarm()
+    }
 
     companion object {
         val instance: RestartAlarm by lazy { Holder.INSTANCE }

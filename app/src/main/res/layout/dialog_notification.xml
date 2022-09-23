@@ -11,7 +11,7 @@
             type="com.dave.soul.exchange_app.view.ui.CustomNotificationDialog" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -158,6 +158,6 @@
             app:layout_constraintRight_toLeftOf="@+id/addAlarm" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

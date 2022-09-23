@@ -9,7 +9,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 
 val appModule = module {
-    single { AdProvider.getInstance(androidContext()) }
+    single { AdProvider(androidContext()) }
     single { CommonSharedPref(get()) }
     single { AdChecker(get()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }

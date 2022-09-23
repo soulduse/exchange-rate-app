@@ -1,9 +1,7 @@
 package com.dave.soul.exchange_app.view.ui;
 
 import android.annotation.SuppressLint;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,14 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+
 import com.dave.soul.exchange_app.R;
-import com.dave.soul.exchange_app.util.DLog;
-import com.dave.soul.exchange_app.view.adapter.DialogAdapter2;
 import com.dave.soul.exchange_app.databinding.DialogNotificationBinding;
 import com.dave.soul.exchange_app.model.AlarmModel;
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.realm.RealmController;
 import com.dave.soul.exchange_app.util.MoneyUtil;
+import com.dave.soul.exchange_app.view.adapter.DialogAdapter2;
 
 import java.util.StringTokenizer;
 
@@ -96,6 +96,7 @@ public class CustomNotificationDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_notification, container, false);
         binding.setDialog(this);
 
@@ -241,34 +242,28 @@ public class CustomNotificationDialog extends DialogFragment {
         }
     };
 
-    public static String getDecimalFormattedString(String value)
-    {
+    public static String getDecimalFormattedString(String value) {
         StringTokenizer lst = new StringTokenizer(value, ".");
         String str1 = value;
         String str2 = "";
-        if (lst.countTokens() > 1)
-        {
+        if (lst.countTokens() > 1) {
             str1 = lst.nextToken();
             str2 = lst.nextToken();
         }
         String str3 = "";
         int i = 0;
         int j = -1 + str1.length();
-        if (str1.charAt( -1 + str1.length()) == '.')
-        {
+        if (str1.charAt(-1 + str1.length()) == '.') {
             j--;
             str3 = ".";
         }
-        for (int k = j;; k--)
-        {
-            if (k < 0)
-            {
+        for (int k = j; ; k--) {
+            if (k < 0) {
                 if (str2.length() > 0)
                     str3 = str3 + "." + str2;
                 return str3;
             }
-            if (i == 3)
-            {
+            if (i == 3) {
                 str3 = "," + str3;
                 i = 0;
             }
@@ -280,9 +275,9 @@ public class CustomNotificationDialog extends DialogFragment {
 
     public static String trimCommaOfString(String string) {
 //        String returnString;
-        if(string.contains(",")){
-            return string.replace(",","");}
-        else {
+        if (string.contains(",")) {
+            return string.replace(",", "");
+        } else {
             return string;
         }
 

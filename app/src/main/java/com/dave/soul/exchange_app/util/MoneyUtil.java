@@ -21,11 +21,16 @@ public class MoneyUtil {
 
         String removeCommasData = removeCommas(data);
 
-        if(removeCommasData.length() >= 11){
-            result = new BigDecimal(removeCommasData);
-        }else{
-            result = Double.parseDouble(removeCommasData);
+        try {
+            if(removeCommasData.length() >= 11){
+                result = new BigDecimal(removeCommasData);
+            }else{
+                result = Double.parseDouble(removeCommasData);
+            }
+        } catch (NumberFormatException e) {
+            result = 0.0;
         }
+
         return result;
     }
 

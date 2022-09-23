@@ -4,11 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,18 +13,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.dave.soul.exchange_app.R;
-import com.dave.soul.exchange_app.view.adapter.DialogAdapter;
 import com.dave.soul.exchange_app.databinding.FragmentTwoBinding;
 import com.dave.soul.exchange_app.manager.DataManager;
 import com.dave.soul.exchange_app.model.CalcuCountries;
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.paser.ExchangeInfo;
 import com.dave.soul.exchange_app.realm.RealmController;
-import com.dave.soul.exchange_app.view.ui.CountryDialog;
 import com.dave.soul.exchange_app.util.KakaoLinkUtil;
 import com.dave.soul.exchange_app.util.MoneyUtil;
+import com.dave.soul.exchange_app.view.adapter.DialogAdapter;
+import com.dave.soul.exchange_app.view.ui.CountryDialog;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 

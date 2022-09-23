@@ -5,16 +5,13 @@ import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.manager.DataManager
 import com.dave.soul.exchange_app.util.RestartAlarm
@@ -23,6 +20,9 @@ import com.dave.soul.exchange_app.view.fragment.OneFragment
 import com.dave.soul.exchange_app.view.fragment.ThreeFragment
 import com.dave.soul.exchange_app.view.fragment.TwoFragment
 import com.dave.soul.exchange_app.view.ui.CustomNotificationDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
 
@@ -94,23 +94,33 @@ class MainActivity : AppCompatActivity() {
      */
     fun initViewPager(internet: Boolean) {
         setupViewPager(viewPager!!)
-        val msg = if (internet) getString(R.string.connect_internet) else getString(R.string.disconnect_internet)
+        val msg =
+            if (internet) getString(R.string.connect_internet) else getString(R.string.disconnect_internet)
         showSnackBar(msg)
     }
 
     private fun initBroadCast() {
-        //리스타트 서비스 생성
+        // 리스타트 서비스 생성
         restartService = RestartService()
         val intentFilter = IntentFilter("com.dave.soul.exchange_app.view.service.AlarmService")
-        //브로드 캐스트에 등록
+        // 브로드 캐스트에 등록
         registerReceiver(restartService, intentFilter)
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
         mPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        mPagerAdapter!!.addFragment(OneFragment(), resources.getString(R.string.viewpager_tap_name_1))
-        mPagerAdapter!!.addFragment(TwoFragment(), resources.getString(R.string.viewpager_tap_name_2))
-        mPagerAdapter!!.addFragment(ThreeFragment(), resources.getString(R.string.viewpager_tap_name_3))
+        mPagerAdapter!!.addFragment(
+            OneFragment(),
+            resources.getString(R.string.viewpager_tap_name_1)
+        )
+        mPagerAdapter!!.addFragment(
+            TwoFragment(),
+            resources.getString(R.string.viewpager_tap_name_2)
+        )
+        mPagerAdapter!!.addFragment(
+            ThreeFragment(),
+            resources.getString(R.string.viewpager_tap_name_3)
+        )
         viewPager.offscreenPageLimit = 2
         Log.d(TAG, "viewPager.getCurrentItem() >> " + viewPager.currentItem)
         if (viewPager.currentItem == 0) {
@@ -119,8 +129,11 @@ class MainActivity : AppCompatActivity() {
             moveNextActivityFAB(0)
         }
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
@@ -143,7 +156,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-
             }
         })
         viewPager.adapter = mPagerAdapter
@@ -182,8 +194,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSnackBar(msg: String) {
         val snackbar = Snackbar
-                .make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
+            .make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
+            .setAction("Action", null)
         snackbar.setActionTextColor(Color.RED)
         snackbar.show()
     }
@@ -198,9 +210,8 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onDestroy() {
         stopService()
-        //브로드 캐스트 해제
+        // 브로드 캐스트 해제
         unregisterReceiver(restartService)
         super.onDestroy()
     }
 }
-

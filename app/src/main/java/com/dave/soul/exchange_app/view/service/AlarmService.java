@@ -14,20 +14,20 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+
 import com.dave.soul.exchange_app.R;
-import com.dave.soul.exchange_app.view.activity.MainActivity;
-import com.dave.soul.exchange_app.view.activity.SettingActivity;
-import com.dave.soul.exchange_app.view.adapter.AlarmAdapter;
 import com.dave.soul.exchange_app.manager.DataManager;
 import com.dave.soul.exchange_app.model.AlarmModel;
 import com.dave.soul.exchange_app.realm.RealmController;
 import com.dave.soul.exchange_app.util.RestartAlarm;
 import com.dave.soul.exchange_app.util.SystemUtil;
+import com.dave.soul.exchange_app.view.activity.MainActivity;
+import com.dave.soul.exchange_app.view.activity.SettingActivity;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ import io.realm.Realm;
 
 public class AlarmService extends Service {
 
-    private static final String TAG = AlarmAdapter.class.getSimpleName();
+    private static final String TAG = AlarmService.class.getSimpleName();
     private static final int MILLISINFUTURE = 86400 * 1000;
     private static final String CHANNEL_ID = "channel_id";
 
@@ -68,10 +68,17 @@ public class AlarmService extends Service {
         super.onCreate();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1, new Notification());
+            Notification notification = new Notification.Builder(this, CHANNEL_ID).build();
+            startForeground(1, notification);
         }
 
         initData();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(TAG, "onStartCommand @@@@@@@@@");
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -106,7 +113,7 @@ public class AlarmService extends Service {
         alarmSound = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_SOUND, false);
         alarmVibe = sharedPref.getBoolean(SettingActivity.KEY_PREF_ALARM_VIBE, false);
 
-        Log.d(TAG, "SharedPreferences values : " +
+        Log.i(TAG, "SharedPreferences values : " +
                 "showGraphType : " + showGraphType + ", " +
                 "refreshTime : " + refreshTime + ", " +
                 "alarmSwitch : " + alarmSwitch + ", " +
@@ -131,7 +138,7 @@ public class AlarmService extends Service {
                 // 데이터 갱신
                 DataManager.newInstance(getApplicationContext()).load();
 
-                Log.d(TAG, "isRunningProcess ===> " + SystemUtil.isAppForground(getApplicationContext()));
+                Log.i(TAG, "isRunningProcess ===> " + SystemUtil.isAppForground(getApplicationContext()));
                 if (!alarmSwitch || SystemUtil.isAppForground(getApplicationContext())) {
                     return;
                 }
@@ -153,7 +160,7 @@ public class AlarmService extends Service {
                             String aboveOrBelow = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
 
                             events[i] = abbr + " " + standard + " : " + currentPrice + "원 - (" + aboveOrBelow + ")";
-                            Log.d(TAG, "Event text : " + events[i]);
+                            Log.i(TAG, "Event text : " + events[i]);
                         }
 
                         inboxStyle = new NotificationCompat.InboxStyle();
@@ -238,7 +245,7 @@ public class AlarmService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
         return builder;
     }

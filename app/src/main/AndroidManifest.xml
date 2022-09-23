@@ -4,6 +4,7 @@
 
     <application
         android:name="com.dave.soul.exchange_app.MyApplication"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -12,12 +13,13 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/banner_app_unit_id"/>
+            android:value="@string/admob_id"/>
 
         <!-- MainActivity -->
         <activity
             android:name=".view.activity.SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +29,8 @@
 
         <activity android:name=".view.activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
 
             <intent-filter>
                 <!-- 카카오톡 링크를 사용하기 위한 설정 값 1 -->
@@ -69,11 +72,6 @@
             </intent-filter>
         </receiver>
 
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="b9f858ffa35efde3250514c6e0f40c8c3b4397f0" />
-
         <!-- 카카오톡 링크를 사용하기 위한 설정 값 1 -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -87,6 +85,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
 </manifest>

@@ -1,23 +1,25 @@
 package com.dave.soul.exchange_app.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.dave.soul.exchange_app.R;
 import com.dave.soul.exchange_app.model.AlarmModel;
 import com.dave.soul.exchange_app.model.ExchangeRate;
 import com.dave.soul.exchange_app.realm.RealmController;
-import com.dave.soul.exchange_app.view.ui.CustomNotificationDialog;
 import com.dave.soul.exchange_app.util.MoneyUtil;
+import com.dave.soul.exchange_app.view.ui.CustomNotificationDialog;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -49,7 +51,7 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final AlarmModel obj = getItem(position);
         ExchangeRate exchangeRate = obj.getExchangeRate();
         Resources res = context.getResources();

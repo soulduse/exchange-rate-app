@@ -10,14 +10,14 @@
         android:layout_height="wrap_content"
         android:text="@string/apology_ad_title" />
 
-    <com.google.android.gms.ads.NativeExpressAdView
-        android:id="@+id/ad_back_pressed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="320x150"
-        ads:adUnitId="@string/ad_back_pressed_ad_id" />
+<!--    <com.google.android.gms.ads.NativeExpressAdView-->
+<!--        android:id="@+id/ad_back_pressed"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        ads:adSize="320x150"-->
+<!--        ads:adUnitId="@string/ad_back_pressed_ad_id" />-->
 
     <LinearLayout
         android:layout_width="match_parent"

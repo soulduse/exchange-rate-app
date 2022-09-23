@@ -2,9 +2,6 @@ package com.dave.soul.exchange_app.view.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,9 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dave.soul.exchange_app.R;
-import com.dave.soul.exchange_app.view.adapter.DialogAdapter;
 import com.dave.soul.exchange_app.realm.RealmController;
+import com.dave.soul.exchange_app.view.adapter.DialogAdapter;
 
 import io.realm.Realm;
 
@@ -28,10 +29,11 @@ public class CountryDialog extends DialogFragment {
     private Realm realm;
     private DialogAdapter.OnItemClickListener mListener;
 
-    public CountryDialog(){}
+    public CountryDialog() {
+    }
 
     @SuppressLint("ValidFragment")
-    public CountryDialog(DialogAdapter.OnItemClickListener mListener){
+    public CountryDialog(DialogAdapter.OnItemClickListener mListener) {
         this.mListener = mListener;
     }
 
@@ -51,14 +53,13 @@ public class CountryDialog extends DialogFragment {
         return v;
     }
 
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         // resize popup
         DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
-        int width   = (int) (dm.widthPixels*0.9);
-        int height  = (int) (dm.heightPixels/0.9);
+        int width = (int) (dm.widthPixels * 0.9);
+        int height = (int) (dm.heightPixels / 0.9);
 
         Window window = getDialog().getWindow();
         window.setLayout(width, height);

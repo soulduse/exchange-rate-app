@@ -6,9 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.dave.soul.exchange_app.view.service.AlarmService
+import com.dave.soul.exchange_app.view.service.BackupWorker
+import java.util.concurrent.TimeUnit
 import org.jetbrains.anko.startService
+import timber.log.Timber
 
 /**
  * Created by soul on 2017. 7. 31..
@@ -36,7 +40,17 @@ class RestartService : BroadcastReceiver() {
     }
 }
 
-inline fun <reified T: Service> Context.serviceStart() {
+inline fun <reified T : Service> Context.serviceStart() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        Timber.w("Build.VERSION_CODES.S @@@@@@@@@@@@@@@")
+        val request = OneTimeWorkRequest.Builder(BackupWorker::class.java)
+            .setInitialDelay(100L, TimeUnit.MINUTES)
+            .addTag("BACKUP_WORKER_TAG")
+            .build()
+        WorkManager.getInstance(this).enqueue(request)
+        return
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         startForegroundService(Intent(this, T::class.java))
         return
