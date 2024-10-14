@@ -1,8 +1,10 @@
 package com.dave.soul.exchange_app.view.activity
 
+import android.Manifest
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -14,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.manager.DataManager
+import com.dave.soul.exchange_app.util.PermissionCheck
 import com.dave.soul.exchange_app.util.RestartAlarm
 import com.dave.soul.exchange_app.view.adapter.ViewPagerAdapter
 import com.dave.soul.exchange_app.view.fragment.OneFragment
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         load()
         initBroadCast()
         initLayout()
+        initPermission()
     }
 
     private fun initSettings() {
@@ -55,6 +59,14 @@ class MainActivity : AppCompatActivity() {
         tabLayout = findViewById<View>(R.id.tabs) as TabLayout
         tabLayout!!.setupWithViewPager(viewPager)
         fab = findViewById<View>(R.id.fab) as FloatingActionButton
+    }
+
+    private fun initPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        PermissionCheck
+            .withContext(this)
+            .withPermissions(Manifest.permission.POST_NOTIFICATIONS)
+            .check()
     }
 
     override fun onStart() {
@@ -111,15 +123,15 @@ class MainActivity : AppCompatActivity() {
         mPagerAdapter = ViewPagerAdapter(supportFragmentManager)
         mPagerAdapter!!.addFragment(
             OneFragment(),
-            resources.getString(R.string.viewpager_tap_name_1)
+            resources.getString(R.string.viewpager_tap_name_1),
         )
         mPagerAdapter!!.addFragment(
             TwoFragment(),
-            resources.getString(R.string.viewpager_tap_name_2)
+            resources.getString(R.string.viewpager_tap_name_2),
         )
         mPagerAdapter!!.addFragment(
             ThreeFragment(),
-            resources.getString(R.string.viewpager_tap_name_3)
+            resources.getString(R.string.viewpager_tap_name_3),
         )
         viewPager.offscreenPageLimit = 2
         Log.d(TAG, "viewPager.getCurrentItem() >> " + viewPager.currentItem)
@@ -132,7 +144,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
-                positionOffsetPixels: Int
+                positionOffsetPixels: Int,
             ) {
             }
 
@@ -143,10 +155,12 @@ class MainActivity : AppCompatActivity() {
                         fab!!.show()
                         moveNextActivityFAB(position)
                     }
+
                     1 -> {
                         Log.d(TAG, "Fab button 1 ")
                         fab!!.hide()
                     }
+
                     2 -> {
                         Log.d(TAG, "Fab button 2 ")
                         fab!!.show()

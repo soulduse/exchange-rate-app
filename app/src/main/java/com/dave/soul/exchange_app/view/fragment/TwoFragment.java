@@ -281,8 +281,8 @@ public class TwoFragment  extends Fragment {
                 }
 
                 // 카카오톡 사용이 가능하다면 카카오 링크로 공유
-                if(KakaoLinkUtil.getInstance().isKakaoLinkAvailable(getContext())){
-                    KakaoLinkUtil.getInstance().sendLink(getContext(), getLinkTitle(), getLinkDiscription());
+                if(KakaoLinkUtil.INSTANCE.isKakaoTalkSharingAvailable(getContext())){
+                    KakaoLinkUtil.INSTANCE.sendLink(getContext(), getLinkTitle(), getLinkDiscription());
                 }else{
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -292,7 +292,7 @@ public class TwoFragment  extends Fragment {
                     String subject = "환율 알리미 ["+getLinkTitle()+"]";
                     String discription = "\n"+getLinkDiscription().replace("-","");
                     intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                    intent.putExtra(Intent.EXTRA_TEXT, discription+"\n 자세히 보기 \n"+KakaoLinkUtil.getInstance().PLAY_STORE_URL);
+                    intent.putExtra(Intent.EXTRA_TEXT, discription+"\n 자세히 보기 \n"+KakaoLinkUtil.INSTANCE.getPLAY_STORE_URL());
 
                     // Title of intent
                     Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");

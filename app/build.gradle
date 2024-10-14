@@ -5,14 +5,14 @@ apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 31
+    compileSdk 33
 //    buildToolsVersion '31.0.3'
     defaultConfig {
         applicationId "com.dave.soul.exchange_app"
         minSdkVersion 23
-        targetSdkVersion 31
-        versionCode 13
-        versionName "1.8.4"
+        targetSdkVersion 33
+        versionCode 14
+        versionName "1.8.5"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -34,8 +34,8 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation "com.google.android.material:material:1.6.1"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "com.google.android.material:material:1.9.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     // Firebase
@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation "com.google.firebase:firebase-core:21.1.1"
-    implementation 'com.google.firebase:firebase-config:21.1.2'
+    implementation 'com.google.firebase:firebase-config:21.4.1'
 
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -65,26 +65,27 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // Optional -- Mockito framework
-    testImplementation 'org.mockito:mockito-core:4.0.0'
+    testImplementation 'org.mockito:mockito-core:5.2.0'
 
-    implementation "joda-time:joda-time:2.10.1"
+    implementation "joda-time:joda-time:2.10.5"
 
     // constraint-layout
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
     implementation "org.koin:koin-android:$koin_version"
+    implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-rc02")
 
-    implementation 'com.google.firebase:firebase-ads:21.2.0'
+    implementation 'com.google.firebase:firebase-ads:22.3.0'
     implementation "com.google.firebase:firebase-core:21.1.1"
-    implementation "com.google.firebase:firebase-crashlytics:18.2.13"
+    implementation "com.google.firebase:firebase-crashlytics:18.4.1"
 
-    implementation 'androidx.work:work-runtime:2.7.1'
+    implementation 'androidx.work:work-runtime:2.8.1'
     implementation 'com.google.guava:guava:27.0.1-android'
 
     implementation("com.jakewharton.timber:timber:4.7.1")
 
     // 카카오링크 sdk를 사용하기 위해 필요.
-    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+    implementation "com.kakao.sdk:v2-share:2.16.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt 'com.android.databinding:compiler:3.1.4'
 }

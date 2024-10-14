@@ -99,7 +99,8 @@
     <string name="ad_interstitial_id">ca-app-pub-1908860913688060/2186144132</string>
     <string name="ad_banner_id">ca-app-pub-1908860913688060/6574404035</string>
     <string name="ad_back_pressed_ad_id">ca-app-pub-1908860913688060/3495356376</string>
-
+    <string name="toast_agree">모든 권한에 승인을 해주세요</string>
+    <string name="setting_txt">설정</string>
     <string name="thanks_for_clicked_ad">감사합니다! 오늘 하루동안은 광고가 노출되지 않습니다. :)\n즐거운 하루되세요!</string>
 
     <string name="apology_ad_title">

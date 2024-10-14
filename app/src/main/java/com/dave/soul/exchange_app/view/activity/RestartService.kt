@@ -10,9 +10,9 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.dave.soul.exchange_app.view.service.AlarmService
 import com.dave.soul.exchange_app.view.service.BackupWorker
-import java.util.concurrent.TimeUnit
 import org.jetbrains.anko.startService
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by soul on 2017. 7. 31..
