@@ -6,7 +6,7 @@ import com.dave.soul.exchange_app.util.AdProvider
 import com.dave.soul.exchange_app.util.CommonSharedPref
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 val appModule = module {
     single { AdProvider(androidContext()) }

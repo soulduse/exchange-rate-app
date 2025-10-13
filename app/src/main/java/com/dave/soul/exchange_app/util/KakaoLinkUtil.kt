@@ -1,12 +1,12 @@
 package com.dave.soul.exchange_app.util
 
 import android.content.Context
+import android.widget.Toast
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.template.model.Button
 import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
-import org.jetbrains.anko.toast
 
 /**
  * Created by soul on 2017. 8. 6..
@@ -24,7 +24,7 @@ object KakaoLinkUtil {
         val params: FeedTemplate = getMessageFeed(title, description)
         ShareClient.instance.shareDefault(context, params) { sharingResult, error ->
             when {
-                error != null -> context.toast("카카오톡 공유 실패")
+                error != null -> Toast.makeText(context, "카카오톡 공유 실패", Toast.LENGTH_SHORT).show()
                 (sharingResult != null) -> context.startActivity(sharingResult.intent)
                 else -> {} // Do nothing
             }

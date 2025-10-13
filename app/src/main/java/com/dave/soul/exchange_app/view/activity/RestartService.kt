@@ -10,7 +10,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.dave.soul.exchange_app.view.service.AlarmService
 import com.dave.soul.exchange_app.view.service.BackupWorker
-import org.jetbrains.anko.startService
+// Removed anko import
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -55,5 +55,5 @@ inline fun <reified T : Service> Context.serviceStart() {
         startForegroundService(Intent(this, T::class.java))
         return
     }
-    startService<T>()
+    startService(Intent(this, T::class.java))
 }

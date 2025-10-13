@@ -101,7 +101,7 @@ class PermissionResultActivity : AppCompatActivity() {
     private fun isTargetSdkUnderAndroidM(): Boolean {
         return try {
             val info = packageManager.getPackageInfo(packageName, 0)
-            val targetSdkVersion = info.applicationInfo.targetSdkVersion
+            val targetSdkVersion = info.applicationInfo?.targetSdkVersion ?: return false
             targetSdkVersion < Build.VERSION_CODES.M
         } catch (ignore: PackageManager.NameNotFoundException) {
             false

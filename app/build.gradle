@@ -5,12 +5,12 @@ apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdk 33
+    compileSdk 35
 //    buildToolsVersion '31.0.3'
     defaultConfig {
         applicationId "com.dave.soul.exchange_app"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode 14
         versionName "1.8.5"
         multiDexEnabled true
@@ -26,24 +26,43 @@ android {
     dataBinding {
         enabled = true
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    androidResources {
+        generateLocaleConfig false
+    }
+
+    namespace 'com.dave.soul.exchange_app'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 dependencies {
-    def anko_version = '0.10.8'
-    def koin_version = "1.0.0"
+    def koin_version = "3.5.6"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation "com.google.android.material:material:1.9.0"
+    // AndroidX Core
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation "com.google.android.material:material:1.12.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:30.4.0')
+    implementation platform('com.google.firebase:firebase-bom:33.5.1')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation "com.google.firebase:firebase-core:21.1.1"
-    implementation 'com.google.firebase:firebase-config:21.4.1'
+    implementation 'com.google.firebase:firebase-config-ktx'
 
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -57,9 +76,8 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
-
-    implementation 'io.realm:android-adapters:2.0.0'
+    // Realm adapter (using snapshot from jitpack as jcenter is deprecated)
+    implementation 'com.github.realm:realm-android-adapters:v4.0.0'
 
     // Required -- JUnit 4 framework
     testImplementation 'junit:junit:4.13.2'
@@ -72,15 +90,13 @@ dependencies {
     // constraint-layout
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-    implementation "org.koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
     implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-rc02")
 
-    implementation 'com.google.firebase:firebase-ads:22.3.0'
-    implementation "com.google.firebase:firebase-core:21.1.1"
-    implementation "com.google.firebase:firebase-crashlytics:18.4.1"
+    implementation 'com.google.firebase:firebase-ads:23.5.0'
 
-    implementation 'androidx.work:work-runtime:2.8.1'
-    implementation 'com.google.guava:guava:27.0.1-android'
+    implementation 'androidx.work:work-runtime-ktx:2.9.1'
+    implementation 'com.google.guava:guava:33.3.1-android'
 
     implementation("com.jakewharton.timber:timber:4.7.1")
 
