@@ -223,25 +223,24 @@ public class TwoFragment  extends Fragment {
     private void clickEtc(int id){
 
         Log.d(TAG," clicked!");
-        switch (id){
-            // 한 숫자씩 지우기
-            case R.id.button_backspace:
-                Editable text = binding.editText.getText();
-                String msg = MoneyUtil.removeCommas(text+"");
-                if(msg.length()>1){
-                    msg = msg.substring(0, msg.length()-1);
-                    String addedCommasNumbers = MoneyUtil.fmt(Double.parseDouble(msg));
-                    Log.d(TAG, "msg : "+msg+" / addedCommasNumbers : "+addedCommasNumbers);
-                    double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,addedCommasNumbers);
-                    binding.editText2.setText(MoneyUtil.fmt(data));
-                    binding.editText.setText(addedCommasNumbers);
-                }else if(text.length() <= 1){
-                    binding.editText.getText().clear();
-                    binding.editText2.getText().clear();
-                }
-                break;
-            // 위아래 스왑
-            case R.id.button_swap:
+        // 한 숫자씩 지우기
+        if (id == R.id.button_backspace) {
+            Editable text = binding.editText.getText();
+            String msg = MoneyUtil.removeCommas(text+"");
+            if(msg.length()>1){
+                msg = msg.substring(0, msg.length()-1);
+                String addedCommasNumbers = MoneyUtil.fmt(Double.parseDouble(msg));
+                Log.d(TAG, "msg : "+msg+" / addedCommasNumbers : "+addedCommasNumbers);
+                double data = MoneyUtil.calMoney(selectedPriceFirst, selectedPriceSecond,addedCommasNumbers);
+                binding.editText2.setText(MoneyUtil.fmt(data));
+                binding.editText.setText(addedCommasNumbers);
+            }else if(text.length() <= 1){
+                binding.editText.getText().clear();
+                binding.editText2.getText().clear();
+            }
+        }
+        // 위아래 스왑
+        else if (id == R.id.button_swap) {
                 int tempSwapNum = dataSwapFirst;
                 dataSwapFirst = dataSwapSecond;
                 dataSwapSecond = tempSwapNum;
@@ -266,48 +265,43 @@ public class TwoFragment  extends Fragment {
                     binding.editText2.setText(MoneyUtil.fmt(data));
                 }
 
-                if(exchangeList.size() != 0){
-                    binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
-                    binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
-                    Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
-                    Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
-                }
+            if(exchangeList.size() != 0){
+                binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
+                binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
+                Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
+                Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
+            }
+        }
+        else if (id == R.id.button_share) {
+            if(isEmptyNumber()){
+                printSnackbar("공유할 데이터를 입력해주세요.");
+                return;
+            }
 
-                break;
-            case R.id.button_share:
-                if(isEmptyNumber()){
-                    printSnackbar("공유할 데이터를 입력해주세요.");
-                    break;
-                }
+            // 카카오톡 사용이 가능하다면 카카오 링크로 공유
+            if(KakaoLinkUtil.INSTANCE.isKakaoTalkSharingAvailable(getContext())){
+                KakaoLinkUtil.INSTANCE.sendLink(getContext(), getLinkTitle(), getLinkDiscription());
+            }else{
+                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                intent.setType("text/plain");
 
-                // 카카오톡 사용이 가능하다면 카카오 링크로 공유
-                if(KakaoLinkUtil.INSTANCE.isKakaoTalkSharingAvailable(getContext())){
-                    KakaoLinkUtil.INSTANCE.sendLink(getContext(), getLinkTitle(), getLinkDiscription());
-                }else{
-                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    intent.setType("text/plain");
+                // Set default text message
+                // 카톡, 이메일, MMS 다 이걸로 설정 가능
+                String subject = "환율 알리미 ["+getLinkTitle()+"]";
+                String discription = "\n"+getLinkDiscription().replace("-","");
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, discription+"\n 자세히 보기 \n"+KakaoLinkUtil.INSTANCE.getPLAY_STORE_URL());
 
-                    // Set default text message
-                    // 카톡, 이메일, MMS 다 이걸로 설정 가능
-                    String subject = "환율 알리미 ["+getLinkTitle()+"]";
-                    String discription = "\n"+getLinkDiscription().replace("-","");
-                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                    intent.putExtra(Intent.EXTRA_TEXT, discription+"\n 자세히 보기 \n"+KakaoLinkUtil.INSTANCE.getPLAY_STORE_URL());
-
-                    // Title of intent
-                    Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
-                    startActivity(chooser);
-                }
-
-
-
-                break;
-            case R.id.flag1:
-                selectCountry(0);
-                break;
-            case R.id.flag2:
-                selectCountry(1);
-                break;
+                // Title of intent
+                Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
+                startActivity(chooser);
+            }
+        }
+        else if (id == R.id.flag1) {
+            selectCountry(0);
+        }
+        else if (id == R.id.flag2) {
+            selectCountry(1);
         }
     }
 

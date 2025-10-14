@@ -164,22 +164,16 @@ public class CustomNotificationDialog extends DialogFragment {
 
     private String getSelectedPrice(int position, ExchangeRate exchangeRate) {
         String price = null;
-        switch (position) {
-            case FLAG_PRICE_BASE:
-                price = MoneyUtil.fmt(exchangeRate.getPriceBase());
-                break;
-            case FLAG_PRICE_BUY:
-                price = MoneyUtil.fmt(exchangeRate.getPriceBuy());
-                break;
-            case FLAG_PRICE_SELL:
-                price = MoneyUtil.fmt(exchangeRate.getPriceSell());
-                break;
-            case FLAG_PRICE_SEND:
-                price = MoneyUtil.fmt(exchangeRate.getPriceSend());
-                break;
-            case FLAG_PRICE_RECEIVE:
-                price = MoneyUtil.fmt(exchangeRate.getPriceReceive());
-                break;
+        if (position == FLAG_PRICE_BASE) {
+            price = MoneyUtil.fmt(exchangeRate.getPriceBase());
+        } else if (position == FLAG_PRICE_BUY) {
+            price = MoneyUtil.fmt(exchangeRate.getPriceBuy());
+        } else if (position == FLAG_PRICE_SELL) {
+            price = MoneyUtil.fmt(exchangeRate.getPriceSell());
+        } else if (position == FLAG_PRICE_SEND) {
+            price = MoneyUtil.fmt(exchangeRate.getPriceSend());
+        } else if (position == FLAG_PRICE_RECEIVE) {
+            price = MoneyUtil.fmt(exchangeRate.getPriceReceive());
         }
 
         return "현재 : " + MoneyUtil.fmt(price);
@@ -286,51 +280,49 @@ public class CustomNotificationDialog extends DialogFragment {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                // 이상 이하 swtch
-                case R.id.aboveOrbelowTxt:
-                    String text = binding.aboveOrbelowTxt.getText().equals(getString(R.string.above))
-                            ? getString(R.string.below) : getString(R.string.above);
-                    binding.aboveOrbelowTxt.setText(text);
-                    break;
+            int viewId = v.getId();
+            // 이상 이하 swtch
+            if (viewId == R.id.aboveOrbelowTxt) {
+                String text = binding.aboveOrbelowTxt.getText().equals(getString(R.string.above))
+                        ? getString(R.string.below) : getString(R.string.above);
+                binding.aboveOrbelowTxt.setText(text);
+            }
+            // 환율 알림 제거
+            else if (viewId == R.id.deleteAlarm) {
+                RealmController.deleteAlarm(realm, position);
+                onChangeDataListener.eventListener();
+                dismiss();
+            }
+            // 환율 알림 추가
+            else if (viewId == R.id.addAlarm) {
+                String priceText = MoneyUtil.removeCommas(binding.alarmPriceEdit.getText().toString());
+                if (priceText == null || priceText.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.warning_empty_price, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ExchangeRate exchangeRate = (ExchangeRate) binding.spinner.getSelectedItem();
+                // true = 이상, false = 이하
+                boolean state = binding.aboveOrbelowTxt.getText().toString().equals("이상") ? true : false;
+                // price가 숫자인지에 대한 검증은 안해도된다 왜냐하면 EditText의 데이터 타입을 숫자로 설정 해놓았기 때문.
+                double price = Double.parseDouble(priceText);
+                int standardExchange = binding.spinner2.getSelectedItemPosition();
+                int countryPosition = binding.spinner.getSelectedItemPosition();
 
-                // 환율 알림 제거
-                case R.id.deleteAlarm:
-                    RealmController.deleteAlarm(realm, position);
-                    onChangeDataListener.eventListener();
+                // 중복된 알람이 있는지 검증
+                if (RealmController.isOverlap(realm, exchangeRate, state, price, standardExchange)) {
+                    Toast.makeText(getContext(), R.string.warning_overlap_alarm, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (alarmModel != null) {
+                    RealmController.updateAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition, position);
                     dismiss();
-                    break;
-                // 환율 알림 추가
-                case R.id.addAlarm:
-                    String priceText = MoneyUtil.removeCommas(binding.alarmPriceEdit.getText().toString());
-                    if (priceText == null || priceText.isEmpty()) {
-                        Toast.makeText(getContext(), R.string.warning_empty_price, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    ExchangeRate exchangeRate = (ExchangeRate) binding.spinner.getSelectedItem();
-                    // true = 이상, false = 이하
-                    boolean state = binding.aboveOrbelowTxt.getText().toString().equals("이상") ? true : false;
-                    // price가 숫자인지에 대한 검증은 안해도된다 왜냐하면 EditText의 데이터 타입을 숫자로 설정 해놓았기 때문.
-                    double price = Double.parseDouble(priceText);
-                    int standardExchange = binding.spinner2.getSelectedItemPosition();
-                    int countryPosition = binding.spinner.getSelectedItemPosition();
-
-                    // 중복된 알람이 있는지 검증
-                    if (RealmController.isOverlap(realm, exchangeRate, state, price, standardExchange)) {
-                        Toast.makeText(getContext(), R.string.warning_overlap_alarm, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-
-                    if (alarmModel != null) {
-                        RealmController.updateAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition, position);
-                        dismiss();
-                        break;
-                    }
-                    // 알람을 Realm에 저장한다.
-                    RealmController.addAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition);
-                    // 데이터가 등록되었으니 Dialog 창을 닫는다.
-                    dismiss();
-                    break;
+                    return;
+                }
+                // 알람을 Realm에 저장한다.
+                RealmController.addAlarm(realm, exchangeRate, state, price, standardExchange, countryPosition);
+                // 데이터가 등록되었으니 Dialog 창을 닫는다.
+                dismiss();
             }
         }
     };
