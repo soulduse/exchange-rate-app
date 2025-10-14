@@ -148,24 +148,55 @@ public class AlarmService extends Service {
                     List<AlarmModel> alarmModelList = RealmController.getAlarms(realm);
                     int alarmSize = alarmModelList.size();
 
-                    // 알림 조건에 맞는 데이터가 있을경우 알림발생 시킴
-                    if (alarmSize != 0) {
-                        String[] events = new String[alarmSize];
+                    if (alarmSize == 0) {
+                        Log.i(TAG, "No alarms set");
+                        return;
+                    }
 
-                        for (int i = 0; i < alarmSize; i++) {
-                            AlarmModel alarmModel = alarmModelList.get(i);
-                            String abbr = alarmModel.getExchangeRate().getCountryAbbr();
-                            String standard = titles[alarmModel.getStandardExchange()];
-                            double currentPrice = DataManager.getInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
-                            String aboveOrBelow = alarmModel.isAboveOrbelow() ? getString(R.string.compare_above) : getString(R.string.compare_below);
+                    Log.i(TAG, "Found " + alarmSize + " alarm(s)");
 
-                            events[i] = abbr + " " + standard + " : " + currentPrice + "원 - (" + aboveOrBelow + ")";
-                            Log.i(TAG, "Event text : " + events[i]);
+                    // 알림 조건에 맞는 데이터 확인
+                    java.util.ArrayList<String> events = new java.util.ArrayList<>();
+
+                    for (int i = 0; i < alarmSize; i++) {
+                        AlarmModel alarmModel = alarmModelList.get(i);
+
+                        // 이 알람이 꺼져있으면 스킵
+                        if (!alarmModel.isAlarmSwitch()) {
+                            Log.i(TAG, "Alarm " + i + " is switched off, skipping");
+                            continue;
                         }
 
+                        String abbr = alarmModel.getExchangeRate().getCountryAbbr();
+                        String standard = titles[alarmModel.getStandardExchange()];
+                        double currentPrice = DataManager.getInstance().getPrice(alarmModel.getStandardExchange(), alarmModel.getExchangeRate());
+                        double targetPrice = alarmModel.getPrice();
+                        boolean isAbove = alarmModel.isAboveOrbelow();
+
+                        // 조건 체크: 이상/이하 확인
+                        boolean conditionMet;
+                        if (isAbove) {
+                            conditionMet = currentPrice >= targetPrice;
+                        } else {
+                            conditionMet = currentPrice <= targetPrice;
+                        }
+
+                        if (conditionMet) {
+                            String aboveOrBelow = isAbove ? getString(R.string.compare_above) : getString(R.string.compare_below);
+                            String eventText = abbr + " " + standard + " : " + currentPrice + "원 - (" + aboveOrBelow + ")";
+                            events.add(eventText);
+                            Log.i(TAG, "Alarm condition met: " + eventText);
+                        } else {
+                            Log.i(TAG, "Alarm " + i + " condition not met (current: " + currentPrice + ", target: " + targetPrice + ", isAbove: " + isAbove + ")");
+                        }
+                    }
+
+                    // 조건에 맞는 알람이 있으면 노티피케이션 발송
+                    if (!events.isEmpty()) {
+                        int eventCount = events.size();
                         inboxStyle = new NotificationCompat.InboxStyle();
-                        inboxStyle.setBigContentTitle("환율 알림 " + alarmSize + "건");
-                        inboxStyle.setSummaryText(alarmSize + "개의 환율 알림 발생");
+                        inboxStyle.setBigContentTitle("환율 알림 " + eventCount + "건");
+                        inboxStyle.setSummaryText(eventCount + "개의 환율 알림 발생");
 
                         for (String str : events) {
                             inboxStyle.addLine(str);
@@ -173,11 +204,14 @@ public class AlarmService extends Service {
                         //스타일 추가
                         mBuilder.setStyle(inboxStyle);
                         mBuilder.setContentTitle("환율");
-                        mBuilder.setContentText("환율 알림 " + alarmSize + "건");
+                        mBuilder.setContentText("환율 알림 " + eventCount + "건");
                         mBuilder.setSubText("설정한 수치에 도달한 환율이 있습니다.");
                         mBuilder.setContentIntent(createPendingIntent());
                         mBuilder.setWhen(System.currentTimeMillis());
                         mNotificationManager.notify(2130, mBuilder.build());
+                        Log.i(TAG, "Notification sent with " + eventCount + " alarm(s)");
+                    } else {
+                        Log.i(TAG, "No alarm conditions met");
                     }
                 } finally {
                     realm.close();
