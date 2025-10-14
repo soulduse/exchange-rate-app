@@ -219,7 +219,7 @@ public class AlarmService extends Service {
 
         return stackBuilder.getPendingIntent(
                 0,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
     }
 

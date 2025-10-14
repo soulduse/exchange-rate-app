@@ -53,10 +53,9 @@
         <service
             android:name=".view.service.AlarmService"
             android:enabled="true"
-            >
+            android:foregroundServiceType="dataSync"
+            android:exported="false">
         </service>
-        <!--android:enabled="true"-->
-        <!--android:process=":remote"-->
 
         <!-- SetCountryActivity -->
         <activity android:name=".view.activity.SetCountryActivity"
@@ -87,15 +86,21 @@
             android:value="@string/kakao_app_key" />
     </application>
 
+    <!-- Network permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Notification permissions -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Boot and alarm permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- Foreground service permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
 </manifest>
