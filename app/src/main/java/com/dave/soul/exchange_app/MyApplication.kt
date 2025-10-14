@@ -5,7 +5,8 @@ import com.dave.soul.exchange_app.di.appModule
 import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import timber.log.Timber
 
 /**
@@ -21,10 +22,14 @@ class MyApplication : Application() {
             .name(Realm.DEFAULT_REALM_NAME)
             .schemaVersion(0)
             .deleteRealmIfMigrationNeeded()
+            .allowWritesOnUiThread(true)
             .build()
         Realm.setDefaultConfiguration(config)
 
-        startKoin(this, listOf(appModule))
+        startKoin {
+            androidContext(this@MyApplication)
+            modules(appModule)
+        }
 
         MobileAds.initialize(this)
         /*
