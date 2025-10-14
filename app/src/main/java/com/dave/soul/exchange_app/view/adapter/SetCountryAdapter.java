@@ -56,7 +56,10 @@ public class SetCountryAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Se
         holder.title.setText(title);
         holder.isCheck.setOnCheckedChangeListener(null);
         holder.isCheck.setChecked(obj.isCheckState());
-        Glide.with(context).load(obj.getThumbnail()).into(holder.thumbnail);
+        Glide.with(context)
+            .load(obj.getThumbnail())
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(holder.thumbnail);
         changeCheck(holder.isCheck, title);
 
         // itemView 클릭시 Check 되도록 추가

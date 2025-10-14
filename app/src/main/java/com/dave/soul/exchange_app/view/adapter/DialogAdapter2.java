@@ -71,7 +71,10 @@ public class DialogAdapter2 extends BaseAdapter {
         ExchangeRate exchangeRate = realmResults.get(position);
 
         title.setText(exchangeRate.getCountryAbbr()+" "+exchangeRate.getCountryName());
-        Glide.with(context).load(exchangeRate.getThumbnail()).into(thumbnail);
+        Glide.with(context)
+            .load(exchangeRate.getThumbnail())
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(thumbnail);
 
         return convertView;
     }

@@ -153,11 +153,80 @@ public class ExchangeParser implements ExchangeInfo{
         }
     }
 
-    private String combineThumbnailUrl(String flag){
-        String preUrl = FLAG_IMG_URL.substring(0,FLAG_IMG_URL.length()-4);
-        String sufUrl = FLAG_IMG_URL.substring(FLAG_IMG_URL.length()-4, FLAG_IMG_URL.length());
+    private String combineThumbnailUrl(String currencyCode){
+        String countryCode = convertCurrencyToCountryCode(currencyCode);
+        return FLAG_IMG_URL + countryCode + ".png";
+    }
 
-        return preUrl+flag+sufUrl;
+    /**
+     * Convert currency code (ISO 4217) to country code (ISO 3166-1 alpha-2)
+     * @param currencyCode 3-letter currency code (e.g., USD, JPY)
+     * @return 2-letter country code in lowercase (e.g., us, jp)
+     */
+    private String convertCurrencyToCountryCode(String currencyCode) {
+        if (currencyCode == null || currencyCode.length() != 3) {
+            return "xx"; // fallback for invalid codes
+        }
+
+        // Convert currency code to country code
+        switch (currencyCode.toUpperCase()) {
+            case "USD": return "us";  // United States Dollar
+            case "EUR": return "eu";  // Euro (European Union flag)
+            case "JPY": return "jp";  // Japanese Yen
+            case "GBP": return "gb";  // British Pound
+            case "CNY": return "cn";  // Chinese Yuan
+            case "AUD": return "au";  // Australian Dollar
+            case "CAD": return "ca";  // Canadian Dollar
+            case "CHF": return "ch";  // Swiss Franc
+            case "HKD": return "hk";  // Hong Kong Dollar
+            case "NZD": return "nz";  // New Zealand Dollar
+            case "SEK": return "se";  // Swedish Krona
+            case "SGD": return "sg";  // Singapore Dollar
+            case "NOK": return "no";  // Norwegian Krone
+            case "MXN": return "mx";  // Mexican Peso
+            case "INR": return "in";  // Indian Rupee
+            case "RUB": return "ru";  // Russian Ruble
+            case "ZAR": return "za";  // South African Rand
+            case "TRY": return "tr";  // Turkish Lira
+            case "BRL": return "br";  // Brazilian Real
+            case "TWD": return "tw";  // Taiwan Dollar
+            case "DKK": return "dk";  // Danish Krone
+            case "PLN": return "pl";  // Polish Zloty
+            case "THB": return "th";  // Thai Baht
+            case "IDR": return "id";  // Indonesian Rupiah
+            case "HUF": return "hu";  // Hungarian Forint
+            case "CZK": return "cz";  // Czech Koruna
+            case "ILS": return "il";  // Israeli Shekel
+            case "CLP": return "cl";  // Chilean Peso
+            case "PHP": return "ph";  // Philippine Peso
+            case "AED": return "ae";  // UAE Dirham
+            case "SAR": return "sa";  // Saudi Riyal
+            case "MYR": return "my";  // Malaysian Ringgit
+            case "KWD": return "kw";  // Kuwaiti Dinar
+            case "BHD": return "bh";  // Bahraini Dinar
+            case "DZD": return "dz";  // Algerian Dinar
+            case "JOD": return "jo";  // Jordanian Dinar
+            case "KZT": return "kz";  // Kazakhstani Tenge
+            case "EGP": return "eg";  // Egyptian Pound
+            case "VND": return "vn";  // Vietnamese Dong
+            case "MAD": return "ma";  // Moroccan Dirham
+            case "OMR": return "om";  // Omani Rial
+            case "RON": return "ro";  // Romanian Leu
+            case "PKR": return "pk";  // Pakistani Rupee
+            case "QAR": return "qa";  // Qatari Riyal
+            case "FJD": return "fj";  // Fijian Dollar
+            case "BDT": return "bd";  // Bangladeshi Taka
+            case "LKR": return "lk";  // Sri Lankan Rupee
+            case "KES": return "ke";  // Kenyan Shilling
+            case "COP": return "co";  // Colombian Peso
+            case "ARS": return "ar";  // Argentine Peso
+            case "PEN": return "pe";  // Peruvian Sol
+            case "MNT": return "mn";  // Mongolian Tugrik
+            default:
+                // Try to derive country code from currency code (first 2 letters)
+                Log.w(TAG, "Unknown currency code: " + currencyCode + ", using fallback");
+                return currencyCode.substring(0, 2).toLowerCase();
+        }
     }
 
     public String getExchangeDate(){

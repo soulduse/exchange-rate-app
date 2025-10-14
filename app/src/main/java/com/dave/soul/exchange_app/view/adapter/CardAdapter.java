@@ -159,7 +159,10 @@ public class CardAdapter extends RealmRecyclerViewAdapter<ExchangeRate, CardAdap
         });
 
         // loading flag cover using Glide library
-        Glide.with(mContext).load(obj.getThumbnail()).into(holder.thumbnail);
+        Glide.with(mContext)
+            .load(obj.getThumbnail())
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(holder.thumbnail);
     }
 
     // https://github.com/mikepenz/MaterialDrawer/issues/1158

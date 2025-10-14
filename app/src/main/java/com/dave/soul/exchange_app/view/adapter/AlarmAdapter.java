@@ -60,7 +60,10 @@ public class AlarmAdapter extends RealmRecyclerViewAdapter<AlarmModel, AlarmAdap
         holder.title.setText(title);
 
         holder.price.setText(titles[obj.getStandardExchange()]+" "+ MoneyUtil.fmt(obj.getPrice()));
-        Glide.with(context).load(exchangeRate.getThumbnail()).into(holder.flag);
+        Glide.with(context)
+            .load(exchangeRate.getThumbnail())
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(holder.flag);
 
         // 이상일 경우 up arrow, 이하 일 경우 down arrow 표
         int arrowImage = obj.isAboveOrbelow() ?

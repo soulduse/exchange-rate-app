@@ -8,8 +8,8 @@ public interface ExchangeInfo {
 
     String BASE_URL         = "https://finance.naver.com/marketindex/exchangeList.nhn";
     String SECOND_URL       = "https://finance.naver.com/marketindex/";
-    String FLAG_IMG_URL     = "http://imgfinance.naver.net/nfinance/flag/flag_.png";
-    String KOREA_FLAG       = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/50px-Flag_of_South_Korea.svg.png";
+    String FLAG_IMG_URL     = "https://flagcdn.com/w40/";
+    String KOREA_FLAG       = "https://flagcdn.com/w40/kr.png";
     String GRAPH_BASE_URL   = "https://ssl.pstatic.net/imgfinance/chart/mobile/marketindex/";
 
     String USD              = "USD";

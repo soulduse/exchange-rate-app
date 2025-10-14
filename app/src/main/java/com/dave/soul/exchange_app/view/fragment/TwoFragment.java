@@ -89,8 +89,14 @@ public class TwoFragment  extends Fragment {
         if(exchangeList.size() != 0){
             binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
             binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
-            Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
-            Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
+            Glide.with(getContext())
+                .load(exchangeList.get(dataSwapFirst).getThumbnail())
+                .error(android.R.drawable.ic_menu_report_image)
+                .into(binding.flag1);
+            Glide.with(getContext())
+                .load(exchangeList.get(dataSwapSecond).getThumbnail())
+                .error(android.R.drawable.ic_menu_report_image)
+                .into(binding.flag2);
         }
 
         View view = binding.getRoot();
@@ -200,12 +206,18 @@ public class TwoFragment  extends Fragment {
 
             if(position == 0){
                 binding.name1.setText(result.getCountryAbbr());
-                Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag1);
+                Glide.with(getContext())
+                    .load(result.getThumbnail())
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(binding.flag1);
                 selectedPriceFirst  = DataManager.getInstance().getPrice(selectedPrice, result);
                 dataSwapFirst = itemPosition;
             }else{
                 binding.name2.setText(result.getCountryAbbr());
-                Glide.with(getContext()).load(result.getThumbnail()).into(binding.flag2);
+                Glide.with(getContext())
+                    .load(result.getThumbnail())
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(binding.flag2);
                 selectedPriceSecond = DataManager.getInstance().getPrice(selectedPrice, result);
                 dataSwapSecond = itemPosition;
             }
@@ -268,8 +280,14 @@ public class TwoFragment  extends Fragment {
             if(exchangeList.size() != 0){
                 binding.name1.setText(exchangeList.get(dataSwapFirst).getCountryAbbr());
                 binding.name2.setText(exchangeList.get(dataSwapSecond).getCountryAbbr());
-                Glide.with(getContext()).load(exchangeList.get(dataSwapFirst).getThumbnail()).into(binding.flag1);
-                Glide.with(getContext()).load(exchangeList.get(dataSwapSecond).getThumbnail()).into(binding.flag2);
+                Glide.with(getContext())
+                    .load(exchangeList.get(dataSwapFirst).getThumbnail())
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(binding.flag1);
+                Glide.with(getContext())
+                    .load(exchangeList.get(dataSwapSecond).getThumbnail())
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(binding.flag2);
             }
         }
         else if (id == R.id.button_share) {

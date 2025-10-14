@@ -50,7 +50,10 @@ public class DialogAdapter extends RealmRecyclerViewAdapter<ExchangeRate, Dialog
         final ExchangeRate obj = getItem(position);
         final String title = obj.getCountryAbbr() + " " + obj.getCountryName();
         holder.title.setText(title);
-        Glide.with(context).load(obj.getThumbnail()).into(holder.thumbnail);
+        Glide.with(context)
+            .load(obj.getThumbnail())
+            .error(android.R.drawable.ic_menu_report_image)
+            .into(holder.thumbnail);
 
 
         // itemView 클릭시 Check 되도록 추가
