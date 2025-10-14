@@ -20,7 +20,7 @@ class MyApplication : Application() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()
             .name(Realm.DEFAULT_REALM_NAME)
-            .schemaVersion(0)
+            .schemaVersion(1)  // Incremented to force data refresh for new flag image URLs
             .deleteRealmIfMigrationNeeded()
             .allowWritesOnUiThread(true)
             .build()

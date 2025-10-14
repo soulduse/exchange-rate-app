@@ -1,6 +1,7 @@
 package com.dave.soul.exchange_app.view.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +71,14 @@ public class DialogAdapter2 extends BaseAdapter {
 
         ExchangeRate exchangeRate = realmResults.get(position);
 
+        String thumbnailUrl = exchangeRate.getThumbnail();
+        Log.d(TAG, "Position: " + position +
+            ", Country: " + exchangeRate.getCountryAbbr() +
+            ", Thumbnail URL: " + thumbnailUrl);
+
         title.setText(exchangeRate.getCountryAbbr()+" "+exchangeRate.getCountryName());
         Glide.with(context)
-            .load(exchangeRate.getThumbnail())
+            .load(thumbnailUrl)
             .error(android.R.drawable.ic_menu_report_image)
             .into(thumbnail);
 

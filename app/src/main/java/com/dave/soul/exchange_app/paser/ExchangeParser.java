@@ -155,7 +155,9 @@ public class ExchangeParser implements ExchangeInfo{
 
     private String combineThumbnailUrl(String currencyCode){
         String countryCode = convertCurrencyToCountryCode(currencyCode);
-        return FLAG_IMG_URL + countryCode + ".png";
+        String url = FLAG_IMG_URL + countryCode + ".png";
+        Log.d(TAG, "Currency: " + currencyCode + " -> Country: " + countryCode + " -> URL: " + url);
+        return url;
     }
 
     /**
