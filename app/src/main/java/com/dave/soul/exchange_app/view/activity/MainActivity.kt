@@ -1,6 +1,7 @@
 package com.dave.soul.exchange_app.view.activity
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -13,6 +14,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager.widget.ViewPager
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.manager.DataManager
@@ -46,6 +49,17 @@ class MainActivity : AppCompatActivity() {
         initBroadCast()
         initLayout()
         initPermission()
+        applyWindowInsets()
+    }
+
+    private fun applyWindowInsets() {
+        val rootView = findViewById<View>(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val naviBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            view.setPadding(0, statusBarHeight, 0, naviBarHeight)
+            insets
+        }
     }
 
     private fun initSettings() {
@@ -116,7 +130,11 @@ class MainActivity : AppCompatActivity() {
         restartService = RestartService()
         val intentFilter = IntentFilter("com.dave.soul.exchange_app.view.service.AlarmService")
         // 브로드 캐스트에 등록
-        registerReceiver(restartService, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(restartService, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(restartService, intentFilter)
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

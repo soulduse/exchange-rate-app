@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +55,18 @@ public class SetCountryActivity extends AppCompatActivity {
         adapter = new SetCountryAdapter(RealmController.getExchangeRateExceptKorea(realm), getApplicationContext());
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
+
+        applyWindowInsets();
+    }
+
+    private void applyWindowInsets() {
+        View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (view, insets) -> {
+            Insets statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            view.setPadding(0, statusBarInsets.top, 0, navBarInsets.bottom);
+            return insets;
+        });
     }
 
 
@@ -62,17 +78,13 @@ public class SetCountryActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.select_all:
-                Log.d(TAG, "selected option item");
-                RealmController.changeAllSelected(realm, true);
-                break;
-
-            case R.id.deselect_all:
-                Log.d(TAG, "deselected option item");
-                RealmController.changeAllSelected(realm, false);
-
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.select_all) {
+            Log.d(TAG, "selected option item");
+            RealmController.changeAllSelected(realm, true);
+        } else if (itemId == R.id.deselect_all) {
+            Log.d(TAG, "deselected option item");
+            RealmController.changeAllSelected(realm, false);
         }
         return super.onOptionsItemSelected(item);
     }

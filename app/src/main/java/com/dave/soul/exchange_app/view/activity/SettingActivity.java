@@ -9,10 +9,14 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.dave.soul.exchange_app.R;
 
@@ -54,6 +58,17 @@ public class SettingActivity extends AppCompatActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(listener);
 
+        applyWindowInsets();
+    }
+
+    private void applyWindowInsets() {
+        View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (view, insets) -> {
+            Insets statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            view.setPadding(0, statusBarInsets.top, 0, navBarInsets.bottom);
+            return insets;
+        });
     }
 
 

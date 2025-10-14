@@ -15,8 +15,7 @@
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/banner_ad_container"
-        android:fitsSystemWindows="true">
+        android:layout_above="@+id/banner_ad_container">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
