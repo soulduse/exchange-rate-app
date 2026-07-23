@@ -194,7 +194,7 @@ private fun ChartCard(chart: ChartState, onRangeSelect: (String) -> Unit) {
             }
             val closes = chart.items.map { it.close }
             if (closes.size >= 2) {
-                RateChart(closes = closes)
+                RateChart(closes = closes, dates = chart.items.map { it.date })
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
