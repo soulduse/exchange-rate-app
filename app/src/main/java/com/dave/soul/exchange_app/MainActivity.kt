@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.dave.soul.exchange_app.ads.AdsManager
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var adsManager: AdsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {

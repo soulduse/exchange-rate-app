@@ -57,3 +57,4 @@ freeline_project_description.json
 # v2 마이그레이션 로컬 산출물
 google-services.json.*
 app/release/
+keystore.properties

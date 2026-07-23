@@ -5,4 +5,9 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+    <style name="Theme.ExchangeApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#1E3FBF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.ExchangeApp</item>
+    </style>
 </resources>

@@ -7,9 +7,16 @@
 -keepclassmembers class com.dave.soul.exchange_app.** { *** Companion; }
 -keepclasseswithmembers class com.dave.soul.exchange_app.** { kotlinx.serialization.KSerializer serializer(...); }
 
-# Retrofit
+# Retrofit — AGP 8 은 R8 full mode 기본. retrofit 2.9 consumer rules 로는 부족해
+# 인터페이스/Continuation/Response 제네릭이 축소되면 릴리스에서만 조용히 호출이 깨진다.
 -keepattributes Signature, Exceptions
 -keepclassmembers,allowshrinking,allowobfuscation interface * { @retrofit2.http.* <methods>; }
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation,allowshrinking class <1>
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
 -dontwarn javax.annotation.**
 -dontwarn kotlin.Unit
 -dontwarn retrofit2.KotlinExtensions

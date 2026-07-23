@@ -1,6 +1,7 @@
 package com.dave.soul.exchange_app.core.repo
 
 import android.content.Context
+import android.util.Log
 import androidx.glance.appwidget.updateAll
 import com.dave.soul.exchange_app.core.db.RateDao
 import com.dave.soul.exchange_app.core.db.RateEntity
@@ -32,6 +33,10 @@ class RateRepository @Inject constructor(
         dao.upsertAll(board.rates.map { RateEntity.from(it, now) })
         runCatching { RatesWidget().updateAll(context) }
         Unit
+    }.onFailure { Log.w(TAG, "refresh failed", it) }
+
+    private companion object {
+        const val TAG = "RateRepository"
     }
 
     suspend fun history(code: String, range: String): Result<HistoryResponse> =

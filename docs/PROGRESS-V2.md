@@ -41,11 +41,22 @@
 - **E2E 실수신 검증**: 앱 알림 생성(USD 1,480.47 이하) → 2분 사이클 발화 → `fcm_test_guard_allowed_type`→`fcm_sent`(promotions-ebe8e) → 에뮬 시스템 알림 실표시 "미국 USD 매매기준율 1,472.50원 — 목표 1,480.47원 이하 도달"
 - ONCE 발화 후 active=false 전이가 앱 목록 토글 OFF로 동기화되는 것도 확인
 
-## 다음
-1. ~~FCM E2E~~ ✅ / ~~앱 커밋~~ ✅ 0fb9867 push 완료 (코드리뷰 HIGH 1건 = FCM 서비스 scope onDestroy cancel 반영)
-2. M5 잔여: 앱 아이콘/스플래시 리프레시, 릴리스 서명(exchange-rate-app.jks 비번 미확인 — 무비번 지문 대조 레시피), R8 release 실기기 검증
-3. M6 잔여: 스토어 자산(스크린샷·문구) → 심사 제출
-4. 미결 결정(사용자): AdMob 계정 이관(현 제3 계정 `ca-app-pub-1908860913688060~...` 유지 중), 어드민 앱 등록(서버 광고설정 채택 여부 — v2.0은 클라 자체 게이팅)
+### M5 — 서명·아이콘/스플래시·R8 ✅ 2026-07-23
+- **서명 확보**: `exchange-rate-app.jks`(레포 루트) 무비번 지문 열람 → 기존 릴리스 APK와 SHA-256 일치(79:0B:00:80:9B:34...)로 파일 확정 → 비번은 타 앱 keystore.properties 후보 전수 대조로 판별(값 비노출, android-clipboard와 동일값 재사용 패턴). alias=exchange-rate, keyPassword=storePassword. `keystore.properties`(gitignore) + build.gradle.kts signingConfig(파일 없으면 debug 폴백)
+- **아이콘 리프레시**: 벡터 adaptive icon 신규 제작(딥블루 그라데이션 배경 + 흰 순환화살표·₩ 전경, monochrome 포함) + 레거시 PNG 5밀도(rsvg-convert) + 스토어 512(`docs/store/icon_512.png`). 구 icon.png 잔재 제거
+- **스플래시**: core-splashscreen 1.0.1 — `Theme.ExchangeApp.Splash`(딥블루 배경+전경 아이콘) + MainActivity installSplashScreen
+- **⚠️R8 릴리스 실사고 해결**: 릴리스에서만 "환율 정보를 불러올 수 없습니다" — **AGP 8 R8 full mode에서 retrofit 2.9 keep 부족**(인터페이스/`kotlin.coroutines.Continuation`/`retrofit2.Response` 제네릭 축소). proguard-rules.pro에 `-if interface … -keep,allowobfuscation interface <1>` + Continuation/Response shrink-keep 추가로 해결. refresh 실패 Log.w 추가(진단용)
+- **릴리스 검증**: 실키 서명 AAB(10.7MB, 지문 재대조 일치) + 에뮬 릴리스 스모크(홈 305회차 로드·상세 차트/4종가/우대율·알림 생성 EP·실광고 fill·새 아이콘/스플래시)
+- 위젯 previewImage 추가(`drawable-nodpi/widget_preview.png`)
+
+### M6 준비 — 스토어 자산 ✅ 초안 2026-07-23
+- 등록 문구: `docs/store/listing.md` (앱명/짧은·전체 설명/출시 노트/체크리스트)
+- 스크린샷 4장(릴리스 빌드·라이트): `docs/store/shot_01_home~04_alerts.png` / 아이콘 512 완비
+- 업로드 산출물: `app/build/outputs/bundle/release/app-release.aab` (vc16/2.0.0)
+
+## 다음 (게이트)
+1. **심사 제출** (사용자 확인 게이트): Play Console 업로드(AAB)+등록정보 반영+심사 제출. 그래픽 이미지 1024x500은 screenshots-hub 쇼케이스로 제작 예정
+2. 미결 결정(사용자): AdMob 계정 이관(현 제3 계정 `ca-app-pub-1908860913688060~...` 유지 중 — 릴리스 빌드에서 fill 나오는 것 확인됨), 어드민 앱 등록(서버 광고설정 채택 여부 — v2.0은 클라 자체 게이팅)
 
 ## 메모
 - 앱 API 베이스: `https://app-api.oror.link` (oror.link는 py EP 404 — edge-router 화이트리스트)
