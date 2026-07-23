@@ -8,6 +8,7 @@ import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.network.HistoryItemDto
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
+import com.dave.soul.exchange_app.core.rates.CrossRates
 import com.dave.soul.exchange_app.core.repo.AlertRepository
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -25,6 +27,19 @@ data class ChartState(
     val items: List<HistoryItemDto> = emptyList(),
     val isLoading: Boolean = false,
 )
+
+/**
+ * 헤더가 상태 — 기준통화 관점의 표시가.
+ * base=KRW 면 고시가 그대로(절대 등락 포함), base≠KRW 면 크로스가(등락은 %만).
+ */
+data class HeaderState(
+    val baseCurrency: String = "KRW",
+    val price: Double? = null,
+    val change: Double? = null,
+    val changeRatio: Double? = null,
+) {
+    val isCross: Boolean get() = baseCurrency != "KRW"
+}
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
@@ -39,6 +54,33 @@ class DetailViewModel @Inject constructor(
 
     val rate: StateFlow<RateEntity?> = rateRepository.rate(currencyCode)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    /** 기준통화 관점 헤더가 — base 시세 부재·자기 자신 조회 시 KRW 고시로 폴백. */
+    val header: StateFlow<HeaderState> = combine(
+        rateRepository.rates, prefs.baseCurrency,
+    ) { rates, base ->
+        val byCode = rates.associateBy { it.currencyCode }
+        val target = byCode[currencyCode]
+            ?: return@combine HeaderState(baseCurrency = "KRW")
+        val baseKrwPerOne = CrossRates.krwPerOne(base, byCode)
+        if (base == "KRW" || base == currencyCode || baseKrwPerOne == null) {
+            HeaderState(
+                baseCurrency = "KRW",
+                price = target.basePrice,
+                change = target.change,
+                changeRatio = target.changeRatio,
+            )
+        } else {
+            HeaderState(
+                baseCurrency = base,
+                price = CrossRates.displayValue(target, baseKrwPerOne),
+                change = null,
+                changeRatio = CrossRates.crossChangeRatio(
+                    target.changeRatio, byCode.getValue(base).changeRatio,
+                ),
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HeaderState())
 
     private val _chart = MutableStateFlow(ChartState())
     val chart: StateFlow<ChartState> = _chart.asStateFlow()
@@ -67,8 +109,10 @@ class DetailViewModel @Inject constructor(
     }
 
     fun createAlert(priceType: String, direction: String, targetPrice: Double, repeatMode: String) {
+        // 헤더가 크로스면 알림도 같은 축으로 — 목표가 입력이 표시가와 동일 스케일
+        val base = header.value.baseCurrency
         viewModelScope.launch {
-            alertRepository.create(currencyCode, priceType, direction, targetPrice, repeatMode)
+            alertRepository.create(currencyCode, base, priceType, direction, targetPrice, repeatMode)
                 .onSuccess { _alertResult.value = context.getString(R.string.detail_alert_registered) }
                 .onFailure { _alertResult.value = context.getString(R.string.detail_alert_failed) }
         }

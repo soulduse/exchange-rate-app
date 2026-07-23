@@ -62,13 +62,17 @@ data class DeviceRegisterResponse(val deviceId: String)
 data class AlertDto(
     val id: Long,
     val currencyCode: String,
+    // 기준통화 — KRW=원화 고시 알림(기존), 그 외=크로스레이트(값 단위가 base 통화)
+    val baseCurrency: String = "KRW",
     val priceType: String,
     val direction: String,
     val targetPrice: Double,
     val repeatMode: String,
     val active: Boolean,
     val lastFiredAt: String? = null,
-)
+) {
+    val isCross: Boolean get() = baseCurrency != "KRW"
+}
 
 @Serializable
 data class AlertListResponse(val alerts: List<AlertDto> = emptyList())
@@ -77,6 +81,7 @@ data class AlertListResponse(val alerts: List<AlertDto> = emptyList())
 data class AlertCreateRequest(
     val deviceId: String,
     val currencyCode: String,
+    val baseCurrency: String = "KRW",
     val priceType: String,
     val direction: String,
     val targetPrice: Double,

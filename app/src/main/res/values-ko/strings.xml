@@ -17,6 +17,7 @@
     <string name="home_currency_search">통화 검색</string>
     <string name="home_confirm">확인</string>
     <string name="home_cancel">취소</string>
+    <string name="home_base_currency">기준 통화</string>
 
     <!-- 홈 온보딩 (v2 첫 실행 안내) -->
     <string name="onboarding_title">환율알리미가 새로워졌어요 ✨</string>
@@ -42,6 +43,8 @@
     <string name="detail_create_alert">알림 만들기</string>
     <string name="detail_back">뒤로</string>
     <string name="detail_price_per_unit">원 / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">아래 차트·은행 고시 정보는 원화(KRW) 기준입니다.</string>
     <string name="detail_chart_min">최저 %s</string>
     <string name="detail_chart_max">최고 %s</string>
     <string name="detail_chart_empty">차트 데이터를 준비 중입니다.</string>
@@ -59,14 +62,21 @@
     <string name="alerts_direction_below">이하</string>
     <string name="alerts_repeat_once">1회</string>
     <string name="alerts_repeat_repeat">반복</string>
-    <string name="alerts_target_price">목표 환율</string>
     <string name="alerts_save">저장</string>
     <string name="alerts_delete">삭제</string>
     <string name="alerts_select_currency">통화 선택</string>
     <string name="alerts_cancel">취소</string>
     <string name="alerts_dialog_title">%s 알림</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s 알림</string>
     <string name="alerts_current_price">현재 %s원</string>
+    <string name="alerts_current_price_cross">현재 %1$s %2$s</string>
+    <string name="alerts_current_price_label">현재 환율</string>
     <string name="alerts_row_summary">%1$s원 %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">가격 유형</string>
+    <string name="alerts_section_target">목표 환율</string>
+    <string name="alerts_section_condition">알림 조건</string>
+    <string name="alerts_section_repeat">반복</string>
     <string name="alerts_error_list">알림 목록을 불러올 수 없습니다.</string>
     <string name="alerts_error_create">알림 등록에 실패했습니다.</string>
     <string name="alerts_error_update">변경에 실패했습니다.</string>
@@ -114,6 +124,7 @@
     <!-- 푸시 로컬 조립 (data-only 수신 시 기기 언어로 렌더) -->
     <string name="notif_alert_unit">(%1$d%2$s)</string>
     <string name="notif_alert_body">%1$s%2$s %3$s %4$s원 — 목표 %5$s원 %6$s 도달</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — 목표 %5$s %4$s %6$s 도달</string>
     <string name="notif_swing_title">환율 급변동</string>
     <string name="notif_swing_body_up">%1$s 급등 — %2$s원 (전일 대비 %3$s%%)</string>
     <string name="notif_swing_body_down">%1$s 급락 — %2$s원 (전일 대비 %3$s%%)</string>

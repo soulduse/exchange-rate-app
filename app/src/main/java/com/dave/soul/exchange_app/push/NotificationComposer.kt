@@ -4,6 +4,7 @@ import android.content.Context
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.util.displayName
 import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.formatSigned
 import com.dave.soul.exchange_app.core.util.priceTypeLabelRes
 
@@ -35,15 +36,29 @@ object NotificationComposer {
         val perUnit = data["perUnit"]?.toIntOrNull() ?: 1
         val unitText =
             if (perUnit != 1) context.getString(R.string.notif_alert_unit, perUnit, code) else ""
-        val body = context.getString(
-            R.string.notif_alert_body,
-            name,
-            unitText,
-            context.getString(labelRes),
-            formatPrice(current),
-            formatPrice(target),
-            context.getString(directionRes),
-        )
+        val base = data["baseCurrency"] ?: "KRW"
+        val body = if (base != "KRW") {
+            // 크로스 알림 — 값 단위가 base 통화(서버 평가와 동일 스케일), 유형은 BASE 고정
+            context.getString(
+                R.string.notif_alert_body_cross,
+                name,
+                unitText,
+                formatRate(current),
+                base,
+                formatRate(target),
+                context.getString(directionRes),
+            )
+        } else {
+            context.getString(
+                R.string.notif_alert_body,
+                name,
+                unitText,
+                context.getString(labelRes),
+                formatPrice(current),
+                formatPrice(target),
+                context.getString(directionRes),
+            )
+        }
         return context.getString(R.string.app_name) to body
     }
 

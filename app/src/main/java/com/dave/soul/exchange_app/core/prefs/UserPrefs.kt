@@ -29,6 +29,8 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
         val SPREAD_RATE = floatPreferencesKey("spread_rate")
         val CALC_BASE_CODE = stringPreferencesKey("calc_base_code")
         val CALC_AMOUNT = stringPreferencesKey("calc_amount")
+        // 홈/상세/위젯 표시 기준통화 — 계산기(CALC_BASE_CODE)와 독립
+        val BASE_CURRENCY = stringPreferencesKey("base_currency")
         val THEME_MODE = stringPreferencesKey("theme_mode")  // SYSTEM/LIGHT/DARK
         val ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
         val LAUNCH_COUNT = intPreferencesKey("launch_count")
@@ -50,6 +52,9 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
         context.dataStore.data.map { it[Keys.CALC_BASE_CODE] ?: "USD" }
 
     val calcAmount: Flow<String> = context.dataStore.data.map { it[Keys.CALC_AMOUNT] ?: "1" }
+
+    val baseCurrency: Flow<String> =
+        context.dataStore.data.map { it[Keys.BASE_CURRENCY] ?: "KRW" }
 
     val themeMode: Flow<String> = context.dataStore.data.map { it[Keys.THEME_MODE] ?: "SYSTEM" }
 
@@ -86,6 +91,10 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
             it[Keys.CALC_BASE_CODE] = baseCode
             it[Keys.CALC_AMOUNT] = amount
         }
+    }
+
+    suspend fun setBaseCurrency(code: String) {
+        context.dataStore.edit { it[Keys.BASE_CURRENCY] = code }
     }
 
     suspend fun setThemeMode(mode: String) {

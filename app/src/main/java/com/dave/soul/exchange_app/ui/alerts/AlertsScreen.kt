@@ -50,8 +50,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.R
+import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.network.AlertDto
+import com.dave.soul.exchange_app.core.rates.CrossRates
+import com.dave.soul.exchange_app.core.util.displayName
+import com.dave.soul.exchange_app.core.util.flagEmoji
 import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.priceTypeLabelRes
 
 /** 가격 유형 코드의 현지화 라벨 — 미지원 코드는 코드 원문 폴백. */
@@ -129,14 +134,25 @@ fun AlertsScreen(viewModel: AlertsViewModel = hiltViewModel()) {
     }
 
     if (showCreate) {
-        val currentPrice = rates.firstOrNull { it.currencyCode == pickerCode }?.basePrice
+        val base by viewModel.baseCurrency.collectAsState()
+        val byCode = rates.associateBy { it.currencyCode }
+        // 기준통화 자신에 대한 알림은 크로스 불성립(base==대상 400),
+        // base 시세 미보유 시에도 크로스 계산 불가 — 둘 다 KRW 축으로 폴백
+        val baseKrwPerOne =
+            if (pickerCode == base) null else CrossRates.krwPerOne(base, byCode)
+        val dialogBase = if (base != "KRW" && baseKrwPerOne != null) base else "KRW"
+        val currentPrice = byCode[pickerCode]?.let { target ->
+            if (dialogBase == "KRW") target.basePrice
+            else CrossRates.displayValue(target, baseKrwPerOne!!)
+        }
         CurrencySelectableAlertDialog(
-            codes = rates.map { it.currencyCode },
+            rates = rates,
             selectedCode = pickerCode,
             onCodeChange = { pickerCode = it },
+            baseCurrency = dialogBase,
             currentPrice = currentPrice,
-            onSave = { priceType, direction, target, repeat ->
-                viewModel.create(pickerCode, priceType, direction, target, repeat)
+            onSave = { base2, priceType, direction, target, repeat ->
+                viewModel.create(pickerCode, base2, priceType, direction, target, repeat)
                 showCreate = false
             },
             onDismiss = { showCreate = false },
@@ -146,17 +162,20 @@ fun AlertsScreen(viewModel: AlertsViewModel = hiltViewModel()) {
 
 @Composable
 private fun CurrencySelectableAlertDialog(
-    codes: List<String>,
+    rates: List<RateEntity>,
     selectedCode: String,
     onCodeChange: (String) -> Unit,
+    baseCurrency: String,
     currentPrice: Double?,
-    onSave: (String, String, Double, String) -> Unit,
+    onSave: (String, String, String, Double, String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     // 1단계 통화 선택 → 2단계 조건 입력. 주요 통화 우선 정렬.
-    val ordered = remember(codes) {
+    val ordered = remember(rates) {
         val majors = listOf("USD", "JPY", "EUR", "CNY")
-        majors.filter { it in codes } + codes.filterNot { it in majors }.sorted()
+        val byCode = rates.associateBy { it.currencyCode }
+        (majors.mapNotNull { byCode[it] } +
+            rates.filterNot { it.currencyCode in majors }.sortedBy { it.currencyCode })
     }
     var pickingCurrency by remember { mutableStateOf(true) }
 
@@ -166,18 +185,39 @@ private fun CurrencySelectableAlertDialog(
             title = { Text(stringResource(R.string.alerts_select_currency)) },
             text = {
                 LazyColumn {
-                    items(ordered, key = { it }) { code ->
-                        Text(
-                            code + if (code == selectedCode) "  ✓" else "",
-                            style = MaterialTheme.typography.titleMedium,
+                    items(ordered, key = { it.currencyCode }) { rate ->
+                        // 홈 통화 추가 피커와 동일한 국기+현지화 통화명 행 — 전 언어 대응
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    onCodeChange(code)
+                                    onCodeChange(rate.currencyCode)
                                     pickingCurrency = false
                                 }
                                 .padding(vertical = 10.dp),
-                        )
+                        ) {
+                            Text(
+                                flagEmoji(rate.countryCode),
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    displayName(rate.name, rate.nameEng, rate.currencyCode),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                                Text(
+                                    rate.currencyCode +
+                                        if (rate.perUnit != 1) " (${rate.perUnit})" else "",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            if (rate.currencyCode == selectedCode) {
+                                Text("✓", style = MaterialTheme.typography.titleMedium)
+                            }
+                        }
                     }
                 }
             },
@@ -189,8 +229,11 @@ private fun CurrencySelectableAlertDialog(
     } else {
         AlertEditDialog(
             currencyCode = selectedCode,
+            baseCurrency = baseCurrency,
             currentPrice = currentPrice,
-            onSave = onSave,
+            onSave = { priceType, direction, target, repeat ->
+                onSave(baseCurrency, priceType, direction, target, repeat)
+            },
             onDismiss = onDismiss,
         )
     }
@@ -208,16 +251,20 @@ private fun AlertRow(alert: AlertDto, onToggle: () -> Unit, onDelete: () -> Unit
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        alert.currencyCode,
+                        // 크로스 알림은 FX 페어 표기("EUR/USD") — 가격 유형 라벨은 생략
+                        if (alert.isCross) "${alert.currencyCode}/${alert.baseCurrency}"
+                        else alert.currencyCode,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                     )
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        priceTypeLabel(alert.priceType),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    if (!alert.isCross) {
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            priceTypeLabel(alert.priceType),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
                 val directionLabel = stringResource(
                     if (alert.direction == "ABOVE") R.string.alerts_direction_above
@@ -228,12 +275,22 @@ private fun AlertRow(alert: AlertDto, onToggle: () -> Unit, onDelete: () -> Unit
                     else R.string.alerts_repeat_once,
                 )
                 Text(
-                    stringResource(
-                        R.string.alerts_row_summary,
-                        formatPrice(alert.targetPrice),
-                        directionLabel,
-                        repeatLabel,
-                    ),
+                    if (alert.isCross) {
+                        stringResource(
+                            R.string.alerts_row_summary_cross,
+                            formatRate(alert.targetPrice),
+                            alert.baseCurrency,
+                            directionLabel,
+                            repeatLabel,
+                        )
+                    } else {
+                        stringResource(
+                            R.string.alerts_row_summary,
+                            formatPrice(alert.targetPrice),
+                            directionLabel,
+                            repeatLabel,
+                        )
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

@@ -34,6 +34,7 @@ class AlertRepository @Inject constructor(
 
     suspend fun create(
         currencyCode: String,
+        baseCurrency: String,
         priceType: String,
         direction: String,
         targetPrice: Double,
@@ -43,6 +44,7 @@ class AlertRepository @Inject constructor(
             AlertCreateRequest(
                 deviceId = prefs.deviceId(),
                 currencyCode = currencyCode,
+                baseCurrency = baseCurrency,
                 priceType = priceType,
                 direction = direction,
                 targetPrice = targetPrice,

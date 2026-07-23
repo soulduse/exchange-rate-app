@@ -89,3 +89,16 @@
 - **UI 수정**: AlertEditDialog 방향/반복 칩 4개 한 줄 → 두 줄 분리(영어 라벨 "Repeat" 세로 래핑 버그)
 - **E2E 실검증**(에뮬 vc18 릴리스, 프로덕션 서버): ko 조립 "환율알리미 / 미국 매매기준율 1,474.50원 — 목표 1,459.95원 이상 도달"(22:30:03) · en 조립 "Exchange Rate Alert / US Dollar Base rate 1,472.10 KRW — hit your target of 1,459.75 KRW (Above)"(22:34:04, currencyName '미국'→'US Dollar' 클라 현지화). 런치 전면·en UI 전반도 확인
 - **잔여**: ① vc18 AAB는 vc17 심사 승인 후 업로드(심사 중 릴리스 교체 금지) ② P2 en-US 스토어 리스팅+en 쇼케이스 ③ P3 기준통화 크로스레이트
+
+## M9 — vc18 제출 + P2 en-US 리스팅 ✅ 2026-07-24 새벽
+- **vc17 즉시 승인·출시 확인**(사용자) → vc18 진행
+- **vc18 릴리스**: bundleRelease(커밋 d26babc) → 프로덕션 새 릴리스 생성 → AAB 업로드 → 출시 노트 ko/en → 저장. 릴리스 수정 진입은 "출시" 탭→"출시 관리"→"버전 세부정보 수정" 경로
+- **P2 en-US 리스팅**: 번역 관리→언어 추가(영어-미국) → 앱명 "Exchange Rate Alert & Widget"/짧은/전체 설명(listing.md `## English (en-US)`, 커밋 ec83892) → en 그래픽 1024x500 + 폰 쇼케이스 4장 교체(screenshots-hub 2로케일 생성기, 커밋 81fffde·dd96c8a). ⚠️1/1 필수 슬롯은 delete 불가 — 라이브러리 패널 업로드→체크→하단 aria="추가"로 자동 교체가 정답. en 캡처의 한국어 배너는 PIL 동일 rect 패치로 제거
+- **제출 완료**: 게시 개요 변경사항 2건(vc18 + en-US) 일괄 전송 → "검토 중인 변경사항" 확인(빠른 검사 재검 후 자동 제출 루프)
+
+## M10 — P3 기준통화 크로스레이트 (vc19/2.2.0) 🔶 2026-07-24 새벽 — 구현·E2E 완료, 제출은 vc18 승인 대기
+- **설계**: 크로스 스케일 통일 `value = basePrice(A)×perUnit(B)/basePrice(B)`(perUnit(A) 유지, "100 JPY = 0.6106 USD") — 클라·서버 동일 수식으로 목표가/현재가/표시가 축 일치. 크로스 등락은 %만 `((1+cA/100)/(1+cB/100)-1)×100`. 계산기(CALC_BASE_CODE)와 분리된 BASE_CURRENCY pref
+- **서버(apis-py 커밋 99fc9a6, 배포+DDL 적용 완료)**: ExchangeAlert.base_currency(DDL V20260724, 프로드 적용 확인) · ExchangeRateSnapshot.cross_display_price · create_alert 400 3종(base==대상/크로스에 4종가/미지원 base — 프로드 curl 확인) · evaluate_alerts `_current_price` 헬퍼(base 스냅샷 부재=스킵) · dispatch FiredAlert.base_currency+data baseCurrency+크로스 본문(:,.4f) · 테스트 21 그린(수식/크로스 발화/기본값/400)
+- **클라(vc19)**: core/rates/CrossRates.kt(DisplayRate·displayRates·crossChangeRatio, base 미보유 시 KRW 폴백) · formatRate(≥10→2자리·≥0.01→4자리·그 외 6자리, FX 관례) · 홈 TopAppBar 기준통화 드롭다운(KRW+선택 통화, 크로스 모드=KRW 가상행+base 제외+히어로 없음) · 상세 헤더 크로스+KRW 안내 라벨(차트/4종가/우대율/52주는 KRW 유지) · 위젯 CrossRates 재사용(소형은 가상 KRW 행 스킵) · 알림 축(DTO baseCurrency·크로스는 BASE 고정·base==대상은 KRW 폴백) · **AlertEditDialog 전면 리디자인**(현재가 강조 카드+섹션 라벨+SegmentedButton+단위 suffix, 사용자 요청) · **통화 선택 다이얼로그 국기+현지화 통화명**(사용자 요청, 서버 변경 불필요) · NotificationComposer 크로스 조립(notif_alert_body_cross)
+- **E2E(에뮬 5556·프로덕션 서버)**: USD 기준 전환(KRW 0.000678/EUR 1.1377/CNY 0.1475, %만) · 계산기 교차검산(EUR 0.88=1/1.1378) · 재시작 영속 · 상세 크로스 헤더+안내 · **크로스 알림 실발화 FCM 실수신**("유럽 1.1378 USD — 목표 1.1377 USD 이상 도달") · KRW 복귀 원상 · vc17/18 하위호환(base 미전송=KRW, 서버 계약 테스트)
+- **잔여**: vc18 심사 승인 확인 → vc19 AAB 업로드·출시 노트·제출(AAB 빌드됨 01:49)

@@ -3,6 +3,7 @@ package com.dave.soul.exchange_app.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,10 +21,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,9 +55,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
+import com.dave.soul.exchange_app.core.rates.DisplayRate
 import com.dave.soul.exchange_app.core.util.displayName
 import com.dave.soul.exchange_app.core.util.flagEmoji
-import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.formatSigned
 import com.dave.soul.exchange_app.ui.common.Sparkline
 import com.dave.soul.exchange_app.ui.theme.FallBlue
@@ -101,6 +107,16 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    BaseCurrencySelector(
+                        baseCurrency = state.baseCurrency,
+                        candidates = state.baseCandidates,
+                        countryCodeOf = { code ->
+                            if (code == "KRW") "kr"
+                            else state.all.firstOrNull { it.currencyCode == code }
+                                ?.countryCode.orEmpty()
+                        },
+                        onSelect = viewModel::setBaseCurrency,
+                    )
                     IconButton(onClick = { showPicker = true }) {
                         Icon(
                             Icons.Filled.Add,
@@ -129,13 +145,33 @@ fun HomeScreen(
                 state.errorMessage?.let { message ->
                     item { NoticeBanner(message, isError = true) }
                 }
-                state.selected.firstOrNull()?.let { hero ->
-                    item(key = "hero-${hero.currencyCode}") {
-                        HeroCard(rate = hero, onClick = { onCurrencyClick(hero.currencyCode) })
+                if (state.baseCurrency == "KRW") {
+                    state.selected.firstOrNull()?.let { hero ->
+                        item(key = "hero-${hero.code}") {
+                            HeroCard(
+                                rate = hero,
+                                baseCurrency = state.baseCurrency,
+                                onClick = { onCurrencyClick(hero.code) },
+                            )
+                        }
                     }
-                }
-                items(state.selected.drop(1), key = { it.currencyCode }) { rate ->
-                    RateRow(rate = rate, onClick = { onCurrencyClick(rate.currencyCode) })
+                    items(state.selected.drop(1), key = { it.code }) { rate ->
+                        RateRow(
+                            rate = rate,
+                            baseCurrency = state.baseCurrency,
+                            onClick = { onCurrencyClick(rate.code) },
+                        )
+                    }
+                } else {
+                    // 크로스 모드 — 히어로 없이 균일 행(KRW 가상 행은 상세 진입 없음)
+                    items(state.selected, key = { it.code }) { rate ->
+                        RateRow(
+                            rate = rate,
+                            baseCurrency = state.baseCurrency,
+                            onClick = if (rate.isVirtualKrw) null
+                            else ({ onCurrencyClick(rate.code) }),
+                        )
+                    }
                 }
             }
         }
@@ -144,7 +180,7 @@ fun HomeScreen(
     if (showPicker) {
         CurrencyPickerDialog(
             all = state.all,
-            selected = state.selected.map { it.currencyCode },
+            selected = state.selectedCodes,
             onConfirm = { codes ->
                 viewModel.updateSelection(codes)
                 showPicker = false
@@ -165,19 +201,24 @@ private fun changeColor(change: Double?): Color = when {
     else -> MaterialTheme.colorScheme.onSurfaceVariant
 }
 
-/** 등락 배지 — 연한 배경 칩. */
+/** 등락 배지 — 연한 배경 칩. 절대 등락이 없으면(크로스 모드) %만 표시. */
 @Composable
 private fun ChangeBadge(change: Double?, changeRatio: Double?) {
-    val value = change ?: return
+    val value = change ?: changeRatio ?: return
     val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val container = when {
         value > 0 -> if (dark) RiseRedContainerDark else RiseRedContainer
         value < 0 -> if (dark) FallBlueContainerDark else FallBlueContainer
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
-    val ratioText = changeRatio?.let { " (${formatSigned(it)}%)" }.orEmpty()
+    val text =
+        if (change != null) {
+            formatSigned(change) + changeRatio?.let { " (${formatSigned(it)}%)" }.orEmpty()
+        } else {
+            "${formatSigned(changeRatio ?: 0.0)}%"
+        }
     Text(
-        text = formatSigned(value) + ratioText,
+        text = text,
         style = MaterialTheme.typography.labelMedium,
         fontWeight = FontWeight.SemiBold,
         color = changeColor(value),
@@ -190,9 +231,14 @@ private fun ChangeBadge(change: Double?, changeRatio: Double?) {
 private fun Color.luminance(): Float =
     (0.299f * red + 0.587f * green + 0.114f * blue)
 
-/** 대표 통화(목록 첫 번째) 히어로 카드. */
+/** 값 단위 라벨 — 기준통화 KRW 면 "원", 그 외엔 통화 코드 그대로. */
 @Composable
-private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
+private fun unitLabel(baseCurrency: String): String =
+    if (baseCurrency == "KRW") stringResource(R.string.unit_krw) else baseCurrency
+
+/** 대표 통화(목록 첫 번째) 히어로 카드 — KRW 기준 모드 전용. */
+@Composable
+private fun HeroCard(rate: DisplayRate, baseCurrency: String, onClick: () -> Unit) {
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
@@ -205,11 +251,11 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
                 Spacer(Modifier.width(10.dp))
                 Column {
                     Text(
-                        displayName(rate.name, rate.nameEng, rate.currencyCode),
+                        displayName(rate.name, rate.nameEng, rate.code),
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
-                        rate.currencyCode +
+                        rate.code +
                             if (rate.perUnit != 1) {
                                 stringResource(R.string.home_per_unit, rate.perUnit)
                             } else "",
@@ -223,11 +269,11 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            formatPrice(rate.basePrice),
+                            formatRate(rate.value),
                             style = MaterialTheme.typography.displaySmall,
                         )
                         Text(
-                            stringResource(R.string.unit_krw),
+                            unitLabel(baseCurrency),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
@@ -236,10 +282,9 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
                     Spacer(Modifier.height(8.dp))
                     ChangeBadge(rate.change, rate.changeRatio)
                 }
-                val sparkValues = rate.sparkValues()
-                if (sparkValues.size >= 2) {
+                if (rate.spark.size >= 2) {
                     Sparkline(
-                        values = sparkValues,
+                        values = rate.spark,
                         color = changeColor(rate.change),
                         modifier = Modifier.size(width = 96.dp, height = 44.dp),
                     )
@@ -250,13 +295,10 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
 }
 
 @Composable
-private fun RateRow(rate: RateEntity, onClick: () -> Unit) {
-    Card(
-        onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+private fun RateRow(rate: DisplayRate, baseCurrency: String, onClick: (() -> Unit)?) {
+    val shape = RoundedCornerShape(16.dp)
+    val colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    val content: @Composable () -> Unit = {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -267,31 +309,89 @@ private fun RateRow(rate: RateEntity, onClick: () -> Unit) {
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    displayName(rate.name, rate.nameEng, rate.currencyCode),
+                    displayName(rate.name, rate.nameEng, rate.code),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
-                    rate.currencyCode + if (rate.perUnit != 1) " (${rate.perUnit})" else "",
+                    rate.code + if (rate.perUnit != 1) " (${rate.perUnit})" else "",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            val sparkValues = rate.sparkValues()
-            if (sparkValues.size >= 2) {
+            if (rate.spark.size >= 2) {
                 Sparkline(
-                    values = sparkValues,
+                    values = rate.spark,
                     color = changeColor(rate.change),
                     modifier = Modifier.size(width = 64.dp, height = 28.dp),
                 )
                 Spacer(Modifier.width(14.dp))
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    formatPrice(rate.basePrice),
-                    style = MaterialTheme.typography.titleMedium,
-                )
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        formatRate(rate.value),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(
+                        unitLabel(baseCurrency),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
+                    )
+                }
                 Spacer(Modifier.height(3.dp))
                 ChangeBadge(rate.change, rate.changeRatio)
+            }
+        }
+    }
+    if (onClick != null) {
+        Card(onClick = onClick, shape = shape, colors = colors,
+            modifier = Modifier.fillMaxWidth()) { content() }
+    } else {
+        Card(shape = shape, colors = colors, modifier = Modifier.fillMaxWidth()) { content() }
+    }
+}
+
+/** 기준통화 드롭다운 — 홈/상세/위젯 표시 기준을 바꾼다(계산기와 독립). */
+@Composable
+private fun BaseCurrencySelector(
+    baseCurrency: String,
+    candidates: List<String>,
+    countryCodeOf: (String) -> String,
+    onSelect: (String) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { expanded = true }) {
+            Text(
+                text = flagEmoji(countryCodeOf(baseCurrency)) + " " + baseCurrency,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Icon(
+                Icons.Filled.ArrowDropDown,
+                contentDescription = stringResource(R.string.home_base_currency),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            Text(
+                stringResource(R.string.home_base_currency),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+            )
+            candidates.forEach { code ->
+                DropdownMenuItem(
+                    text = { Text(flagEmoji(countryCodeOf(code)) + " " + code) },
+                    trailingIcon = {
+                        if (code == baseCurrency) Icon(Icons.Filled.Check, contentDescription = null)
+                    },
+                    onClick = {
+                        onSelect(code)
+                        expanded = false
+                    },
+                )
             }
         }
     }

@@ -33,8 +33,9 @@ import androidx.glance.LocalSize
 import com.dave.soul.exchange_app.MainActivity
 import com.dave.soul.exchange_app.core.db.RateDao
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
+import com.dave.soul.exchange_app.core.rates.CrossRates
 import com.dave.soul.exchange_app.core.util.flagEmoji
-import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.formatSigned
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -51,12 +52,14 @@ interface WidgetEntryPoint {
     fun userPrefs(): UserPrefs
 }
 
-/** 위젯 표시용 행 스냅샷. */
+/** 위젯 표시용 행 스냅샷 — 크로스 모드는 change 없이 changeRatio(%)만. */
 data class WidgetRate(
     val code: String,
     val countryCode: String,
     val price: Double,
     val change: Double?,
+    val changeRatio: Double?,
+    val isVirtualKrw: Boolean,
 )
 
 class RatesWidget : GlanceAppWidget() {
@@ -65,10 +68,16 @@ class RatesWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val entry = EntryPointAccessors.fromApplication(context, WidgetEntryPoint::class.java)
-        val rates = entry.rateDao().observeAll().first().associateBy { it.currencyCode }
+        val rates = entry.rateDao().observeAll().first()
         val selected = entry.userPrefs().selectedCodes.first()
-        val rows = selected.mapNotNull { code ->
-            rates[code]?.let { WidgetRate(code, it.countryCode, it.basePrice, it.change) }
+        val base = entry.userPrefs().baseCurrency.first()
+        val rows = CrossRates.displayRates(
+            rates = rates,
+            selected = selected,
+            base = base,
+            krwName = context.getString(R.string.calc_krw_name),
+        ).map {
+            WidgetRate(it.code, it.countryCode, it.value, it.change, it.changeRatio, it.isVirtualKrw)
         }
         // Glance @Composable 에는 LocalContext 가 없어 여기서 문자열을 확보해 전달
         val emptyText = context.getString(R.string.widget_empty)
@@ -112,7 +121,8 @@ private fun WidgetContent(rows: List<WidgetRate>, emptyText: String) {
         if (rows.isEmpty()) {
             Text(emptyText, style = TextStyle(color = TextSub, fontSize = 12.sp))
         } else if (!isLarge) {
-            WidgetRow(rows.first(), large = true)
+            // 소형 1행 — 크로스 모드의 KRW 가상 행 대신 첫 실통화를 보여준다
+            WidgetRow(rows.firstOrNull { !it.isVirtualKrw } ?: rows.first(), large = true)
         } else {
             rows.take(4).forEachIndexed { index, row ->
                 if (index > 0) Spacer(GlanceModifier.height(6.dp))
@@ -124,8 +134,12 @@ private fun WidgetContent(rows: List<WidgetRate>, emptyText: String) {
 
 @Composable
 private fun WidgetRow(rate: WidgetRate, large: Boolean) {
-    val change = rate.change ?: 0.0
-    val changeColor = if (change >= 0) Rise else Fall
+    // KRW 기준=절대 등락, 크로스=합성 등락률(%) — 홈 ChangeBadge 와 동일 규칙
+    val signal = rate.change ?: rate.changeRatio ?: 0.0
+    val changeColor = if (signal >= 0) Rise else Fall
+    val changeText =
+        if (rate.change != null) formatSigned(rate.change)
+        else "${formatSigned(rate.changeRatio ?: 0.0)}%"
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -140,7 +154,7 @@ private fun WidgetRow(rate: WidgetRate, large: Boolean) {
         )
         Spacer(GlanceModifier.defaultWeight())
         Text(
-            formatPrice(rate.price),
+            formatRate(rate.price),
             style = TextStyle(
                 color = TextMain,
                 fontSize = if (large) 18.sp else 14.sp,
@@ -149,7 +163,7 @@ private fun WidgetRow(rate: WidgetRate, large: Boolean) {
         )
         Spacer(GlanceModifier.width(6.dp))
         Text(
-            formatSigned(change),
+            changeText,
             style = TextStyle(color = changeColor, fontSize = if (large) 13.sp else 11.sp),
         )
     }

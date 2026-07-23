@@ -46,6 +46,7 @@ import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.util.displayName
 import com.dave.soul.exchange_app.core.util.flagEmoji
 import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.formatSigned
 import com.dave.soul.exchange_app.core.util.shortTradedAt
 import com.dave.soul.exchange_app.ui.alerts.AlertEditDialog
@@ -62,6 +63,7 @@ fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel(),
 ) {
     val rate by viewModel.rate.collectAsState()
+    val header by viewModel.header.collectAsState()
     val chart by viewModel.chart.collectAsState()
     val spreadRate by viewModel.spreadRate.collectAsState()
     val alertResult by viewModel.alertResult.collectAsState()
@@ -108,7 +110,15 @@ fun DetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            PriceHeader(r)
+            PriceHeader(r, header)
+            if (header.isCross) {
+                // 차트/4종가/우대율/52주는 KRW 고시 기준 유지 — 크로스는 헤더가만
+                Text(
+                    stringResource(R.string.detail_krw_section_notice),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             ChartCard(chart = chart, onRangeSelect = viewModel::loadHistory)
             FourPricesCard(r)
             SpreadCard(r, spreadRate, viewModel::setSpreadRate)
@@ -126,7 +136,8 @@ fun DetailScreen(
     if (showAlertDialog && rate != null) {
         AlertEditDialog(
             currencyCode = currencyCode,
-            currentPrice = rate?.basePrice,
+            baseCurrency = header.baseCurrency,
+            currentPrice = header.price ?: rate?.basePrice,
             onSave = { priceType, direction, target, repeat ->
                 viewModel.createAlert(priceType, direction, target, repeat)
                 showAlertDialog = false
@@ -137,26 +148,32 @@ fun DetailScreen(
 }
 
 @Composable
-private fun PriceHeader(rate: RateEntity) {
-    val change = rate.change ?: 0.0
+private fun PriceHeader(rate: RateEntity, header: HeaderState) {
+    val signal = (if (header.isCross) header.changeRatio else header.change) ?: 0.0
     val changeColor = when {
-        change > 0 -> RiseRed
-        change < 0 -> FallBlue
+        signal > 0 -> RiseRed
+        signal < 0 -> FallBlue
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
     Column {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                formatPrice(rate.basePrice),
+                formatRate(header.price ?: rate.basePrice),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                if (rate.perUnit != 1) {
-                    stringResource(R.string.detail_price_per_unit, rate.perUnit, rate.currencyCode)
-                } else {
-                    stringResource(R.string.unit_krw)
+                when {
+                    header.isCross && rate.perUnit != 1 -> stringResource(
+                        R.string.detail_price_per_unit_cross,
+                        header.baseCurrency, rate.perUnit, rate.currencyCode,
+                    )
+                    header.isCross -> header.baseCurrency
+                    rate.perUnit != 1 -> stringResource(
+                        R.string.detail_price_per_unit, rate.perUnit, rate.currencyCode,
+                    )
+                    else -> stringResource(R.string.unit_krw)
                 },
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -164,15 +181,17 @@ private fun PriceHeader(rate: RateEntity) {
             )
         }
         Row {
-            Text(
-                formatSigned(change),
-                color = changeColor,
-                style = MaterialTheme.typography.titleSmall,
-            )
-            rate.changeRatio?.let {
+            if (!header.isCross) {
+                Text(
+                    formatSigned(header.change ?: 0.0),
+                    color = changeColor,
+                    style = MaterialTheme.typography.titleSmall,
+                )
+            }
+            header.changeRatio?.let {
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "(${formatSigned(it)}%)",
+                    if (header.isCross) "${formatSigned(it)}%" else "(${formatSigned(it)}%)",
                     color = changeColor,
                     style = MaterialTheme.typography.titleSmall,
                 )

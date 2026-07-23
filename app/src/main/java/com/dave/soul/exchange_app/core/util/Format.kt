@@ -13,6 +13,22 @@ private fun amountFormat() = DecimalFormat("#,##0.##", DecimalFormatSymbols.getI
 /** 시세 표시 — 1,480.60 */
 fun formatPrice(value: Double): String = priceFormat().format(value)
 
+/**
+ * 크로스 포함 시세 표시 — 값 크기에 맞춰 자릿수 적응.
+ * KRW 고시(수십~수천)는 2자리, FX 페어 스케일(10 미만, EUR/USD 1.1377 등)은
+ * 관례대로 4자리, 극소값(KRW 역환산 등)은 6자리.
+ */
+fun formatRate(value: Double): String {
+    val abs = kotlin.math.abs(value)
+    val pattern = when {
+        abs >= 10 -> "#,##0.00"
+        abs >= 0.01 -> "#,##0.0000"
+        else -> "#,##0.000000"
+    }
+    return DecimalFormat(pattern, DecimalFormatSymbols.getInstance(Locale.getDefault()))
+        .format(value)
+}
+
 /** 계산 금액 표시 — 1,234.56 (불필요한 소수 생략) */
 fun formatAmount(value: Double): String = amountFormat().format(value)
 

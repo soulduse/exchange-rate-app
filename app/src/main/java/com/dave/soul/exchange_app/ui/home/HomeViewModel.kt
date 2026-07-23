@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
+import com.dave.soul.exchange_app.core.rates.CrossRates
+import com.dave.soul.exchange_app.core.rates.DisplayRate
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import com.dave.soul.exchange_app.push.BriefingTopics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,18 +24,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
-    val selected: List<RateEntity> = emptyList(),
+    val selected: List<DisplayRate> = emptyList(),
     val all: List<RateEntity> = emptyList(),
+    val selectedCodes: List<String> = emptyList(),
+    val baseCurrency: String = "KRW",
     val isRefreshing: Boolean = false,
     val isStale: Boolean = false,
     val errorMessage: String? = null,
 ) {
     val updatedAtText: String?
-        get() = selected.firstOrNull { it.currencyCode == "USD" }?.localTradedAt
-            ?: selected.firstOrNull()?.localTradedAt
+        get() = (all.firstOrNull { it.currencyCode == "USD" } ?: all.firstOrNull())
+            ?.localTradedAt
 
     val degreeCount: Int?
-        get() = selected.firstOrNull { it.currencyCode == "USD" }?.degreeCount
+        get() = all.firstOrNull { it.currencyCode == "USD" }?.degreeCount
+
+    /** 기준통화 셀렉터 후보 — KRW + 홈에 선택된 통화. */
+    val baseCandidates: List<String>
+        get() = (listOf("KRW") + selectedCodes).distinct()
 }
 
 @HiltViewModel
@@ -47,15 +55,21 @@ class HomeViewModel @Inject constructor(
     private val error = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<HomeUiState> = combine(
-        repository.rates, prefs.selectedCodes, refreshing, error,
-    ) { rates, codes, isRefreshing, errorMessage ->
-        val byCode = rates.associateBy { it.currencyCode }
-        val selected = codes.mapNotNull { byCode[it] }
+        repository.rates, prefs.selectedCodes, prefs.baseCurrency, refreshing, error,
+    ) { rates, codes, base, isRefreshing, errorMessage ->
+        val selected = CrossRates.displayRates(
+            rates = rates,
+            selected = codes,
+            base = base,
+            krwName = context.getString(R.string.calc_krw_name),
+        )
         val stale = rates.isNotEmpty() &&
             System.currentTimeMillis() - rates.maxOf { it.fetchedAtMillis } > STALE_MILLIS
         HomeUiState(
             selected = selected,
             all = rates,
+            selectedCodes = codes,
+            baseCurrency = base,
             isRefreshing = isRefreshing,
             isStale = stale,
             errorMessage = errorMessage,
@@ -80,6 +94,10 @@ class HomeViewModel @Inject constructor(
 
     fun updateSelection(codes: List<String>) {
         viewModelScope.launch { prefs.setSelectedCodes(codes) }
+    }
+
+    fun setBaseCurrency(code: String) {
+        viewModelScope.launch { prefs.setBaseCurrency(code) }
     }
 
     // ── 온보딩 (v2 첫 실행: 새 구조 안내 + 브리핑 옵트인) ──

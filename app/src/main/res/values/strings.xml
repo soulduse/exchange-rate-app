@@ -17,6 +17,7 @@
     <string name="home_currency_search">Search currency</string>
     <string name="home_confirm">Done</string>
     <string name="home_cancel">Cancel</string>
+    <string name="home_base_currency">Base currency</string>
 
     <!-- Home onboarding (first launch on v2) -->
     <string name="onboarding_title">Exchange Rate Alert is all new ✨</string>
@@ -42,6 +43,8 @@
     <string name="detail_create_alert">Create alert</string>
     <string name="detail_back">Back</string>
     <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Chart and bank rates below are based on KRW quotes.</string>
     <string name="detail_chart_min">Low %s</string>
     <string name="detail_chart_max">High %s</string>
     <string name="detail_chart_empty">Preparing chart data.</string>
@@ -59,14 +62,21 @@
     <string name="alerts_direction_below">Below</string>
     <string name="alerts_repeat_once">Once</string>
     <string name="alerts_repeat_repeat">Repeat</string>
-    <string name="alerts_target_price">Target rate</string>
     <string name="alerts_save">Save</string>
     <string name="alerts_delete">Delete</string>
     <string name="alerts_select_currency">Select currency</string>
     <string name="alerts_cancel">Cancel</string>
     <string name="alerts_dialog_title">%s alert</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s alert</string>
     <string name="alerts_current_price">Now %s KRW</string>
+    <string name="alerts_current_price_cross">Now %1$s %2$s</string>
+    <string name="alerts_current_price_label">Current rate</string>
     <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Rate type</string>
+    <string name="alerts_section_target">Target rate</string>
+    <string name="alerts_section_condition">Notify when</string>
+    <string name="alerts_section_repeat">Frequency</string>
     <string name="alerts_error_list">Couldn\'t load your alerts.</string>
     <string name="alerts_error_create">Couldn\'t register the alert.</string>
     <string name="alerts_error_update">Couldn\'t apply the change.</string>
@@ -114,6 +124,7 @@
     <!-- Local push composition (rendered in device language for data-only messages) -->
     <string name="notif_alert_unit">" (%1$d %2$s)"</string>
     <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — hit your target of %5$s KRW (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — hit your target of %5$s %4$s (%6$s)</string>
     <string name="notif_swing_title">Sharp rate move</string>
     <string name="notif_swing_body_up">%1$s surging — %2$s KRW (%3$s%% vs yesterday)</string>
     <string name="notif_swing_body_down">%1$s falling — %2$s KRW (%3$s%% vs yesterday)</string>

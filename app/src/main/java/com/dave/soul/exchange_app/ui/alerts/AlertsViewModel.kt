@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.network.AlertDto
+import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.AlertRepository
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,7 @@ data class AlertsUiState(
 class AlertsViewModel @Inject constructor(
     private val alertRepository: AlertRepository,
     rateRepository: RateRepository,
+    prefs: UserPrefs,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -36,6 +38,10 @@ class AlertsViewModel @Inject constructor(
 
     val rates: StateFlow<List<RateEntity>> = rateRepository.rates
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** 홈과 같은 기준통화 — 알림 생성 다이얼로그의 현재가/목표가 축. */
+    val baseCurrency: StateFlow<String> = prefs.baseCurrency
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "KRW")
 
     init {
         reload()
@@ -57,13 +63,15 @@ class AlertsViewModel @Inject constructor(
 
     fun create(
         currencyCode: String,
+        baseCurrency: String,
         priceType: String,
         direction: String,
         targetPrice: Double,
         repeatMode: String,
     ) {
         viewModelScope.launch {
-            alertRepository.create(currencyCode, priceType, direction, targetPrice, repeatMode)
+            alertRepository
+                .create(currencyCode, baseCurrency, priceType, direction, targetPrice, repeatMode)
                 .onSuccess { reload() }
                 .onFailure {
                     _state.value = _state.value.copy(
