@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.AlertRepository
+import com.dave.soul.exchange_app.push.BriefingTopics
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,7 +44,7 @@ class SettingsViewModel @Inject constructor(
     fun setBriefing(enabled: Boolean) {
         viewModelScope.launch {
             prefs.setBriefingEnabled(enabled)
-            toggleTopic("exchange_briefing", enabled)
+            BriefingTopics.sync(enabled)
         }
     }
 

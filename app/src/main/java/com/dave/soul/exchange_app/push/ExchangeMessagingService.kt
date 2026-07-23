@@ -36,12 +36,17 @@ class ExchangeMessagingService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        // notification payload 는 백그라운드에서 시스템이 자동 표시 —
-        // 포그라운드 수신·data-only 메시지는 여기서 직접 표시한다.
-        val title = message.notification?.title
+        // 서버는 data-only 로 보낸다 — 조립 필드가 있으면 기기 언어로 렌더하고,
+        // 없으면 서버 브리지(data.title/body) → notification payload 순으로 폴백.
+        val composed = NotificationComposer.compose(this, message.data)
+        val title = composed?.first
             ?: message.data["title"]
+            ?: message.notification?.title
             ?: getString(R.string.app_name)
-        val body = message.notification?.body ?: message.data["body"] ?: return
+        val body = composed?.second
+            ?: message.data["body"]
+            ?: message.notification?.body
+            ?: return
         showNotification(title, body, message.data["currencyCode"])
     }
 

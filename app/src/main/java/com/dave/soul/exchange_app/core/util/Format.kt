@@ -1,21 +1,24 @@
 package com.dave.soul.exchange_app.core.util
 
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.Currency
 import java.util.Locale
 
-private val priceFormat = DecimalFormat("#,##0.00")
-private val amountFormat = DecimalFormat("#,##0.##")
+// 로케일별 구분자(1.234,56 vs 1,234.56) 반영 — 로케일 전환 대응 + DecimalFormat 비스레드세이프
+// 회피를 위해 호출마다 생성한다(생성 비용은 μs 단위라 리스트 렌더에도 무시 가능).
+private fun priceFormat() = DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(Locale.getDefault()))
+private fun amountFormat() = DecimalFormat("#,##0.##", DecimalFormatSymbols.getInstance(Locale.getDefault()))
 
 /** 시세 표시 — 1,480.60 */
-fun formatPrice(value: Double): String = priceFormat.format(value)
+fun formatPrice(value: Double): String = priceFormat().format(value)
 
 /** 계산 금액 표시 — 1,234.56 (불필요한 소수 생략) */
-fun formatAmount(value: Double): String = amountFormat.format(value)
+fun formatAmount(value: Double): String = amountFormat().format(value)
 
 /** 등락 부호 포함 — +1.90 / -1.90 */
 fun formatSigned(value: Double): String =
-    (if (value > 0) "+" else "") + priceFormat.format(value)
+    (if (value > 0) "+" else "") + priceFormat().format(value)
 
 /**
  * 기준 시각 축약 — "2026-07-23T20:22:10" → "07.23 20:22".

@@ -7,7 +7,7 @@ import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.RateRepository
-import com.google.firebase.messaging.FirebaseMessaging
+import com.dave.soul.exchange_app.push.BriefingTopics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -63,6 +64,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         refresh()
+        // 기기 언어가 바뀌었을 수 있어 매 실행 브리핑 토픽을 로케일에 재정렬
+        viewModelScope.launch { BriefingTopics.sync(prefs.briefingEnabled.first()) }
     }
 
     fun refresh() {
@@ -89,7 +92,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             if (enableBriefing) {
                 prefs.setBriefingEnabled(true)
-                FirebaseMessaging.getInstance().subscribeToTopic("exchange_briefing")
+                BriefingTopics.sync(enabled = true)
             }
             prefs.setOnboardingDone()
         }

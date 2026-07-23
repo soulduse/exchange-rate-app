@@ -76,3 +76,16 @@
 - **검증**: S21 실기기 릴리스 — 스플래시 애니메이션·전면광고 실노출(2세션 연속)·종료 팝업 네이티브 실렌더·크로스헤어+축·en 로케일(홈/종료팝업/통화명 "US Dollar" 등) 전부 확인. 에뮬은 광고 로드가 6s 초과라 전면 스킵됨(정상 폴백)
 - **AAB 교체 완료**: 릴리스(id 15)에서 vc16 삭제 → vc17 업로드·인식 확인 → 저장. 출시 노트 유지
 - **잔여**: ① 게시 개요 "변경사항 9개 제출" 클릭(사용자 게이트) — 빠른 검사가 "등록정보 기능 설명 불명확(스크린샷 플레이스홀더 의심)" 1건 오탐 경고, "무시하고 계속하기"로 전송 가능 ② S24 재연결 시 vc17 설치 ③ 글로벌 기준통화(크로스레이트)는 차기 마일스톤(로드맵: 홈 기준통화 선택 → krwPerOne 크로스레이트 클라 계산 → 서버 다중 기준 확장)
+
+## M8 — 심사 제출 + P1 글로벌 푸시 (vc18/2.1.0) ✅ 2026-07-23 밤
+- **vc17 심사 제출 완료**: 게시 개요 "변경사항 제출" → 빠른 검사 오탐(쇼케이스 스샷 플레이스홀더 의심) "무시하고 계속하기" → 재검사 통과 후 확인 다이얼로그 "검토를 위해 변경사항 전송" 클릭 → **"검토 중인 변경사항" 전환 확인**. 릴리스 상세에서 새 AAB=17(2.0.0)·비활성=15(1.8.6) 확정(개요의 "16 (2.0.0)"은 릴리스 이름 표기일 뿐)
+- **P1 ① 푸시 data-only 전환**(apis-py 커밋 6b347be, dc01ef3 배포에 포함·블루그린 성공):
+  - dispatch_fired/send_topic: notification 페이로드 제거 → data-only. data에 title/body 한국어 브리지 유지(vc17 폴백 호환)
+  - alert data에 currencyName·perUnit, swing data에 currencyName·basePrice·changeRatio·direction 추가
+  - 브리핑 언어별 토픽: exchange_briefing(ko) + exchange_briefing_en(en) 이중 발송
+- **P1 ① 클라 로케일 조립**: `push/NotificationComposer`(alert/swing 조립, 필드 부족 시 브리지 폴백) + `push/BriefingTopics.sync`(기기 언어 토픽만 구독, 온보딩/설정 토글/앱 시작 시 재정렬) + `core/util/PriceTypeLabels`(AlertsScreen 맵 공용화). 조립 키 5종(notif_*) ko/en 추가
+- **P1 ② 기본 로케일 영어 플립**: values=en(+admob_app_id), values-ko 신설, values-en 삭제 — 미지원 언어 폴백이 영어가 됨. localeConfig(ko/en) 유지
+- **P1 ⑤ 숫자 로케일 포맷**: Format.kt DecimalFormat에 로케일 심볼 적용(호출마다 생성 — 스레드 세이프 겸)
+- **UI 수정**: AlertEditDialog 방향/반복 칩 4개 한 줄 → 두 줄 분리(영어 라벨 "Repeat" 세로 래핑 버그)
+- **E2E 실검증**(에뮬 vc18 릴리스, 프로덕션 서버): ko 조립 "환율알리미 / 미국 매매기준율 1,474.50원 — 목표 1,459.95원 이상 도달"(22:30:03) · en 조립 "Exchange Rate Alert / US Dollar Base rate 1,472.10 KRW — hit your target of 1,459.75 KRW (Above)"(22:34:04, currencyName '미국'→'US Dollar' 클라 현지화). 런치 전면·en UI 전반도 확인
+- **잔여**: ① vc18 AAB는 vc17 심사 승인 후 업로드(심사 중 릴리스 교체 금지) ② P2 en-US 스토어 리스팅+en 쇼케이스 ③ P3 기준통화 크로스레이트

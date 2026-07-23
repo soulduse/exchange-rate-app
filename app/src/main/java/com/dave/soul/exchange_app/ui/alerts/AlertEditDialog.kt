@@ -130,6 +130,7 @@ fun AlertEditDialog(
                         }
                     }
                 }
+                // 방향/반복을 두 줄로 — 한 줄 4칩은 영어 라벨(Above·Below·Once·Repeat)이 넘쳐 세로 래핑됨
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     FilterChip(
                         selected = direction == "ABOVE",
@@ -141,6 +142,8 @@ fun AlertEditDialog(
                         onClick = { direction = "BELOW" },
                         label = { Text(stringResource(R.string.alerts_direction_below)) },
                     )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     FilterChip(
                         selected = repeatMode == "ONCE",
                         onClick = { repeatMode = "ONCE" },

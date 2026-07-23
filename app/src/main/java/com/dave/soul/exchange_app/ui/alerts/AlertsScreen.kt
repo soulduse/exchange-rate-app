@@ -52,20 +52,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.network.AlertDto
 import com.dave.soul.exchange_app.core.util.formatPrice
-
-// 가격 유형 코드 → 라벨 리소스. top-level 상수라 stringResource 불가 → ID 맵으로 보관.
-private val PRICE_TYPE_LABEL_RES: Map<String, Int> = mapOf(
-    "BASE" to R.string.detail_base_price,
-    "CASH_BUY" to R.string.detail_cash_buy,
-    "CASH_SELL" to R.string.detail_cash_sell,
-    "SEND" to R.string.detail_send,
-    "RECEIVE" to R.string.detail_receive,
-)
+import com.dave.soul.exchange_app.core.util.priceTypeLabelRes
 
 /** 가격 유형 코드의 현지화 라벨 — 미지원 코드는 코드 원문 폴백. */
 @Composable
 private fun priceTypeLabel(type: String): String {
-    @StringRes val resId = PRICE_TYPE_LABEL_RES[type]
+    @StringRes val resId = priceTypeLabelRes(type)
     return if (resId != null) stringResource(resId) else type
 }
 
