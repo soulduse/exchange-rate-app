@@ -46,7 +46,7 @@
 - **아이콘 리프레시**: 벡터 adaptive icon 신규 제작(딥블루 그라데이션 배경 + 흰 순환화살표·₩ 전경, monochrome 포함) + 레거시 PNG 5밀도(rsvg-convert) + 스토어 512(`docs/store/icon_512.png`). 구 icon.png 잔재 제거
 - **스플래시**: core-splashscreen 1.0.1 — `Theme.ExchangeApp.Splash`(딥블루 배경+전경 아이콘) + MainActivity installSplashScreen
 - **⚠️R8 릴리스 실사고 해결**: 릴리스에서만 "환율 정보를 불러올 수 없습니다" — **AGP 8 R8 full mode에서 retrofit 2.9 keep 부족**(인터페이스/`kotlin.coroutines.Continuation`/`retrofit2.Response` 제네릭 축소). proguard-rules.pro에 `-if interface … -keep,allowobfuscation interface <1>` + Continuation/Response shrink-keep 추가로 해결. refresh 실패 Log.w 추가(진단용)
-- **릴리스 검증**: 실키 서명 AAB(10.7MB, 지문 재대조 일치) + 에뮬 릴리스 스모크(홈 305회차 로드·상세 차트/4종가/우대율·알림 생성 EP·실광고 fill·새 아이콘/스플래시)
+- **릴리스 검증(전수)**: 실키 서명 AAB(10.7MB, 지문 재대조 일치) + 에뮬 릴리스 빌드로 전 축 검증 — 홈 로드·상세 차트/4종가/우대율·계산기·알림 CRUD·**Glance 위젯 SMALL/LARGE 실렌더**·설정 토픽 토글·실광고 fill·새 아이콘/스플래시·**FCM 실수신**("1,466.80원 — 목표 1,474.44원 이하 도달")
 - 위젯 previewImage 추가(`drawable-nodpi/widget_preview.png`)
 
 ### M6 준비 — 스토어 자산 ✅ 초안 2026-07-23
