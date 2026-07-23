@@ -1,114 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">환율알리미</string>
-    <string name="action_settings">Settings</string>
-    <string name="viewpager_tap_name_1">관심환율</string>
-    <string name="viewpager_tap_name_2">계산기</string>
-    <string name="viewpager_tap_name_3">환율알림</string>
-    <string name="cash">현금</string>
-    <string name="send">송금</string>
-    <string name="sell_text">팔때 : </string>
-    <string name="buy_text">살때 : </string>
-    <string name="send_text">보낼때 : </string>
-    <string name="receive_text">받을때 : </string>
-    <string name="set_actionbar_name">국가설정</string>
-    <string name="setting_actionbar_name">설정</string>
-    <string name="warning_empty_price">환율 금액을 입력해주세요.</string>
-    <string name="warning_overlap_alarm">이미 등록한 알림입니다.</string>
-    <string name="notice_add_alarm">등록된 알림이 없습니다.</string>
 
-    <string name="select_country">나라 선택</string>
-    <string name="above">이상</string>
-    <string name="below">이하</string>
+    <!-- 탭/화면 -->
+    <string name="tab_home">환율</string>
+    <string name="tab_calculator">계산기</string>
+    <string name="tab_alerts">알림</string>
+    <string name="tab_settings">설정</string>
 
-    <string name="compare_above">설정값 보다 상승</string>
-    <string name="compare_below">설정값 보다 하락</string>
+    <!-- 홈 -->
+    <string name="home_updated_at">%s 기준</string>
+    <string name="home_degree_count">%d회차</string>
+    <string name="home_add_currency">통화 추가</string>
+    <string name="home_offline_notice">오프라인 — 마지막으로 받은 환율입니다</string>
+    <string name="home_error_load">환율 정보를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</string>
 
-    <string name="disconnect_internet">No internet connection!</string>
-    <string name="connect_internet">Update success!</string>
+    <!-- 상세 -->
+    <string name="detail_base_price">매매기준율</string>
+    <string name="detail_cash_buy">현찰 살 때</string>
+    <string name="detail_cash_sell">현찰 팔 때</string>
+    <string name="detail_send">송금 보낼 때</string>
+    <string name="detail_receive">송금 받을 때</string>
+    <string name="detail_spread_rate">우대율 적용</string>
+    <string name="detail_52w_band">52주 범위</string>
+    <string name="detail_create_alert">알림 만들기</string>
 
-    <string name="select_option">기준 환율 선택</string>
-    <string-array name="pref_priceOptions">
-        <item>매매기준율</item>
-        <item>살때</item>
-        <item>팔때</item>
-        <item>보낼때</item>
-        <item>받을때</item>
-    </string-array>
+    <!-- 알림 -->
+    <string name="alerts_empty">등록된 알림이 없어요.\n목표 환율에 도달하면 알려드릴게요.</string>
+    <string name="alerts_add">알림 추가</string>
+    <string name="alerts_direction_above">이상</string>
+    <string name="alerts_direction_below">이하</string>
+    <string name="alerts_repeat_once">1회</string>
+    <string name="alerts_repeat_repeat">반복</string>
+    <string name="alerts_target_price">목표 환율</string>
+    <string name="alerts_save">저장</string>
+    <string name="alerts_delete">삭제</string>
 
-    <!-- 설정 관련-->
-    <string name="set_basic">기본 설정</string>
-    <string name="pref_alarmAndData">알림 및 데이터 설정</string>
-    <string name="pref_graph">그래프 보기 설정</string>
-    <string name="pref_refresh">자동 업데이트 주기</string>
+    <!-- 설정 -->
+    <string name="settings_briefing">아침 환율 브리핑</string>
+    <string name="settings_briefing_desc">평일 아침 주요 환율 요약을 받아요</string>
+    <string name="settings_swing">급변동 알림</string>
+    <string name="settings_swing_desc">주요 통화가 크게 움직이면 알려드려요</string>
+    <string name="settings_feedback">피드백/버그 제보</string>
+    <string name="settings_version">앱 버전</string>
 
-    <!-- 그래프 기본 설정 -->
-    <string name="pref_showGraph_default">month3</string>
+    <!-- 알림 채널 -->
+    <string name="channel_alerts_name">환율 알림</string>
+    <string name="channel_alerts_desc">목표 환율 도달·급변동·브리핑 알림</string>
 
-    <!-- 설정 그래프 -->
-    <string-array name="pref_graphOption">
-        <item>3개월</item>
-        <item>1년</item>
-        <item>3년</item>
-        <item>10년</item>
-    </string-array>
-
-    <string-array name="pref_graphOption_values">
-        <item>month3</item>
-        <item>year</item>
-        <item>year3</item>
-        <item>year10</item>
-    </string-array>
-
-    <!-- 알림 설정 -->
-    <string name="pref_alarmSwitch">환율 알림</string>
-    <string name="pref_alarmSet">알림 방법 선택</string>
-    <string name="pref_alarmSound">알림 소리</string>
-    <string name="pref_alarmVibe">알림 진동</string>
-    <string name="pref_refresh_default">60</string>
-
-    <string-array name="pref_refreshOption">
-        <item>5분</item>
-        <item>15분</item>
-        <item>30분</item>
-        <item>1시간</item>
-        <item>2시간</item>
-    </string-array>
-
-    <string-array name="pref_refreshOption_values">
-        <item>5</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>120</item>
-    </string-array>
-
-    <!-- 관심환율 페이지 -->
-    <string name="notice_none_items">등록된 관심환율이 없습니다. \n\n 오른쪽 하단 (+) 버튼을 눌러 \n\n 관심환율을 추가 해보세요.</string>
-
-    <!-- 계산기 페이지 -->
-    <string name="trade_price">매매기준율</string>
-
-    <!-- 환율알림 페이지 -->
-    <string name="notice_none_alarms">등록된 환율알림이 없습니다. \n\n 오른쪽 하단 (+) 버튼을 눌러 \n\n 환율알림을 추가 해보세요.</string>
-
-    <!-- 환율알림 -->
-    <string name="notice_exchange_alarm">설정한 수치에 도달한 환율이 있습니다.</string>
-
-    <!-- admob -->
-    <string name="admob_id">ca-app-pub-1908860913688060~3760538434</string>
-    <string name="ad_interstitial_id">ca-app-pub-1908860913688060/2186144132</string>
-    <string name="ad_banner_id">ca-app-pub-1908860913688060/6574404035</string>
-    <string name="ad_back_pressed_ad_id">ca-app-pub-1908860913688060/3495356376</string>
-    <string name="toast_agree">모든 권한에 승인을 해주세요</string>
-    <string name="setting_txt">설정</string>
-    <string name="thanks_for_clicked_ad">감사합니다! 오늘 하루동안은 광고가 노출되지 않습니다. :)\n즐거운 하루되세요!</string>
-
-    <string name="apology_ad_title">
-        광고 때문에 불편하셨나요? 개발자의\n
-        서버비와 저녁 음식값으로 조금만\n
-        이해해주세요. 좋은 리뷰와 광고 보기 및\n
-        클릭으로 개발자는 많은 힘을 얻습니다.\n
-        조금만 양해 부탁드립니다.
-    </string>
-    <string name="app_title">오늘의 환율</string>
+    <!-- AdMob (기존 계정 유지 — 계정 이관 결정 전까지) -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-1908860913688060~3760538434</string>
 </resources>
