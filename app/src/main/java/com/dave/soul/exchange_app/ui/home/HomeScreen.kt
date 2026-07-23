@@ -453,7 +453,9 @@ private fun CurrencyPickerDialog(
     onDismiss: () -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
-    val checked = remember { mutableStateOf(selected.toMutableSet()) }
+    // 불변 Set 재할당 — MutableSet 제자리 변경은 structural equality 에 걸려
+    // 상태 쓰기가 무시된다(체크 토글 미반영 버그의 원인)
+    var checked by remember { mutableStateOf(selected.toSet()) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -479,7 +481,7 @@ private fun CurrencyPickerDialog(
                             it.currencyCode.contains(query, ignoreCase = true)
                     }
                     items(filtered, key = { it.currencyCode }) { rate ->
-                        val isChecked = rate.currencyCode in checked.value
+                        val isChecked = rate.currencyCode in checked
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -490,9 +492,9 @@ private fun CurrencyPickerDialog(
                                     else Color.Transparent,
                                 )
                                 .clickable {
-                                    val set = checked.value
-                                    if (!set.add(rate.currencyCode)) set.remove(rate.currencyCode)
-                                    checked.value = set.toMutableSet()
+                                    checked =
+                                        if (isChecked) checked - rate.currencyCode
+                                        else checked + rate.currencyCode
                                 }
                                 .heightIn(min = 56.dp)
                                 .padding(horizontal = 8.dp, vertical = 6.dp),
@@ -525,8 +527,8 @@ private fun CurrencyPickerDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                val kept = selected.filter { it in checked.value }
-                val added = checked.value.filter { it !in selected }
+                val kept = selected.filter { it in checked }
+                val added = checked.filter { it !in selected }
                 onConfirm(kept + added)
             }) { Text(stringResource(R.string.home_confirm)) }
         },
