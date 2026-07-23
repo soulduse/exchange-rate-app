@@ -14,6 +14,22 @@
     <string name="home_add_currency">통화 추가</string>
     <string name="home_offline_notice">오프라인 — 마지막으로 받은 환율입니다</string>
     <string name="home_error_load">환율 정보를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</string>
+    <string name="home_currency_search">통화 검색</string>
+    <string name="home_confirm">확인</string>
+    <string name="home_cancel">취소</string>
+
+    <!-- 홈 온보딩 (v2 첫 실행 안내) -->
+    <string name="onboarding_title">환율알리미가 새로워졌어요 ✨</string>
+    <string name="onboarding_bullet_1">• 목표 환율 알림이 서버에서 실시간으로 도착해요</string>
+    <string name="onboarding_bullet_2">• 현찰·송금 4가지 환율과 우대율 계산을 지원해요</string>
+    <string name="onboarding_bullet_3">• 52주 범위·기간별 차트로 타이밍을 판단하세요</string>
+    <string name="onboarding_migration_notice">기존에 설정하신 알림은 새 구조로 이전되지 않았어요. 알림 탭에서 다시 등록해 주세요.</string>
+    <string name="onboarding_enable_briefing">아침 브리핑도 받을래요</string>
+    <string name="onboarding_start">시작하기</string>
+
+    <!-- 단위 -->
+    <string name="unit_krw">원</string>
+    <string name="home_per_unit"> · %d단위</string>
 
     <!-- 상세 -->
     <string name="detail_base_price">매매기준율</string>
@@ -24,6 +40,17 @@
     <string name="detail_spread_rate">우대율 적용</string>
     <string name="detail_52w_band">52주 범위</string>
     <string name="detail_create_alert">알림 만들기</string>
+    <string name="detail_back">뒤로</string>
+    <string name="detail_price_per_unit">원 / %1$d%2$s</string>
+    <string name="detail_chart_min">최저 %s</string>
+    <string name="detail_chart_max">최고 %s</string>
+    <string name="detail_chart_empty">차트 데이터를 준비 중입니다.</string>
+    <string name="detail_spread_buy">우대 적용 살 때</string>
+    <string name="detail_spread_sell">우대 적용 팔 때</string>
+    <string name="detail_52w_percentile">최근 1년 중 상위 %d%%</string>
+    <string name="detail_round_count">%d회차</string>
+    <string name="detail_alert_registered">알림을 등록했어요.</string>
+    <string name="detail_alert_failed">알림 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
 
     <!-- 알림 -->
     <string name="alerts_empty">등록된 알림이 없어요.\n목표 환율에 도달하면 알려드릴게요.</string>
@@ -35,6 +62,15 @@
     <string name="alerts_target_price">목표 환율</string>
     <string name="alerts_save">저장</string>
     <string name="alerts_delete">삭제</string>
+    <string name="alerts_select_currency">통화 선택</string>
+    <string name="alerts_cancel">취소</string>
+    <string name="alerts_dialog_title">%s 알림</string>
+    <string name="alerts_current_price">현재 %s원</string>
+    <string name="alerts_row_summary">%1$s원 %2$s · %3$s</string>
+    <string name="alerts_error_list">알림 목록을 불러올 수 없습니다.</string>
+    <string name="alerts_error_create">알림 등록에 실패했습니다.</string>
+    <string name="alerts_error_update">변경에 실패했습니다.</string>
+    <string name="alerts_error_delete">삭제에 실패했습니다.</string>
 
     <!-- 설정 -->
     <string name="settings_briefing">아침 환율 브리핑</string>
@@ -43,6 +79,33 @@
     <string name="settings_swing_desc">주요 통화가 크게 움직이면 알려드려요</string>
     <string name="settings_feedback">피드백/버그 제보</string>
     <string name="settings_version">앱 버전</string>
+    <string name="settings_theme">화면 테마</string>
+    <string name="settings_theme_system">시스템</string>
+    <string name="settings_theme_light">라이트</string>
+    <string name="settings_theme_dark">다크</string>
+    <string name="settings_feedback_send">의견 보내기</string>
+    <string name="settings_feedback_bug">버그</string>
+    <string name="settings_feedback_feature">기능 제안</string>
+    <string name="settings_feedback_etc">기타</string>
+    <string name="settings_feedback_placeholder">불편한 점이나 바라는 점을 알려주세요</string>
+    <string name="settings_feedback_submit">보내기</string>
+    <string name="settings_feedback_cancel">취소</string>
+    <string name="settings_feedback_success">소중한 의견 감사합니다!</string>
+    <string name="settings_feedback_error">전송에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
+
+    <!-- 계산기 -->
+    <string name="calc_krw_name">대한민국 원</string>
+    <string name="calc_amount_label">%s 금액</string>
+
+    <!-- 종료 다이얼로그 -->
+    <string name="exit_title">앱을 종료할까요?</string>
+    <string name="exit_confirm">종료</string>
+    <string name="exit_review">리뷰</string>
+    <string name="exit_cancel">취소</string>
+    <string name="exit_ad_cta">자세히 보기</string>
+
+    <!-- 위젯 -->
+    <string name="widget_empty">앱을 열어 환율을 불러와 주세요</string>
 
     <!-- 알림 채널 -->
     <string name="channel_alerts_name">환율 알림</string>

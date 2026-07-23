@@ -1,12 +1,15 @@
 package com.dave.soul.exchange_app.ui.alerts
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.network.AlertDto
 import com.dave.soul.exchange_app.core.repo.AlertRepository
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,6 +28,7 @@ data class AlertsUiState(
 class AlertsViewModel @Inject constructor(
     private val alertRepository: AlertRepository,
     rateRepository: RateRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AlertsUiState())
@@ -45,7 +49,7 @@ class AlertsViewModel @Inject constructor(
                 .onFailure {
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        message = "알림 목록을 불러올 수 없습니다.",
+                        message = context.getString(R.string.alerts_error_list),
                     )
                 }
         }
@@ -62,7 +66,9 @@ class AlertsViewModel @Inject constructor(
             alertRepository.create(currencyCode, priceType, direction, targetPrice, repeatMode)
                 .onSuccess { reload() }
                 .onFailure {
-                    _state.value = _state.value.copy(message = "알림 등록에 실패했습니다.")
+                    _state.value = _state.value.copy(
+                        message = context.getString(R.string.alerts_error_create),
+                    )
                 }
         }
     }
@@ -71,7 +77,11 @@ class AlertsViewModel @Inject constructor(
         viewModelScope.launch {
             alertRepository.update(alert.id, active = !alert.active)
                 .onSuccess { reload() }
-                .onFailure { _state.value = _state.value.copy(message = "변경에 실패했습니다.") }
+                .onFailure {
+                    _state.value = _state.value.copy(
+                        message = context.getString(R.string.alerts_error_update),
+                    )
+                }
         }
     }
 
@@ -79,7 +89,11 @@ class AlertsViewModel @Inject constructor(
         viewModelScope.launch {
             alertRepository.delete(alert.id)
                 .onSuccess { reload() }
-                .onFailure { _state.value = _state.value.copy(message = "삭제에 실패했습니다.") }
+                .onFailure {
+                    _state.value = _state.value.copy(
+                        message = context.getString(R.string.alerts_error_delete),
+                    )
+                }
         }
     }
 

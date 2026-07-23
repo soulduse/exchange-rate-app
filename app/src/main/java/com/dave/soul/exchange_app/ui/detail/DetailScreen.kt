@@ -43,9 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
+import com.dave.soul.exchange_app.core.util.displayName
 import com.dave.soul.exchange_app.core.util.flagEmoji
 import com.dave.soul.exchange_app.core.util.formatPrice
 import com.dave.soul.exchange_app.core.util.formatSigned
+import com.dave.soul.exchange_app.core.util.shortTradedAt
 import com.dave.soul.exchange_app.ui.alerts.AlertEditDialog
 import com.dave.soul.exchange_app.ui.theme.FallBlue
 import com.dave.soul.exchange_app.ui.theme.RiseRed
@@ -79,11 +81,19 @@ fun DetailScreen(
             TopAppBar(
                 title = {
                     val r = rate
-                    Text(if (r != null) "${flagEmoji(r.countryCode)} ${r.name}" else currencyCode)
+                    Text(
+                        if (r != null) {
+                            "${flagEmoji(r.countryCode)} " +
+                                displayName(r.name, r.nameEng, r.currencyCode)
+                        } else currencyCode,
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.detail_back),
+                        )
                     }
                 },
             )
@@ -143,7 +153,11 @@ private fun PriceHeader(rate: RateEntity) {
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                "원" + if (rate.perUnit != 1) " / ${rate.perUnit}${rate.currencyCode}" else "",
+                if (rate.perUnit != 1) {
+                    stringResource(R.string.detail_price_per_unit, rate.perUnit, rate.currencyCode)
+                } else {
+                    stringResource(R.string.unit_krw)
+                },
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 6.dp),
@@ -163,10 +177,19 @@ private fun PriceHeader(rate: RateEntity) {
                     style = MaterialTheme.typography.titleSmall,
                 )
             }
+            // 기준 시각(있으면) + 회차 — onSurfaceVariant로 부가 정보 표기
+            shortTradedAt(rate.localTradedAt)?.let {
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    it,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             rate.degreeCount?.let {
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "${it}회차",
+                    stringResource(R.string.detail_round_count, it),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -200,19 +223,19 @@ private fun ChartCard(chart: ChartState, onRangeSelect: (String) -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        "최저 ${formatPrice(closes.min())}",
+                        stringResource(R.string.detail_chart_min, formatPrice(closes.min())),
                         style = MaterialTheme.typography.labelSmall,
                         color = FallBlue,
                     )
                     Text(
-                        "최고 ${formatPrice(closes.max())}",
+                        stringResource(R.string.detail_chart_max, formatPrice(closes.max())),
                         style = MaterialTheme.typography.labelSmall,
                         color = RiseRed,
                     )
                 }
             } else if (!chart.isLoading) {
                 Text(
-                    "차트 데이터를 준비 중입니다.",
+                    stringResource(R.string.detail_chart_empty),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -271,9 +294,9 @@ private fun SpreadCard(rate: RateEntity, spreadRate: Float, onSpreadChange: (Flo
                 valueRange = 0f..100f,
                 steps = 19,
             )
-            PriceLine("우대 적용 살 때", effectiveBuy)
+            PriceLine(stringResource(R.string.detail_spread_buy), effectiveBuy)
             Spacer(Modifier.height(6.dp))
-            PriceLine("우대 적용 팔 때", effectiveSell)
+            PriceLine(stringResource(R.string.detail_spread_sell), effectiveSell)
         }
     }
 }
@@ -292,7 +315,10 @@ private fun Band52wCard(rate: RateEntity) {
             ) {
                 Text(stringResource(R.string.detail_52w_band), fontWeight = FontWeight.SemiBold)
                 Text(
-                    "최근 1년 중 상위 ${(100 - position * 100).toInt()}%",
+                    stringResource(
+                        R.string.detail_52w_percentile,
+                        (100 - position * 100).toInt(),
+                    ),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

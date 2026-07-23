@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.annotation.StringRes
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -52,13 +53,21 @@ import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.network.AlertDto
 import com.dave.soul.exchange_app.core.util.formatPrice
 
-private val PRICE_TYPE_LABELS = mapOf(
-    "BASE" to "매매기준율",
-    "CASH_BUY" to "현찰 살 때",
-    "CASH_SELL" to "현찰 팔 때",
-    "SEND" to "송금 보낼 때",
-    "RECEIVE" to "송금 받을 때",
+// 가격 유형 코드 → 라벨 리소스. top-level 상수라 stringResource 불가 → ID 맵으로 보관.
+private val PRICE_TYPE_LABEL_RES: Map<String, Int> = mapOf(
+    "BASE" to R.string.detail_base_price,
+    "CASH_BUY" to R.string.detail_cash_buy,
+    "CASH_SELL" to R.string.detail_cash_sell,
+    "SEND" to R.string.detail_send,
+    "RECEIVE" to R.string.detail_receive,
 )
+
+/** 가격 유형 코드의 현지화 라벨 — 미지원 코드는 코드 원문 폴백. */
+@Composable
+private fun priceTypeLabel(type: String): String {
+    @StringRes val resId = PRICE_TYPE_LABEL_RES[type]
+    return if (resId != null) stringResource(resId) else type
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -162,7 +171,7 @@ private fun CurrencySelectableAlertDialog(
     if (pickingCurrency) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("통화 선택") },
+            title = { Text(stringResource(R.string.alerts_select_currency)) },
             text = {
                 LazyColumn {
                     items(ordered, key = { it }) { code ->
@@ -181,7 +190,9 @@ private fun CurrencySelectableAlertDialog(
                 }
             },
             confirmButton = {},
-            dismissButton = { TextButton(onClick = onDismiss) { Text("취소") } },
+            dismissButton = {
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.alerts_cancel)) }
+            },
         )
     } else {
         AlertEditDialog(
@@ -211,15 +222,26 @@ private fun AlertRow(alert: AlertDto, onToggle: () -> Unit, onDelete: () -> Unit
                     )
                     Spacer(Modifier.width(6.dp))
                     Text(
-                        PRICE_TYPE_LABELS[alert.priceType] ?: alert.priceType,
+                        priceTypeLabel(alert.priceType),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+                val directionLabel = stringResource(
+                    if (alert.direction == "ABOVE") R.string.alerts_direction_above
+                    else R.string.alerts_direction_below,
+                )
+                val repeatLabel = stringResource(
+                    if (alert.repeatMode == "REPEAT") R.string.alerts_repeat_repeat
+                    else R.string.alerts_repeat_once,
+                )
                 Text(
-                    "${formatPrice(alert.targetPrice)}원 " +
-                        (if (alert.direction == "ABOVE") "이상" else "이하") +
-                        " · " + (if (alert.repeatMode == "REPEAT") "반복" else "1회"),
+                    stringResource(
+                        R.string.alerts_row_summary,
+                        formatPrice(alert.targetPrice),
+                        directionLabel,
+                        repeatLabel,
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

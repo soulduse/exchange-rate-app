@@ -1,12 +1,15 @@
 package com.dave.soul.exchange_app.ui.home
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,6 +39,7 @@ data class HomeUiState(
 class HomeViewModel @Inject constructor(
     private val repository: RateRepository,
     private val prefs: UserPrefs,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val refreshing = MutableStateFlow(false)
@@ -66,7 +70,7 @@ class HomeViewModel @Inject constructor(
             refreshing.value = true
             repository.refresh()
                 .onSuccess { error.value = null }
-                .onFailure { error.value = "환율 정보를 불러올 수 없습니다." }
+                .onFailure { error.value = context.getString(R.string.home_error_load) }
             refreshing.value = false
         }
     }

@@ -41,6 +41,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import androidx.compose.ui.unit.DpSize
+import com.dave.soul.exchange_app.R
 import kotlinx.coroutines.flow.first
 
 @EntryPoint
@@ -69,9 +70,11 @@ class RatesWidget : GlanceAppWidget() {
         val rows = selected.mapNotNull { code ->
             rates[code]?.let { WidgetRate(code, it.countryCode, it.basePrice, it.change) }
         }
+        // Glance @Composable 에는 LocalContext 가 없어 여기서 문자열을 확보해 전달
+        val emptyText = context.getString(R.string.widget_empty)
         provideContent {
             GlanceTheme {
-                WidgetContent(rows)
+                WidgetContent(rows, emptyText)
             }
         }
     }
@@ -94,7 +97,7 @@ private val Rise = ColorProvider(Color(0xFFE5484D), Color(0xFFFF7A7E))
 private val Fall = ColorProvider(Color(0xFF3B6EF6), Color(0xFF8AA6FF))
 
 @Composable
-private fun WidgetContent(rows: List<WidgetRate>) {
+private fun WidgetContent(rows: List<WidgetRate>, emptyText: String) {
     val size = LocalSize.current
     val isLarge = size.height >= 100.dp
     Column(
@@ -107,7 +110,7 @@ private fun WidgetContent(rows: List<WidgetRate>) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (rows.isEmpty()) {
-            Text("앱을 열어 환율을 불러와 주세요", style = TextStyle(color = TextSub, fontSize = 12.sp))
+            Text(emptyText, style = TextStyle(color = TextSub, fontSize = 12.sp))
         } else if (!isLarge) {
             WidgetRow(rows.first(), large = true)
         } else {

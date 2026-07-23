@@ -1,11 +1,14 @@
 package com.dave.soul.exchange_app.ui.calculator
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 data class CalcRow(
     val code: String,
     val name: String,
+    val nameEng: String?,
     val countryCode: String,
     val amount: Double,
     val isBase: Boolean,
@@ -34,6 +38,7 @@ data class CalculatorUiState(
 class CalculatorViewModel @Inject constructor(
     repository: RateRepository,
     private val prefs: UserPrefs,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val baseCode = MutableStateFlow("USD")
@@ -71,12 +76,21 @@ class CalculatorViewModel @Inject constructor(
 
         val rows = codes.mapNotNull { code ->
             if (code == "KRW") {
-                CalcRow("KRW", "대한민국 원", "kr", amountInKrw, base == "KRW")
+                // name 은 이미 로케일 리소스이므로 nameEng 불필요(null → name 그대로 표시)
+                CalcRow(
+                    code = "KRW",
+                    name = context.getString(R.string.calc_krw_name),
+                    nameEng = null,
+                    countryCode = "kr",
+                    amount = amountInKrw,
+                    isBase = base == "KRW",
+                )
             } else {
                 val rate = byCode[code] ?: return@mapNotNull null
                 CalcRow(
                     code = code,
                     name = rate.name,
+                    nameEng = rate.nameEng,
                     countryCode = rate.countryCode,
                     amount = amountInKrw / rate.krwPerOne(),
                     isBase = base == code,

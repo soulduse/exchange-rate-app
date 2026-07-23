@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -84,9 +86,14 @@ fun HomeScreen(
                             style = MaterialTheme.typography.titleLarge,
                         )
                         state.updatedAtText?.let { updated ->
-                            val degree = state.degreeCount?.let { " · ${it}회차" }.orEmpty()
+                            val degree = state.degreeCount
+                                ?.let { " · " + stringResource(R.string.home_degree_count, it) }
+                                .orEmpty()
                             Text(
-                                text = updated.replace('T', ' ').take(16) + " 기준" + degree,
+                                text = stringResource(
+                                    R.string.home_updated_at,
+                                    updated.replace('T', ' ').take(16),
+                                ) + degree,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -198,11 +205,14 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
                 Spacer(Modifier.width(10.dp))
                 Column {
                     Text(
-                        displayName(rate.name, rate.currencyCode),
+                        displayName(rate.name, rate.nameEng, rate.currencyCode),
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
-                        rate.currencyCode + if (rate.perUnit != 1) " · ${rate.perUnit}단위" else "",
+                        rate.currencyCode +
+                            if (rate.perUnit != 1) {
+                                stringResource(R.string.home_per_unit, rate.perUnit)
+                            } else "",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -217,7 +227,7 @@ private fun HeroCard(rate: RateEntity, onClick: () -> Unit) {
                             style = MaterialTheme.typography.displaySmall,
                         )
                         Text(
-                            "원",
+                            stringResource(R.string.unit_krw),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
@@ -257,7 +267,7 @@ private fun RateRow(rate: RateEntity, onClick: () -> Unit) {
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    displayName(rate.name, rate.currencyCode),
+                    displayName(rate.name, rate.nameEng, rate.currencyCode),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
@@ -305,25 +315,29 @@ private fun NoticeBanner(message: String, isError: Boolean = false) {
 private fun OnboardingDialog(onComplete: (enableBriefing: Boolean) -> Unit) {
     AlertDialog(
         onDismissRequest = { onComplete(false) },
-        title = { Text("환율알리미가 새로워졌어요 ✨") },
+        title = { Text(stringResource(R.string.onboarding_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("• 목표 환율 알림이 서버에서 실시간으로 도착해요")
-                Text("• 현찰·송금 4가지 환율과 우대율 계산을 지원해요")
-                Text("• 52주 범위·기간별 차트로 타이밍을 판단하세요")
+                Text(stringResource(R.string.onboarding_bullet_1))
+                Text(stringResource(R.string.onboarding_bullet_2))
+                Text(stringResource(R.string.onboarding_bullet_3))
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "기존에 설정하신 알림은 새 구조로 이전되지 않았어요. 알림 탭에서 다시 등록해 주세요.",
+                    stringResource(R.string.onboarding_migration_notice),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onComplete(true) }) { Text("아침 브리핑도 받을래요") }
+            TextButton(onClick = { onComplete(true) }) {
+                Text(stringResource(R.string.onboarding_enable_briefing))
+            }
         },
         dismissButton = {
-            TextButton(onClick = { onComplete(false) }) { Text("시작하기") }
+            TextButton(onClick = { onComplete(false) }) {
+                Text(stringResource(R.string.onboarding_start))
+            }
         },
     )
 }
@@ -347,30 +361,60 @@ private fun CurrencyPickerDialog(
                     value = query,
                     onValueChange = { query = it },
                     singleLine = true,
-                    placeholder = { Text("통화 검색") },
+                    placeholder = { Text(stringResource(R.string.home_currency_search)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
-                LazyColumn(modifier = Modifier.padding(top = 8.dp)) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .heightIn(max = 440.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
                     val filtered = all.filter {
                         query.isBlank() || it.name.contains(query, ignoreCase = true) ||
+                            it.nameEng?.contains(query, ignoreCase = true) == true ||
                             it.currencyCode.contains(query, ignoreCase = true)
                     }
                     items(filtered, key = { it.currencyCode }) { rate ->
+                        val isChecked = rate.currencyCode in checked.value
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    if (isChecked) MaterialTheme.colorScheme.secondaryContainer
+                                    else Color.Transparent,
+                                )
                                 .clickable {
                                     val set = checked.value
                                     if (!set.add(rate.currencyCode)) set.remove(rate.currencyCode)
                                     checked.value = set.toMutableSet()
-                                },
+                                }
+                                .heightIn(min = 56.dp)
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
                         ) {
+                            Text(
+                                flagEmoji(rate.countryCode),
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    displayName(rate.name, rate.nameEng, rate.currencyCode),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                                Text(
+                                    rate.currencyCode +
+                                        if (rate.perUnit != 1) " (${rate.perUnit})" else "",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                             Checkbox(
-                                checked = rate.currencyCode in checked.value,
+                                checked = isChecked,
                                 onCheckedChange = null,
                             )
-                            Text("${flagEmoji(rate.countryCode)} ${rate.name}")
                         }
                     }
                 }
@@ -381,8 +425,10 @@ private fun CurrencyPickerDialog(
                 val kept = selected.filter { it in checked.value }
                 val added = checked.value.filter { it !in selected }
                 onConfirm(kept + added)
-            }) { Text("확인") }
+            }) { Text(stringResource(R.string.home_confirm)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("취소") } },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.home_cancel)) }
+        },
     )
 }

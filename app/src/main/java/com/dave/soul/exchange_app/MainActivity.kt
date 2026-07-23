@@ -9,11 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.dave.soul.exchange_app.ads.AdsManager
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.push.DeviceRegistrar
+import com.dave.soul.exchange_app.ui.common.SplashGate
 import com.dave.soul.exchange_app.ui.nav.ExchangeNavRoot
 import com.dave.soul.exchange_app.ui.theme.ExchangeTheme
 import com.dave.soul.exchange_app.ui.theme.resolveDarkTheme
@@ -27,6 +31,9 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var deviceRegistrar: DeviceRegistrar
     @Inject lateinit var prefs: UserPrefs
     @Inject lateinit var adsManager: AdsManager
+
+    /** 콜드 스타트 세션 번호 — 1이면 런치 전면광고 면제. 로드 전(null)엔 면제로 취급. */
+    private var launchCount by mutableStateOf<Int?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -45,11 +52,23 @@ class MainActivity : ComponentActivity() {
                 )
                 onDispose {}
             }
+            var gatePassed by remember { mutableStateOf(false) }
             ExchangeTheme(darkTheme = darkTheme) {
-                ExchangeNavRoot(adsManager = adsManager)
+                if (!gatePassed) {
+                    SplashGate(
+                        adsManager = adsManager,
+                        adExempt = launchCount?.let { it <= 1 },
+                        onFinished = { gatePassed = true },
+                    )
+                } else {
+                    ExchangeNavRoot(adsManager = adsManager)
+                }
             }
         }
         adsManager.initialize(this)
-        lifecycleScope.launch { deviceRegistrar.ensureRegistered() }
+        lifecycleScope.launch {
+            launchCount = prefs.incrementLaunchCount()
+            deviceRegistrar.ensureRegistered()
+        }
     }
 }

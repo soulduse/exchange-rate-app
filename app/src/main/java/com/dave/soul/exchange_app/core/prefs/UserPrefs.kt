@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,6 +31,7 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
         val CALC_AMOUNT = stringPreferencesKey("calc_amount")
         val THEME_MODE = stringPreferencesKey("theme_mode")  // SYSTEM/LIGHT/DARK
         val ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
+        val LAUNCH_COUNT = intPreferencesKey("launch_count")
     }
 
     val selectedCodes: Flow<List<String>> = context.dataStore.data.map { prefs ->
@@ -92,6 +94,16 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
 
     suspend fun setOnboardingDone() {
         context.dataStore.edit { it[Keys.ONBOARDING_DONE] = true }
+    }
+
+    /** 콜드 스타트 카운트 증가 후 누적값 반환 — 런치 전면광고 첫 세션 면제 판정용. */
+    suspend fun incrementLaunchCount(): Int {
+        var updated = 1
+        context.dataStore.edit {
+            updated = (it[Keys.LAUNCH_COUNT] ?: 0) + 1
+            it[Keys.LAUNCH_COUNT] = updated
+        }
+        return updated
     }
 
     companion object {

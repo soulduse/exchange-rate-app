@@ -1,11 +1,14 @@
 package com.dave.soul.exchange_app.ui.settings
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.AlertRepository
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,6 +21,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel @Inject constructor(
     private val prefs: UserPrefs,
     private val alertRepository: AlertRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     val briefingEnabled: StateFlow<Boolean> = prefs.briefingEnabled
@@ -53,8 +57,8 @@ class SettingsViewModel @Inject constructor(
     fun sendFeedback(category: String, content: String, appVersion: String) {
         viewModelScope.launch {
             alertRepository.submitFeedback(category, content, appVersion)
-                .onSuccess { _message.value = "소중한 의견 감사합니다!" }
-                .onFailure { _message.value = "전송에 실패했습니다. 잠시 후 다시 시도해 주세요." }
+                .onSuccess { _message.value = context.getString(R.string.settings_feedback_success) }
+                .onFailure { _message.value = context.getString(R.string.settings_feedback_error) }
         }
     }
 

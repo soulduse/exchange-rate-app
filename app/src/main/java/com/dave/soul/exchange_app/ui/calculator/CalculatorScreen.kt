@@ -53,7 +53,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
             OutlinedTextField(
                 value = state.amountText,
                 onValueChange = viewModel::setAmount,
-                label = { Text("${state.baseCode} 금액") },
+                label = { Text(stringResource(R.string.calc_amount_label, state.baseCode)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth(),
@@ -92,7 +92,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
                                     fontWeight = FontWeight.SemiBold,
                                 )
                                 Text(
-                                    displayName(row.name, row.code),
+                                    displayName(row.name, row.nameEng, row.code),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )

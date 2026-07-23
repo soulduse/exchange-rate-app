@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Exchange Rate Alert</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Rates</string>
+    <string name="tab_calculator">Calculator</string>
+    <string name="tab_alerts">Alerts</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">As of %s</string>
+    <string name="home_degree_count">Round %d</string>
+    <string name="home_add_currency">Add currency</string>
+    <string name="home_offline_notice">Offline — showing the last rates received</string>
+    <string name="home_error_load">Couldn\'t load exchange rates. Please try again later.</string>
+    <string name="home_currency_search">Search currency</string>
+    <string name="home_confirm">Done</string>
+    <string name="home_cancel">Cancel</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Exchange Rate Alert is all new ✨</string>
+    <string name="onboarding_bullet_1">• Target rate alerts arrive in real time from the server</string>
+    <string name="onboarding_bullet_2">• 4 rate types (cash &amp; transfer) with preferential-rate calculation</string>
+    <string name="onboarding_bullet_3">• Judge your timing with 52-week ranges and period charts</string>
+    <string name="onboarding_migration_notice">Alerts you set up before weren\'t migrated to the new structure. Please add them again on the Alerts tab.</string>
+    <string name="onboarding_enable_briefing">Send me the morning briefing too</string>
+    <string name="onboarding_start">Get started</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · per %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Base rate</string>
+    <string name="detail_cash_buy">Cash buy</string>
+    <string name="detail_cash_sell">Cash sell</string>
+    <string name="detail_send">Send</string>
+    <string name="detail_receive">Receive</string>
+    <string name="detail_spread_rate">Preferential rate</string>
+    <string name="detail_52w_band">52-week range</string>
+    <string name="detail_create_alert">Create alert</string>
+    <string name="detail_back">Back</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_chart_min">Low %s</string>
+    <string name="detail_chart_max">High %s</string>
+    <string name="detail_chart_empty">Preparing chart data.</string>
+    <string name="detail_spread_buy">Buy with preferential rate</string>
+    <string name="detail_spread_sell">Sell with preferential rate</string>
+    <string name="detail_52w_percentile">Top %d%% of the past year</string>
+    <string name="detail_round_count">Round %d</string>
+    <string name="detail_alert_registered">Alert registered.</string>
+    <string name="detail_alert_failed">Couldn\'t register the alert. Please try again later.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">No alerts yet.\nWe\'ll let you know when a rate hits your target.</string>
+    <string name="alerts_add">Add alert</string>
+    <string name="alerts_direction_above">Above</string>
+    <string name="alerts_direction_below">Below</string>
+    <string name="alerts_repeat_once">Once</string>
+    <string name="alerts_repeat_repeat">Repeat</string>
+    <string name="alerts_target_price">Target rate</string>
+    <string name="alerts_save">Save</string>
+    <string name="alerts_delete">Delete</string>
+    <string name="alerts_select_currency">Select currency</string>
+    <string name="alerts_cancel">Cancel</string>
+    <string name="alerts_dialog_title">%s alert</string>
+    <string name="alerts_current_price">Now %s KRW</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_error_list">Couldn\'t load your alerts.</string>
+    <string name="alerts_error_create">Couldn\'t register the alert.</string>
+    <string name="alerts_error_update">Couldn\'t apply the change.</string>
+    <string name="alerts_error_delete">Couldn\'t delete the alert.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Morning rate briefing</string>
+    <string name="settings_briefing_desc">Get a summary of key rates on weekday mornings</string>
+    <string name="settings_swing">Sharp-move alerts</string>
+    <string name="settings_swing_desc">We\'ll notify you when major currencies move sharply</string>
+    <string name="settings_feedback">Feedback / bug report</string>
+    <string name="settings_version">App version</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_feedback_send">Send feedback</string>
+    <string name="settings_feedback_bug">Bug</string>
+    <string name="settings_feedback_feature">Feature request</string>
+    <string name="settings_feedback_etc">Other</string>
+    <string name="settings_feedback_placeholder">Tell us what\'s bothering you or what you\'d like to see</string>
+    <string name="settings_feedback_submit">Send</string>
+    <string name="settings_feedback_cancel">Cancel</string>
+    <string name="settings_feedback_success">Thanks for your feedback!</string>
+    <string name="settings_feedback_error">Couldn\'t send. Please try again later.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">South Korean Won</string>
+    <string name="calc_amount_label">%s amount</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Exit the app?</string>
+    <string name="exit_confirm">Exit</string>
+    <string name="exit_review">Review</string>
+    <string name="exit_cancel">Cancel</string>
+    <string name="exit_ad_cta">Learn more</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Open the app to load rates</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Rate alerts</string>
+    <string name="channel_alerts_desc">Target-rate, sharp-move, and briefing alerts</string>
+</resources>

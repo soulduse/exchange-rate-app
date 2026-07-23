@@ -1,14 +1,17 @@
 package com.dave.soul.exchange_app.ui.detail
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.core.db.RateEntity
 import com.dave.soul.exchange_app.core.network.HistoryItemDto
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
 import com.dave.soul.exchange_app.core.repo.AlertRepository
 import com.dave.soul.exchange_app.core.repo.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,6 +32,7 @@ class DetailViewModel @Inject constructor(
     private val rateRepository: RateRepository,
     private val alertRepository: AlertRepository,
     private val prefs: UserPrefs,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     val currencyCode: String = savedStateHandle.get<String>("code").orEmpty()
@@ -65,8 +69,8 @@ class DetailViewModel @Inject constructor(
     fun createAlert(priceType: String, direction: String, targetPrice: Double, repeatMode: String) {
         viewModelScope.launch {
             alertRepository.create(currencyCode, priceType, direction, targetPrice, repeatMode)
-                .onSuccess { _alertResult.value = "알림을 등록했어요." }
-                .onFailure { _alertResult.value = "알림 등록에 실패했습니다. 잠시 후 다시 시도해 주세요." }
+                .onSuccess { _alertResult.value = context.getString(R.string.detail_alert_registered) }
+                .onFailure { _alertResult.value = context.getString(R.string.detail_alert_failed) }
         }
     }
 

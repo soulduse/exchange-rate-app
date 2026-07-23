@@ -1,6 +1,7 @@
 package com.dave.soul.exchange_app.ui.nav
 
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -28,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dave.soul.exchange_app.R
 import com.dave.soul.exchange_app.ads.AdsManager
 import com.dave.soul.exchange_app.ads.BannerAd
+import com.dave.soul.exchange_app.ads.ExitDialog
 import com.dave.soul.exchange_app.ui.alerts.AlertsScreen
 import com.dave.soul.exchange_app.ui.calculator.CalculatorScreen
 import com.dave.soul.exchange_app.ui.detail.DetailScreen
@@ -57,6 +63,19 @@ fun ExchangeNavRoot(adsManager: AdsManager) {
     )
     val backStack by navController.currentBackStackEntryAsState()
     val currentRoute = backStack?.destination?.route
+
+    // 홈에서 뒤로가기 → 종료 팝업(네이티브 광고 + [종료·리뷰·취소])
+    var showExitDialog by remember { mutableStateOf(false) }
+    val activity = LocalContext.current as? Activity
+    BackHandler(enabled = currentRoute == Routes.HOME) { showExitDialog = true }
+    if (showExitDialog) {
+        val nativeAd by adsManager.exitNativeAd.collectAsState()
+        ExitDialog(
+            nativeAd = nativeAd,
+            onExit = { activity?.finish() },
+            onDismiss = { showExitDialog = false },
+        )
+    }
 
     Scaffold(
         bottomBar = {

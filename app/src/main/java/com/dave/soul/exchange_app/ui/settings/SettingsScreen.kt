@@ -81,19 +81,22 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
             }
             Card {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("화면 테마", fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.settings_theme), fontWeight = FontWeight.SemiBold)
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         modifier = Modifier.padding(top = 8.dp),
                     ) {
-                        listOf("SYSTEM" to "시스템", "LIGHT" to "라이트", "DARK" to "다크")
-                            .forEach { (value, label) ->
-                                FilterChip(
-                                    selected = themeMode == value,
-                                    onClick = { viewModel.setThemeMode(value) },
-                                    label = { Text(label) },
-                                )
-                            }
+                        listOf(
+                            "SYSTEM" to R.string.settings_theme_system,
+                            "LIGHT" to R.string.settings_theme_light,
+                            "DARK" to R.string.settings_theme_dark,
+                        ).forEach { (value, labelRes) ->
+                            FilterChip(
+                                selected = themeMode == value,
+                                onClick = { viewModel.setThemeMode(value) },
+                                label = { Text(stringResource(labelRes)) },
+                            )
+                        }
                     }
                 }
             }
@@ -106,7 +109,9 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                     )
-                    TextButton(onClick = { showFeedback = true }) { Text("의견 보내기") }
+                    TextButton(onClick = { showFeedback = true }) {
+                        Text(stringResource(R.string.settings_feedback_send))
+                    }
                 }
             }
             Row(
@@ -177,23 +182,23 @@ private fun FeedbackDialog(
                     FilterChip(
                         selected = category == "BUG",
                         onClick = { category = "BUG" },
-                        label = { Text("버그") },
+                        label = { Text(stringResource(R.string.settings_feedback_bug)) },
                     )
                     FilterChip(
                         selected = category == "FEATURE",
                         onClick = { category = "FEATURE" },
-                        label = { Text("기능 제안") },
+                        label = { Text(stringResource(R.string.settings_feedback_feature)) },
                     )
                     FilterChip(
                         selected = category == "ETC",
                         onClick = { category = "ETC" },
-                        label = { Text("기타") },
+                        label = { Text(stringResource(R.string.settings_feedback_etc)) },
                     )
                 }
                 OutlinedTextField(
                     value = content,
                     onValueChange = { content = it },
-                    placeholder = { Text("불편한 점이나 바라는 점을 알려주세요") },
+                    placeholder = { Text(stringResource(R.string.settings_feedback_placeholder)) },
                     minLines = 4,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -203,8 +208,12 @@ private fun FeedbackDialog(
             TextButton(
                 enabled = content.isNotBlank(),
                 onClick = { onSend(category, content) },
-            ) { Text("보내기") }
+            ) { Text(stringResource(R.string.settings_feedback_submit)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("취소") } },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.settings_feedback_cancel))
+            }
+        },
     )
 }
