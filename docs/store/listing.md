@@ -59,12 +59,73 @@ v2.0.0 — 완전히 새로워진 환율알리미
 
 ※ 이전 버전의 알림은 새로 등록이 필요합니다.
 
+## English (en-US)
+
+### App name (30 chars)
+Exchange Rate Alert & Widget
+
+### Short description (80 chars)
+Live KRW exchange rates, target-rate push alerts, and home screen widgets.
+
+### Full description (4000 chars)
+Exchange Rate Alert has been completely rebuilt — faster, more accurate, and easier on the eyes.
+
+■ Live exchange rates
+· Live quotes for 58 currencies against the Korean won — USD, JPY, EUR, CNY and more
+· Besides the base rate, see all four bank prices at a glance: cash buy/sell and wire send/receive
+· Mini sparkline charts and daily change indicators
+· Build your own board with just the currencies you care about
+
+■ Target-rate alerts (fully redesigned)
+· Get a push notification the moment a rate hits your target
+· Our server now watches the market 24/7 — alerts arrive reliably even when the app is closed, unaffected by battery optimization
+· Set alerts on the base rate or on cash/wire prices
+· One-time or repeating alerts, with quick ±0.5% / ±1% presets
+· Optional weekday morning briefing and sharp-move notifications
+
+■ Currency calculator
+· Convert several currencies on one screen at the same time
+· Decimal amounts supported
+· Tap any currency to make it the base
+· Your last amount is saved automatically
+
+■ Detailed charts & 52-week range
+· Rate charts from 1 week up to 3 years
+· See where today's rate sits against the 1-year high and low
+· Calculate real exchange prices with your bank's preferential (fee discount) rate
+
+■ Home screen widgets
+· Check rates right on your home screen without opening the app
+· Shows one currency or a four-currency list depending on widget size
+· Adapts automatically to light/dark mode
+
+■ Dark mode
+· Follows your system setting, or set it manually
+
+--
+Note for existing users: the app has been fully redesigned, so alerts created in previous versions need to be registered again.
+
+Questions or suggestions? Send them via Settings > Feedback in the app — we read everything.
+
+### Release notes (500 chars)
+v2.1.0 — Now in English
+· Full English localization: UI, notifications, and morning briefing
+· Push alerts now render in your device language
+· Localized number formats
+· Improved alert dialog layout
+
+v2.0.0 — Completely rebuilt
+· All-new design, faster and more stable
+· Server-side 24/7 rate monitoring with reliable push alerts
+· Four bank prices (cash/wire) + preferential-rate calculator
+· Charts from 1 week to 3 years with 52-week range
+· Home screen widgets
+
 ## 자산 체크리스트
 - [x] 앱 아이콘 512px: `docs/store/icon_512.png`
-- [ ] 그래픽 이미지 1024x500 (쇼케이스 — screenshots-hub에서 제작 예정)
-- [ ] 휴대전화 스크린샷 4~8장 (아래 원본에서 선별/가공)
-- 원본 스크린샷: 세션 스크래치패드 v2_*.png (홈/상세/계산기/알림/설정/다크/위젯)
+- [x] 그래픽 이미지 1024x500 (ko — screenshots-hub `final/ko/feature_graphic.png`)
+- [x] 휴대전화 스크린샷 4장 (ko — screenshots-hub `final/ko/phone/`)
+- [ ] en 쇼케이스 4장 + en 그래픽 (screenshots-hub `final/en/`)
 
 ## 미결
-- AdMob 계정: 현행 제3 계정 ID 유지 중 (`ca-app-pub-1908860913688060~3760538434`) — 이관 여부 사용자 결정
-- 심사 제출: 사용자 확인 게이트
+- AdMob 계정: 현행 developerkhy 계정 ID 유지 (`ca-app-pub-1908860913688060~3760538434`)
