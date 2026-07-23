@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -80,6 +81,8 @@ fun HomeScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        // 바텀 인셋은 루트의 배너+내비 바가 이미 소비 — 기본값이면 배너 위 유령 마진
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -137,7 +140,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 8.dp),
             ) {
                 if (state.isStale) {
                     item { NoticeBanner(stringResource(R.string.home_offline_notice)) }

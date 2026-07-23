@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -58,6 +59,7 @@ import com.dave.soul.exchange_app.core.util.flagEmoji
 import com.dave.soul.exchange_app.core.util.formatPrice
 import com.dave.soul.exchange_app.core.util.formatRate
 import com.dave.soul.exchange_app.core.util.priceTypeLabelRes
+import com.dave.soul.exchange_app.ui.common.CompactTopBarHeight
 
 /** 가격 유형 코드의 현지화 라벨 — 미지원 코드는 코드 원문 폴백. */
 @Composable
@@ -94,7 +96,14 @@ fun AlertsScreen(viewModel: AlertsViewModel = hiltViewModel()) {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_alerts)) }) },
+        // 바텀 인셋은 루트의 배너+내비 바가 이미 소비 — 기본값이면 배너 위 유령 마진
+        contentWindowInsets = WindowInsets(0),
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.tab_alerts)) },
+                expandedHeight = CompactTopBarHeight,
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showCreate = true }) {
                 Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.alerts_add))
@@ -119,7 +128,7 @@ fun AlertsScreen(viewModel: AlertsViewModel = hiltViewModel()) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(state.alerts, key = { it.id }) { alert ->

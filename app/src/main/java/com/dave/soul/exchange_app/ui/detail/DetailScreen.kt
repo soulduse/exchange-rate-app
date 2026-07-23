@@ -2,9 +2,9 @@ package com.dave.soul.exchange_app.ui.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -79,6 +79,8 @@ fun DetailScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
+        // 바텀 인셋은 루트의 하단 배너가 이미 소비 — 기본값이면 배너 위 유령 마진
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
                 title = {
@@ -107,7 +109,7 @@ fun DetailScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             PriceHeader(r, header)
@@ -129,7 +131,6 @@ fun DetailScreen(
             ) {
                 Text(stringResource(R.string.detail_create_alert))
             }
-            Spacer(Modifier.height(8.dp))
         }
     }
 

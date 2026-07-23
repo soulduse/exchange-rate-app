@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.BuildConfig
 import com.dave.soul.exchange_app.R
+import com.dave.soul.exchange_app.ui.common.CompactTopBarHeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,13 +56,19 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_settings)) }) },
+        contentWindowInsets = WindowInsets(0),
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.tab_settings)) },
+                expandedHeight = CompactTopBarHeight,
+            )
+        },
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(start = 16.dp, top = 4.dp, end = 16.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Card {

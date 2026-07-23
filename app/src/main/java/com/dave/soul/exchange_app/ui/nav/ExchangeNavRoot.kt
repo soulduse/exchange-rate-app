@@ -3,6 +3,8 @@ package com.dave.soul.exchange_app.ui.nav
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
@@ -77,27 +79,37 @@ fun ExchangeNavRoot(adsManager: AdsManager) {
         )
     }
 
+    val isTab = currentRoute in tabs.map { it.route }
     Scaffold(
+        // 상태바 인셋은 각 화면의 TopAppBar가 단독 처리 — 여기서 또 주면 이중 여백
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
-            if (currentRoute in tabs.map { it.route }) {
-                Column {
+            if (isTab || currentRoute == Routes.DETAIL) {
+                Column(
+                    // 상세는 내비 바가 없어 배너가 제스처 영역을 직접 피해야 한다
+                    modifier = if (isTab) Modifier else Modifier.navigationBarsPadding(),
+                ) {
                     BannerAd(unitId = adsManager.bannerUnitId)
-                    NavigationBar {
-                        tabs.forEach { tab ->
-                            NavigationBarItem(
-                                selected = currentRoute == tab.route,
-                                onClick = {
-                                    navController.navigate(tab.route) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
+                    if (isTab) {
+                        NavigationBar {
+                            tabs.forEach { tab ->
+                                NavigationBarItem(
+                                    selected = currentRoute == tab.route,
+                                    onClick = {
+                                        navController.navigate(tab.route) {
+                                            popUpTo(
+                                                navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = { Icon(tab.icon, contentDescription = null) },
-                                label = { Text(stringResource(tab.labelRes)) },
-                            )
+                                    },
+                                    icon = { Icon(tab.icon, contentDescription = null) },
+                                    label = { Text(stringResource(tab.labelRes)) },
+                                )
+                            }
                         }
                     }
                 }

@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dave.soul.exchange_app.R
+import com.dave.soul.exchange_app.ui.common.CompactTopBarHeight
 import com.dave.soul.exchange_app.core.util.displayName
 import com.dave.soul.exchange_app.core.util.flagEmoji
 import com.dave.soul.exchange_app.core.util.formatAmount
@@ -42,7 +44,14 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_calculator)) }) },
+        // 바텀 인셋은 루트의 배너+내비 바가 이미 소비 — 기본값이면 배너 위 유령 마진
+        contentWindowInsets = WindowInsets(0),
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.tab_calculator)) },
+                expandedHeight = CompactTopBarHeight,
+            )
+        },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -61,7 +70,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
             Spacer(Modifier.padding(top = 12.dp))
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 16.dp),
+                contentPadding = PaddingValues(bottom = 8.dp),
             ) {
                 items(state.rows, key = { it.code }) { row ->
                     Card(
