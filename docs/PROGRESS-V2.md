@@ -34,17 +34,18 @@
 - 홈(라이트/다크)·상세(3M/1Y 차트, 4종가, 우대율 슬라이더, 52주 밴드)·계산기(소수점 입력, 기준 전환, 교차환산 검산 일치)·알림(권한→2단계 생성 다이얼로그→목록)·설정 전부 실데이터 검증
 - 알림 서버 발화 확인: `alerts_fired: 1` (USD 이하 조건)
 
-### FCM 실발송 가드 이슈 → 스코프 한정 해제 (진행 중 2026-07-23)
+### FCM 실발송 가드 이슈 → 스코프 한정 해제 ✅ E2E 완료 2026-07-23
 - **원인**: 박스 `.env`의 `FCM_FORCE_TEST_TOPIC=apis-py-staging-test`(이관기 fail-closed 방침)가 스케줄러발 토큰 FCM 전부 드롭 → 앱에 미도달
 - **해법**: 전역 해제는 D3 배치 2(푸시 계열)의 몫이므로, `FCM_GUARD_ALLOW_TYPES`(data.type 화이트리스트) 예외를 추가해 exchange 계열만 개방 — 커밋 8b4684d
-- 남은 절차: CI 이미지 → 박스 `.env`에 `FCM_GUARD_ALLOW_TYPES=EXCHANGE_RATE_ALERT,EXCHANGE_BRIEFING,EXCHANGE_SWING` 추가(백업 후) → scheduler `IMAGE=<SHA>` 재기동 → 새 알림 생성 → FCM 실수신 확인
+- 반영 완료: 박스 `.env` line 93 `FCM_GUARD_ALLOW_TYPES=EXCHANGE_RATE_ALERT,EXCHANGE_BRIEFING,EXCHANGE_SWING`(백업 .env.bak-fcmallow-*) + scheduler `IMAGE=83f226e...` 재기동(72잡)
+- **E2E 실수신 검증**: 앱 알림 생성(USD 1,480.47 이하) → 2분 사이클 발화 → `fcm_test_guard_allowed_type`→`fcm_sent`(promotions-ebe8e) → 에뮬 시스템 알림 실표시 "미국 USD 매매기준율 1,472.50원 — 목표 1,480.47원 이하 도달"
+- ONCE 발화 후 active=false 전이가 앱 목록 토글 OFF로 동기화되는 것도 확인
 
 ## 다음
-1. FCM E2E 마무리 (위 절차)
-2. 앱 저장소 커밋 (전면 리라이트 — 코드리뷰 에이전트 결과 반영 후. `.gitignore`에 release 산출물/백업 제외 추가함)
-3. M5 잔여: 앱 아이콘/스플래시 리프레시, 릴리스 서명(exchange-rate-app.jks 비번 미확인 — 무비번 지문 대조 레시피), R8 release 실기기 검증
-4. M6 잔여: 스토어 자산(스크린샷·문구) → 심사 제출
-5. 미결 결정(사용자): AdMob 계정 이관(현 제3 계정 `ca-app-pub-1908860913688060~...` 유지 중), 어드민 앱 등록(서버 광고설정 채택 여부 — v2.0은 클라 자체 게이팅)
+1. ~~FCM E2E~~ ✅ / ~~앱 커밋~~ ✅ 0fb9867 push 완료 (코드리뷰 HIGH 1건 = FCM 서비스 scope onDestroy cancel 반영)
+2. M5 잔여: 앱 아이콘/스플래시 리프레시, 릴리스 서명(exchange-rate-app.jks 비번 미확인 — 무비번 지문 대조 레시피), R8 release 실기기 검증
+3. M6 잔여: 스토어 자산(스크린샷·문구) → 심사 제출
+4. 미결 결정(사용자): AdMob 계정 이관(현 제3 계정 `ca-app-pub-1908860913688060~...` 유지 중), 어드민 앱 등록(서버 광고설정 채택 여부 — v2.0은 클라 자체 게이팅)
 
 ## 메모
 - 앱 API 베이스: `https://app-api.oror.link` (oror.link는 py EP 404 — edge-router 화이트리스트)
