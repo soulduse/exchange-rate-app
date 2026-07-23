@@ -62,3 +62,17 @@
 - 앱 API 베이스: `https://app-api.oror.link` (oror.link는 py EP 404 — edge-router 화이트리스트)
 - 런처 위젯 피커는 에뮬에서 ANR 잦음 — 앱 아이콘 long-press → Widgets 경로가 안정적. 배치는 `input draganddrop`
 - Glance 위젯 previewImage 미설정(피커에 기본 아이콘) — 스토어 제출 전 previewImage 추가 검토
+
+## M7 — 스토어 반영 + 기능 확장 2차 ✅ 2026-07-23 밤 (vc17)
+- **Play 등록정보 반영 완료**(DeveloperKhy·앱 4976171710155303198): 앱명/짧은·전체 설명 + 아이콘 512 + 그래픽 1024x500 + **폰 쇼케이스 스크린샷 4장(1080x1920, screenshots-hub 생성)** + 태블릿 7"/10" 2장씩 + 저장. ⚠️Play 애셋 패널 함정(슬롯 스코프·파일명 aria 전역 매칭)은 memory `store-screenshots-showcase-only` 참조
+- **스크린샷 지침 확립**: 원캡처 업로드 금지 — `app-screenshots` 스킬에 "절대 규칙" 명문화. 생성기=screenshots-hub `apps/exchange-rate/generator/{shots.html,capture-shots.mjs}` (HTML+puppeteer-core 간이 패턴)
+- **AdMob 확정**: `ca-app-pub-1908860913688060` = developerkhy 소유(제3 계정 아님). 종료 팝업용 네이티브 단위 신설 `…/2312962822`("환율알리미 네이티브 종료")
+- **신기능(vc17, 커밋 0fbf25b)**:
+  - 스플래시 게이트: 브랜드 애니메이션(아크 스윕·회전, ₩ 오버슈트 팝, 궤도 점, 배경 차트 라인 드로잉, 앱명 페이드업) → 런치 전면광고 → 메인. 첫 세션 면제(launchCount)·프리로드 폴링 6s·failsafe 10s
+  - 뒤로가기 종료 팝업: 대형 네이티브 광고 + 왼쪽부터 [종료·리뷰·취소]
+  - 상세 차트: x축 날짜 3점·y축 가격 3단 그리드 + 크로스헤어 공존, 헤더에 기준시각(MM.dd HH:mm) 표기
+  - 통화 추가 다이얼로그 UX: 56dp 행·국기 확대·2줄(국가명+코드)·우측 체크박스
+  - **i18n**: 전 문자열 리소스화(89키) + values-en + per-app locale(localeConfig) + 통화명 로케일 현지화(서버 nameEng null → java.util.Currency.getDisplayName 폴백, 전 언어 지원)
+- **검증**: S21 실기기 릴리스 — 스플래시 애니메이션·전면광고 실노출(2세션 연속)·종료 팝업 네이티브 실렌더·크로스헤어+축·en 로케일(홈/종료팝업/통화명 "US Dollar" 등) 전부 확인. 에뮬은 광고 로드가 6s 초과라 전면 스킵됨(정상 폴백)
+- **AAB 교체 완료**: 릴리스(id 15)에서 vc16 삭제 → vc17 업로드·인식 확인 → 저장. 출시 노트 유지
+- **잔여**: ① 게시 개요 "변경사항 9개 제출" 클릭(사용자 게이트) — 빠른 검사가 "등록정보 기능 설명 불명확(스크린샷 플레이스홀더 의심)" 1건 오탐 경고, "무시하고 계속하기"로 전송 가능 ② S24 재연결 시 vc17 설치 ③ 글로벌 기준통화(크로스레이트)는 차기 마일스톤(로드맵: 홈 기준통화 선택 → krwPerOne 크로스레이트 클라 계산 → 서버 다중 기준 확장)
