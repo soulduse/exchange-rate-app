@@ -101,4 +101,6 @@
 - **서버(apis-py 커밋 99fc9a6, 배포+DDL 적용 완료)**: ExchangeAlert.base_currency(DDL V20260724, 프로드 적용 확인) · ExchangeRateSnapshot.cross_display_price · create_alert 400 3종(base==대상/크로스에 4종가/미지원 base — 프로드 curl 확인) · evaluate_alerts `_current_price` 헬퍼(base 스냅샷 부재=스킵) · dispatch FiredAlert.base_currency+data baseCurrency+크로스 본문(:,.4f) · 테스트 21 그린(수식/크로스 발화/기본값/400)
 - **클라(vc19)**: core/rates/CrossRates.kt(DisplayRate·displayRates·crossChangeRatio, base 미보유 시 KRW 폴백) · formatRate(≥10→2자리·≥0.01→4자리·그 외 6자리, FX 관례) · 홈 TopAppBar 기준통화 드롭다운(KRW+선택 통화, 크로스 모드=KRW 가상행+base 제외+히어로 없음) · 상세 헤더 크로스+KRW 안내 라벨(차트/4종가/우대율/52주는 KRW 유지) · 위젯 CrossRates 재사용(소형은 가상 KRW 행 스킵) · 알림 축(DTO baseCurrency·크로스는 BASE 고정·base==대상은 KRW 폴백) · **AlertEditDialog 전면 리디자인**(현재가 강조 카드+섹션 라벨+SegmentedButton+단위 suffix, 사용자 요청) · **통화 선택 다이얼로그 국기+현지화 통화명**(사용자 요청, 서버 변경 불필요) · NotificationComposer 크로스 조립(notif_alert_body_cross)
 - **E2E(에뮬 5556·프로덕션 서버)**: USD 기준 전환(KRW 0.000678/EUR 1.1377/CNY 0.1475, %만) · 계산기 교차검산(EUR 0.88=1/1.1378) · 재시작 영속 · 상세 크로스 헤더+안내 · **크로스 알림 실발화 FCM 실수신**("유럽 1.1378 USD — 목표 1.1377 USD 이상 도달") · KRW 복귀 원상 · vc17/18 하위호환(base 미전송=KRW, 서버 계약 테스트)
-- **잔여**: vc18 심사 승인 확인 → vc19 AAB 업로드·출시 노트·제출(AAB 빌드됨 01:49)
+- **vc18 승인·게시 확인(02:25)**: 최근 게시일 7/24, 활성 버전 18(2.1.0)·177개국 — en-US 리스팅 동반 게시
+- **vc19 심사 제출 완료**: 새 버전 만들기 → AAB(vc19, 커밋 9e27c1a 재빌드본 01:52) 업로드 → 출시 노트 ko/en → 저장(경고=지원 기기 정보성 1건, 변화 0) → 게시 개요 빠른 검사 통과 → "검토를 위해 변경사항 전송" → **"검토 중인 변경사항" 전환 확인**
+- 잔여: vc19 심사 모니터링·S24 재연결 시 설치
