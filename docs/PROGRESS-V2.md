@@ -110,4 +110,6 @@
 - **근본 원인 2건**: ①루트 Scaffold가 상태바 인셋 패딩을 주고 각 화면 TopAppBar가 또 소비 → 타이틀 위 이중 여백 ②각 화면 Scaffold 기본 contentWindowInsets(safeDrawing bottom=제스처 내비 인셋)가 콘텐츠 bottom 패딩으로 들어가 배너 위 유령 마진
 - **수정(커밋 fc904be)**: 루트+화면 5곳 `contentWindowInsets = WindowInsets(0)` · 계산기/알림/설정 `expandedHeight = CompactTopBarHeight(48dp)`(신설 ui/common/Dimens.kt) · 하단 콘텐츠 패딩 8dp 통일 · **상세 배너**=루트 bottomBar를 DETAIL까지 확장(배너만+navigationBarsPadding, BannerAd 콜사이트 유지로 AdView 인스턴스 재사용)
 - **검증**: 에뮬 5탭+상세 라이트/다크 — 타이틀 상단 여백 상태바 1개분 축소·배너 밀착·상세 배너 표시. 스낵바("알림을 등록했어요")가 배너 바로 위 정상 표시(리뷰 Major 우려 실증 반박 — 어댑티브 배너 최소 높이>제스처 인셋이라 겹침 불가). 코드리뷰 Minor(미사용 import) 반영
-- **잔여**: vc19 심사 승인 확인 → vc20 AAB 업로드·제출(AAB 빌드됨 08:24)
+- **통화 추가 체크박스 버그 수정(커밋 1fdd8dd, 사용자 리포트)**: `mutableStateOf(MutableSet)`에 제자리 add/remove 후 복사본 재할당 → 이미 내용이 같아져 Compose structural equality가 상태 쓰기를 무시(리컴포지션 없음). 불변 Set `checked + code`/`checked - code` 재할당으로 수정. 에뮬·S21 릴리스 양쪽 체크 토글 검증
+- **S21 실기기 릴리스 QA(vc20 릴리스 APK, 커밋 1fdd8dd)**: 홈 다크·컴팩트 상단·배너 밀착 / 기준통화 USD 전환(KRW 0.000679·EUR 1.1379·CNY 0.1476, %만) / 체크박스 토글 / EUR 상세(크로스 헤더+KRW 안내+신규 하단 배너 실광고) / 알림 다이얼로그 리디자인·목록 FX 페어 표기 / 계산기·설정 정상. **크로스 알림 서버 실발화→FCM 실수신**: "유럽 1.1379 USD — 목표 1.2000 USD 이하 도달"(09:22, notif_alert_body_cross 조립 정확). ⚠️경계값 함정: 프리필 목표(formatRate 반올림)가 실크로스가(1.13795)와 어긋나 미발화 — QA는 여유 목표(±수%)로. QA 알림은 앱 UI 삭제로 서버까지 동기화 확인, 기준통화 KRW 복원 완료
+- **잔여**: vc19 심사 승인 확인 → **vc20 AAB 재빌드(08:24 빌드는 1fdd8dd 이전 — 체크박스 수정 미포함)** → 업로드·제출
