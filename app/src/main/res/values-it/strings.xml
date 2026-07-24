@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Avviso Tassi di Cambio</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Tassi</string>
+    <string name="tab_calculator">Calcolatrice</string>
+    <string name="tab_alerts">Avvisi</string>
+    <string name="tab_settings">Impostazioni</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">Al %s</string>
+    <string name="home_degree_count">Aggiornamento %d</string>
+    <string name="home_add_currency">Aggiungi valuta</string>
+    <string name="home_offline_notice">Offline — vengono mostrati gli ultimi tassi ricevuti</string>
+    <string name="home_error_load">Impossibile caricare i tassi di cambio. Riprova più tardi.</string>
+    <string name="home_currency_search">Cerca valuta</string>
+    <string name="home_confirm">Fine</string>
+    <string name="home_cancel">Annulla</string>
+    <string name="home_base_currency">Valuta di riferimento</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Avviso Tassi di Cambio è tutto nuovo ✨</string>
+    <string name="onboarding_bullet_1">• Gli avvisi sul tasso obiettivo arrivano in tempo reale dal server</string>
+    <string name="onboarding_bullet_2">• 4 tipi di tasso (contanti e bonifico) con calcolo del tasso preferenziale</string>
+    <string name="onboarding_bullet_3">• Valuta il momento giusto con gli intervalli a 52 settimane e i grafici</string>
+    <string name="onboarding_migration_notice">Gli avvisi creati in precedenza non sono stati migrati alla nuova struttura. Ricreali nella scheda Avvisi.</string>
+    <string name="onboarding_enable_briefing">Ricevi anche il briefing del mattino</string>
+    <string name="onboarding_start">Inizia</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · per %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Tasso di riferimento</string>
+    <string name="detail_cash_buy">Acquisto contanti</string>
+    <string name="detail_cash_sell">Vendita contanti</string>
+    <string name="detail_send">Bonifico in uscita</string>
+    <string name="detail_receive">Bonifico in entrata</string>
+    <string name="detail_spread_rate">Tasso preferenziale</string>
+    <string name="detail_52w_band">Intervallo 52 settimane</string>
+    <string name="detail_create_alert">Crea avviso</string>
+    <string name="detail_back">Indietro</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Il grafico e i tassi bancari qui sotto si basano sulle quotazioni in KRW.</string>
+    <string name="detail_chart_min">Min %s</string>
+    <string name="detail_chart_max">Max %s</string>
+    <string name="detail_chart_empty">Preparazione dei dati del grafico.</string>
+    <string name="detail_spread_buy">Acquista al tasso preferenziale</string>
+    <string name="detail_spread_sell">Vendi al tasso preferenziale</string>
+    <string name="detail_52w_percentile">Top %d%% dell\'ultimo anno</string>
+    <string name="detail_round_count">Aggiornamento %d</string>
+    <string name="detail_alert_registered">Avviso registrato.</string>
+    <string name="detail_alert_failed">Impossibile registrare l\'avviso. Riprova più tardi.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Ancora nessun avviso.\nTi avviseremo quando un tasso raggiunge il tuo obiettivo.</string>
+    <string name="alerts_add">Aggiungi avviso</string>
+    <string name="alerts_direction_above">Sopra</string>
+    <string name="alerts_direction_below">Sotto</string>
+    <string name="alerts_repeat_once">Una volta</string>
+    <string name="alerts_repeat_repeat">Ripeti</string>
+    <string name="alerts_save">Salva</string>
+    <string name="alerts_delete">Elimina</string>
+    <string name="alerts_select_currency">Seleziona valuta</string>
+    <string name="alerts_cancel">Annulla</string>
+    <string name="alerts_dialog_title">Avviso %s</string>
+    <string name="alerts_dialog_title_cross">Avviso %1$s/%2$s</string>
+    <string name="alerts_current_price">Attuale %s KRW</string>
+    <string name="alerts_current_price_cross">Attuale %1$s %2$s</string>
+    <string name="alerts_current_price_label">Tasso attuale</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Tipo di tasso</string>
+    <string name="alerts_section_target">Tasso obiettivo</string>
+    <string name="alerts_section_condition">Avvisami quando</string>
+    <string name="alerts_section_repeat">Frequenza</string>
+    <string name="alerts_error_list">Impossibile caricare gli avvisi.</string>
+    <string name="alerts_error_create">Impossibile registrare l\'avviso.</string>
+    <string name="alerts_error_update">Impossibile applicare la modifica.</string>
+    <string name="alerts_error_delete">Impossibile eliminare l\'avviso.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Briefing dei tassi al mattino</string>
+    <string name="settings_briefing_desc">Ricevi un riepilogo dei tassi principali nelle mattine feriali</string>
+    <string name="settings_swing">Avvisi di forte variazione</string>
+    <string name="settings_swing_desc">Ti avviseremo quando le valute principali si muovono bruscamente</string>
+    <string name="settings_feedback">Feedback / segnala un bug</string>
+    <string name="settings_version">Versione dell\'app</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Chiaro</string>
+    <string name="settings_theme_dark">Scuro</string>
+    <string name="settings_feedback_send">Invia feedback</string>
+    <string name="settings_feedback_bug">Bug</string>
+    <string name="settings_feedback_feature">Richiesta di funzionalità</string>
+    <string name="settings_feedback_etc">Altro</string>
+    <string name="settings_feedback_placeholder">Raccontaci cosa non va o cosa vorresti vedere</string>
+    <string name="settings_feedback_submit">Invia</string>
+    <string name="settings_feedback_cancel">Annulla</string>
+    <string name="settings_feedback_success">Grazie per il tuo feedback!</string>
+    <string name="settings_feedback_error">Invio non riuscito. Riprova più tardi.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Won sudcoreano</string>
+    <string name="calc_amount_label">Importo in %s</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Uscire dall\'app?</string>
+    <string name="exit_confirm">Esci</string>
+    <string name="exit_review">Recensione</string>
+    <string name="exit_cancel">Annulla</string>
+    <string name="exit_ad_cta">Scopri di più</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Apri l\'app per caricare i tassi</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Avvisi sui tassi</string>
+    <string name="channel_alerts_desc">Avvisi su tasso obiettivo, forti variazioni e briefing</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — raggiunto il tuo obiettivo di %5$s KRW (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — raggiunto il tuo obiettivo di %5$s %4$s (%6$s)</string>
+    <string name="notif_swing_title">Forte variazione del tasso</string>
+    <string name="notif_swing_body_up">%1$s in forte rialzo — %2$s KRW (%3$s%% vs ieri)</string>
+    <string name="notif_swing_body_down">%1$s in forte calo — %2$s KRW (%3$s%% vs ieri)</string>
+</resources>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Valutakursvarsel</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Kurser</string>
+    <string name="tab_calculator">Kalkulator</string>
+    <string name="tab_alerts">Varsler</string>
+    <string name="tab_settings">Innstillinger</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">Per %s</string>
+    <string name="home_degree_count">Oppdatering %d</string>
+    <string name="home_add_currency">Legg til valuta</string>
+    <string name="home_offline_notice">Frakoblet — viser de sist mottatte kursene</string>
+    <string name="home_error_load">Kunne ikke laste valutakursene. Prøv igjen senere.</string>
+    <string name="home_currency_search">Søk etter valuta</string>
+    <string name="home_confirm">Ferdig</string>
+    <string name="home_cancel">Avbryt</string>
+    <string name="home_base_currency">Basisvaluta</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Valutakursvarsel er helt nytt ✨</string>
+    <string name="onboarding_bullet_1">• Målkursvarsler kommer i sanntid fra serveren</string>
+    <string name="onboarding_bullet_2">• 4 kurstyper (kontant og overføring) med beregning av preferansekurs</string>
+    <string name="onboarding_bullet_3">• Vurder timingen med 52-ukers intervaller og periodegrafer</string>
+    <string name="onboarding_migration_notice">De tidligere varslene dine ble ikke flyttet til den nye strukturen. Legg dem til på nytt i Varsler-fanen.</string>
+    <string name="onboarding_enable_briefing">Send meg morgenrapporten også</string>
+    <string name="onboarding_start">Kom i gang</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · per %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Midtkurs</string>
+    <string name="detail_cash_buy">Kontantkjøp</string>
+    <string name="detail_cash_sell">Kontantsalg</string>
+    <string name="detail_send">Send overføring</string>
+    <string name="detail_receive">Motta overføring</string>
+    <string name="detail_spread_rate">Preferansekurs</string>
+    <string name="detail_52w_band">52-ukers intervall</string>
+    <string name="detail_create_alert">Opprett varsel</string>
+    <string name="detail_back">Tilbake</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Grafen og bankkursene nedenfor er basert på KRW-noteringer.</string>
+    <string name="detail_chart_min">Lav %s</string>
+    <string name="detail_chart_max">Høy %s</string>
+    <string name="detail_chart_empty">Forbereder grafdata.</string>
+    <string name="detail_spread_buy">Kjøp med preferansekurs</string>
+    <string name="detail_spread_sell">Selg med preferansekurs</string>
+    <string name="detail_52w_percentile">Topp %d%% det siste året</string>
+    <string name="detail_round_count">Oppdatering %d</string>
+    <string name="detail_alert_registered">Varselet er registrert.</string>
+    <string name="detail_alert_failed">Kunne ikke registrere varselet. Prøv igjen senere.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Ingen varsler ennå.\nVi gir deg beskjed når en kurs når målet ditt.</string>
+    <string name="alerts_add">Legg til varsel</string>
+    <string name="alerts_direction_above">Over</string>
+    <string name="alerts_direction_below">Under</string>
+    <string name="alerts_repeat_once">Én gang</string>
+    <string name="alerts_repeat_repeat">Gjenta</string>
+    <string name="alerts_save">Lagre</string>
+    <string name="alerts_delete">Slett</string>
+    <string name="alerts_select_currency">Velg valuta</string>
+    <string name="alerts_cancel">Avbryt</string>
+    <string name="alerts_dialog_title">%s-varsel</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s-varsel</string>
+    <string name="alerts_current_price">Nå %s KRW</string>
+    <string name="alerts_current_price_cross">Nå %1$s %2$s</string>
+    <string name="alerts_current_price_label">Gjeldende kurs</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Kurstype</string>
+    <string name="alerts_section_target">Målkurs</string>
+    <string name="alerts_section_condition">Varsle når</string>
+    <string name="alerts_section_repeat">Frekvens</string>
+    <string name="alerts_error_list">Kunne ikke laste varslene dine.</string>
+    <string name="alerts_error_create">Kunne ikke registrere varselet.</string>
+    <string name="alerts_error_update">Kunne ikke bruke endringen.</string>
+    <string name="alerts_error_delete">Kunne ikke slette varselet.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Morgenrapport om kurser</string>
+    <string name="settings_briefing_desc">Få et sammendrag av viktige kurser på hverdagsmorgener</string>
+    <string name="settings_swing">Varsler ved store bevegelser</string>
+    <string name="settings_swing_desc">Vi varsler deg når store valutaer beveger seg kraftig</string>
+    <string name="settings_feedback">Tilbakemelding / rapporter feil</string>
+    <string name="settings_version">Appversjon</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Lyst</string>
+    <string name="settings_theme_dark">Mørkt</string>
+    <string name="settings_feedback_send">Send tilbakemelding</string>
+    <string name="settings_feedback_bug">Feil</string>
+    <string name="settings_feedback_feature">Funksjonsønske</string>
+    <string name="settings_feedback_etc">Annet</string>
+    <string name="settings_feedback_placeholder">Fortell oss hva som plager deg eller hva du ønsker deg</string>
+    <string name="settings_feedback_submit">Send</string>
+    <string name="settings_feedback_cancel">Avbryt</string>
+    <string name="settings_feedback_success">Takk for tilbakemeldingen!</string>
+    <string name="settings_feedback_error">Kunne ikke sende. Prøv igjen senere.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Sørkoreansk won</string>
+    <string name="calc_amount_label">Beløp i %s</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Avslutte appen?</string>
+    <string name="exit_confirm">Avslutt</string>
+    <string name="exit_review">Vurder</string>
+    <string name="exit_cancel">Avbryt</string>
+    <string name="exit_ad_cta">Finn ut mer</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Åpne appen for å laste kurser</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Kursvarsler</string>
+    <string name="channel_alerts_desc">Varsler om målkurs, store bevegelser og rapporter</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — målet ditt på %5$s KRW er nådd (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — målet ditt på %5$s %4$s er nådd (%6$s)</string>
+    <string name="notif_swing_title">Kraftig kursbevegelse</string>
+    <string name="notif_swing_body_up">%1$s stiger kraftig — %2$s KRW (%3$s%% mot i går)</string>
+    <string name="notif_swing_body_down">%1$s faller kraftig — %2$s KRW (%3$s%% mot i går)</string>
+</resources>

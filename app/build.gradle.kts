@@ -25,8 +25,8 @@ android {
         applicationId = "com.dave.soul.exchange_app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20
-        versionName = "2.2.1"
+        versionCode = 21
+        versionName = "2.3.0"
 
         // apis-py 신규 앱 공개 축 — oror.link 는 py EP 404 (edge-router 화이트리스트)
         buildConfigField("String", "API_BASE_URL", "\"https://app-api.oror.link\"")

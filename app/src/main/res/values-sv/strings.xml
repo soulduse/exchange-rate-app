@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Valutakursalarm</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Kurser</string>
+    <string name="tab_calculator">Kalkylator</string>
+    <string name="tab_alerts">Alarm</string>
+    <string name="tab_settings">Inställningar</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">Per %s</string>
+    <string name="home_degree_count">Uppdatering %d</string>
+    <string name="home_add_currency">Lägg till valuta</string>
+    <string name="home_offline_notice">Offline — visar senast mottagna kurser</string>
+    <string name="home_error_load">Det gick inte att läsa in valutakurserna. Försök igen senare.</string>
+    <string name="home_currency_search">Sök valuta</string>
+    <string name="home_confirm">Klar</string>
+    <string name="home_cancel">Avbryt</string>
+    <string name="home_base_currency">Basvaluta</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Valutakursalarm är helt nytt ✨</string>
+    <string name="onboarding_bullet_1">• Målkursalarm kommer i realtid från servern</string>
+    <string name="onboarding_bullet_2">• 4 kurstyper (kontanter och överföring) med förmånskursberäkning</string>
+    <string name="onboarding_bullet_3">• Bedöm din timing med 52-veckors intervall och periodgrafer</string>
+    <string name="onboarding_migration_notice">Dina tidigare alarm flyttades inte till den nya strukturen. Lägg till dem igen på fliken Alarm.</string>
+    <string name="onboarding_enable_briefing">Skicka morgonrapporten också</string>
+    <string name="onboarding_start">Kom igång</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · per %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Mittkurs</string>
+    <string name="detail_cash_buy">Kontantköp</string>
+    <string name="detail_cash_sell">Kontantförsäljning</string>
+    <string name="detail_send">Skicka överföring</string>
+    <string name="detail_receive">Ta emot överföring</string>
+    <string name="detail_spread_rate">Förmånskurs</string>
+    <string name="detail_52w_band">52-veckors intervall</string>
+    <string name="detail_create_alert">Skapa alarm</string>
+    <string name="detail_back">Tillbaka</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Grafen och bankkurserna nedan baseras på KRW-noteringar.</string>
+    <string name="detail_chart_min">Lägst %s</string>
+    <string name="detail_chart_max">Högst %s</string>
+    <string name="detail_chart_empty">Förbereder grafdata.</string>
+    <string name="detail_spread_buy">Köp med förmånskurs</string>
+    <string name="detail_spread_sell">Sälj med förmånskurs</string>
+    <string name="detail_52w_percentile">Topp %d%% av det senaste året</string>
+    <string name="detail_round_count">Uppdatering %d</string>
+    <string name="detail_alert_registered">Alarmet har registrerats.</string>
+    <string name="detail_alert_failed">Det gick inte att registrera alarmet. Försök igen senare.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Inga alarm ännu.\nVi meddelar dig när en kurs når ditt mål.</string>
+    <string name="alerts_add">Lägg till alarm</string>
+    <string name="alerts_direction_above">Över</string>
+    <string name="alerts_direction_below">Under</string>
+    <string name="alerts_repeat_once">En gång</string>
+    <string name="alerts_repeat_repeat">Upprepa</string>
+    <string name="alerts_save">Spara</string>
+    <string name="alerts_delete">Ta bort</string>
+    <string name="alerts_select_currency">Välj valuta</string>
+    <string name="alerts_cancel">Avbryt</string>
+    <string name="alerts_dialog_title">%s-alarm</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s-alarm</string>
+    <string name="alerts_current_price">Nu %s KRW</string>
+    <string name="alerts_current_price_cross">Nu %1$s %2$s</string>
+    <string name="alerts_current_price_label">Aktuell kurs</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Kurstyp</string>
+    <string name="alerts_section_target">Målkurs</string>
+    <string name="alerts_section_condition">Meddela när</string>
+    <string name="alerts_section_repeat">Frekvens</string>
+    <string name="alerts_error_list">Det gick inte att läsa in dina alarm.</string>
+    <string name="alerts_error_create">Det gick inte att registrera alarmet.</string>
+    <string name="alerts_error_update">Det gick inte att tillämpa ändringen.</string>
+    <string name="alerts_error_delete">Det gick inte att ta bort alarmet.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Morgonrapport om kurser</string>
+    <string name="settings_briefing_desc">Få en sammanfattning av viktiga kurser på vardagsmorgnar</string>
+    <string name="settings_swing">Varningar vid kraftiga rörelser</string>
+    <string name="settings_swing_desc">Vi meddelar dig när stora valutor rör sig kraftigt</string>
+    <string name="settings_feedback">Feedback / rapportera bugg</string>
+    <string name="settings_version">Appversion</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Ljust</string>
+    <string name="settings_theme_dark">Mörkt</string>
+    <string name="settings_feedback_send">Skicka feedback</string>
+    <string name="settings_feedback_bug">Bugg</string>
+    <string name="settings_feedback_feature">Funktionsönskemål</string>
+    <string name="settings_feedback_etc">Övrigt</string>
+    <string name="settings_feedback_placeholder">Berätta vad som stör dig eller vad du vill se</string>
+    <string name="settings_feedback_submit">Skicka</string>
+    <string name="settings_feedback_cancel">Avbryt</string>
+    <string name="settings_feedback_success">Tack för din feedback!</string>
+    <string name="settings_feedback_error">Det gick inte att skicka. Försök igen senare.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Sydkoreansk won</string>
+    <string name="calc_amount_label">Belopp i %s</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Avsluta appen?</string>
+    <string name="exit_confirm">Avsluta</string>
+    <string name="exit_review">Betygsätt</string>
+    <string name="exit_cancel">Avbryt</string>
+    <string name="exit_ad_cta">Läs mer</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Öppna appen för att läsa in kurser</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Kursaviseringar</string>
+    <string name="channel_alerts_desc">Aviseringar om målkurser, kraftiga rörelser och rapporter</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — ditt mål på %5$s KRW har nåtts (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — ditt mål på %5$s %4$s har nåtts (%6$s)</string>
+    <string name="notif_swing_title">Kraftig kursrörelse</string>
+    <string name="notif_swing_body_up">%1$s stiger kraftigt — %2$s KRW (%3$s%% mot igår)</string>
+    <string name="notif_swing_body_down">%1$s faller kraftigt — %2$s KRW (%3$s%% mot igår)</string>
+</resources>

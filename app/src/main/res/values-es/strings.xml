@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Alerta de Tipo de Cambio</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Tipos</string>
+    <string name="tab_calculator">Calculadora</string>
+    <string name="tab_alerts">Alertas</string>
+    <string name="tab_settings">Ajustes</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">A las %s</string>
+    <string name="home_degree_count">Actualización %d</string>
+    <string name="home_add_currency">Añadir divisa</string>
+    <string name="home_offline_notice">Sin conexión — mostrando los últimos tipos recibidos</string>
+    <string name="home_error_load">No se pudieron cargar los tipos de cambio. Inténtalo de nuevo más tarde.</string>
+    <string name="home_currency_search">Buscar divisa</string>
+    <string name="home_confirm">Hecho</string>
+    <string name="home_cancel">Cancelar</string>
+    <string name="home_base_currency">Divisa base</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Alerta de Tipo de Cambio se renueva ✨</string>
+    <string name="onboarding_bullet_1">• Las alertas de tipo objetivo llegan en tiempo real desde el servidor</string>
+    <string name="onboarding_bullet_2">• 4 tipos de cambio (efectivo y transferencia) con cálculo de tipo preferencial</string>
+    <string name="onboarding_bullet_3">• Decide el mejor momento con rangos de 52 semanas y gráficos por período</string>
+    <string name="onboarding_migration_notice">Tus alertas anteriores no se migraron a la nueva estructura. Vuelve a crearlas en la pestaña Alertas.</string>
+    <string name="onboarding_enable_briefing">Recibir también el resumen matutino</string>
+    <string name="onboarding_start">Empezar</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · por %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Tipo de referencia</string>
+    <string name="detail_cash_buy">Compra en efectivo</string>
+    <string name="detail_cash_sell">Venta en efectivo</string>
+    <string name="detail_send">Transferencia enviada</string>
+    <string name="detail_receive">Transferencia recibida</string>
+    <string name="detail_spread_rate">Tipo preferencial</string>
+    <string name="detail_52w_band">Rango de 52 semanas</string>
+    <string name="detail_create_alert">Crear alerta</string>
+    <string name="detail_back">Atrás</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">El gráfico y los tipos bancarios de abajo se basan en cotizaciones en KRW.</string>
+    <string name="detail_chart_min">Mín %s</string>
+    <string name="detail_chart_max">Máx %s</string>
+    <string name="detail_chart_empty">Preparando los datos del gráfico.</string>
+    <string name="detail_spread_buy">Comprar con tipo preferencial</string>
+    <string name="detail_spread_sell">Vender con tipo preferencial</string>
+    <string name="detail_52w_percentile">Top %d%% del último año</string>
+    <string name="detail_round_count">Actualización %d</string>
+    <string name="detail_alert_registered">Alerta registrada.</string>
+    <string name="detail_alert_failed">No se pudo registrar la alerta. Inténtalo de nuevo más tarde.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Aún no hay alertas.\nTe avisaremos cuando un tipo alcance tu objetivo.</string>
+    <string name="alerts_add">Añadir alerta</string>
+    <string name="alerts_direction_above">Por encima</string>
+    <string name="alerts_direction_below">Por debajo</string>
+    <string name="alerts_repeat_once">Una vez</string>
+    <string name="alerts_repeat_repeat">Repetir</string>
+    <string name="alerts_save">Guardar</string>
+    <string name="alerts_delete">Eliminar</string>
+    <string name="alerts_select_currency">Seleccionar divisa</string>
+    <string name="alerts_cancel">Cancelar</string>
+    <string name="alerts_dialog_title">Alerta de %s</string>
+    <string name="alerts_dialog_title_cross">Alerta %1$s/%2$s</string>
+    <string name="alerts_current_price">Ahora %s KRW</string>
+    <string name="alerts_current_price_cross">Ahora %1$s %2$s</string>
+    <string name="alerts_current_price_label">Tipo actual</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Tipo de cambio</string>
+    <string name="alerts_section_target">Tipo objetivo</string>
+    <string name="alerts_section_condition">Avisarme cuando</string>
+    <string name="alerts_section_repeat">Frecuencia</string>
+    <string name="alerts_error_list">No se pudieron cargar tus alertas.</string>
+    <string name="alerts_error_create">No se pudo registrar la alerta.</string>
+    <string name="alerts_error_update">No se pudo aplicar el cambio.</string>
+    <string name="alerts_error_delete">No se pudo eliminar la alerta.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Resumen matutino de tipos</string>
+    <string name="settings_briefing_desc">Recibe un resumen de los tipos clave las mañanas de días laborables</string>
+    <string name="settings_swing">Alertas de movimiento brusco</string>
+    <string name="settings_swing_desc">Te avisaremos cuando las divisas principales se muevan bruscamente</string>
+    <string name="settings_feedback">Comentarios / informar de un error</string>
+    <string name="settings_version">Versión de la app</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_feedback_send">Enviar comentarios</string>
+    <string name="settings_feedback_bug">Error</string>
+    <string name="settings_feedback_feature">Sugerencia</string>
+    <string name="settings_feedback_etc">Otro</string>
+    <string name="settings_feedback_placeholder">Cuéntanos qué te molesta o qué te gustaría ver</string>
+    <string name="settings_feedback_submit">Enviar</string>
+    <string name="settings_feedback_cancel">Cancelar</string>
+    <string name="settings_feedback_success">¡Gracias por tus comentarios!</string>
+    <string name="settings_feedback_error">No se pudo enviar. Inténtalo de nuevo más tarde.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Won surcoreano</string>
+    <string name="calc_amount_label">Importe en %s</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">¿Salir de la app?</string>
+    <string name="exit_confirm">Salir</string>
+    <string name="exit_review">Valorar</string>
+    <string name="exit_cancel">Cancelar</string>
+    <string name="exit_ad_cta">Más información</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Abre la app para cargar los tipos</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Alertas de tipos</string>
+    <string name="channel_alerts_desc">Alertas de tipo objetivo, movimientos bruscos y resumen</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — alcanzó tu objetivo de %5$s KRW (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — alcanzó tu objetivo de %5$s %4$s (%6$s)</string>
+    <string name="notif_swing_title">Movimiento brusco del tipo</string>
+    <string name="notif_swing_body_up">%1$s sube con fuerza — %2$s KRW (%3$s%% vs ayer)</string>
+    <string name="notif_swing_body_down">%1$s baja con fuerza — %2$s KRW (%3$s%% vs ayer)</string>
+</resources>

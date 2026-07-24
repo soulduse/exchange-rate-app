@@ -64,15 +64,16 @@ fun displayName(name: String, currencyCode: String): String =
 
 /**
  * 통화 표시명 — 한국어 로케일은 서버 한국어명, 그 외 로케일은
- * 서버 영문명 → java.util.Currency 로케일 통화명(전 언어 현지화) → 한국어명 순 폴백.
+ * java.util.Currency 로케일 통화명(전 언어 현지화) → 서버 영문명 → 한국어명 순 폴백.
+ * (영문명을 앞세우면 ja/de 등 신규 지원 로케일에서도 영어가 나와버림)
  */
 fun displayName(name: String, nameEng: String?, currencyCode: String): String {
     if (Locale.getDefault().language == "ko") return displayName(name, currencyCode)
-    if (!nameEng.isNullOrBlank()) return nameEng
     val localized = runCatching {
         Currency.getInstance(currencyCode).getDisplayName(Locale.getDefault())
     }.getOrNull()
-    // getDisplayName 은 미지원 로케일에서 코드 자체를 돌려준다 — 그 경우 한국어명 폴백
-    return if (localized != null && !localized.equals(currencyCode, ignoreCase = true)) localized
-    else displayName(name, currencyCode)
+    // getDisplayName 은 미지원 로케일에서 코드 자체를 돌려준다 — 그 경우 다음 폴백으로
+    if (localized != null && !localized.equals(currencyCode, ignoreCase = true)) return localized
+    if (!nameEng.isNullOrBlank()) return nameEng
+    return displayName(name, currencyCode)
 }

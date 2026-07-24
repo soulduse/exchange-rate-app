@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">為替レートアラート</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">レート</string>
+    <string name="tab_calculator">計算機</string>
+    <string name="tab_alerts">アラート</string>
+    <string name="tab_settings">設定</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">%s 時点</string>
+    <string name="home_degree_count">更新 %d回目</string>
+    <string name="home_add_currency">通貨を追加</string>
+    <string name="home_offline_notice">オフライン — 最後に取得したレートを表示中</string>
+    <string name="home_error_load">為替レートを読み込めませんでした。しばらくしてからもう一度お試しください。</string>
+    <string name="home_currency_search">通貨を検索</string>
+    <string name="home_confirm">完了</string>
+    <string name="home_cancel">キャンセル</string>
+    <string name="home_base_currency">基準通貨</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">為替レートアラートが新しくなりました ✨</string>
+    <string name="onboarding_bullet_1">• 目標レートの通知がサーバーからリアルタイムで届きます</string>
+    <string name="onboarding_bullet_2">• 4種類のレート（現金・送金）と優遇レート計算に対応</string>
+    <string name="onboarding_bullet_3">• 52週レンジと期間チャートでタイミングを判断</string>
+    <string name="onboarding_migration_notice">以前設定したアラートは新しい仕組みへ引き継がれていません。アラートタブでもう一度登録してください。</string>
+    <string name="onboarding_enable_briefing">朝のブリーフィングも受け取る</string>
+    <string name="onboarding_start">はじめる</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · %d あたり</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">基準レート</string>
+    <string name="detail_cash_buy">現金購入</string>
+    <string name="detail_cash_sell">現金売却</string>
+    <string name="detail_send">送金（送る）</string>
+    <string name="detail_receive">送金（受取）</string>
+    <string name="detail_spread_rate">優遇レート</string>
+    <string name="detail_52w_band">52週レンジ</string>
+    <string name="detail_create_alert">アラートを作成</string>
+    <string name="detail_back">戻る</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">以下のチャートと銀行レートは KRW 建ての公示値に基づきます。</string>
+    <string name="detail_chart_min">安値 %s</string>
+    <string name="detail_chart_max">高値 %s</string>
+    <string name="detail_chart_empty">チャートデータを準備中です。</string>
+    <string name="detail_spread_buy">優遇レートで購入</string>
+    <string name="detail_spread_sell">優遇レートで売却</string>
+    <string name="detail_52w_percentile">過去1年の上位 %d%%</string>
+    <string name="detail_round_count">更新 %d回目</string>
+    <string name="detail_alert_registered">アラートを登録しました。</string>
+    <string name="detail_alert_failed">アラートを登録できませんでした。しばらくしてからもう一度お試しください。</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">アラートはまだありません。\n目標レートに達したらお知らせします。</string>
+    <string name="alerts_add">アラートを追加</string>
+    <string name="alerts_direction_above">以上</string>
+    <string name="alerts_direction_below">以下</string>
+    <string name="alerts_repeat_once">1回のみ</string>
+    <string name="alerts_repeat_repeat">繰り返し</string>
+    <string name="alerts_save">保存</string>
+    <string name="alerts_delete">削除</string>
+    <string name="alerts_select_currency">通貨を選択</string>
+    <string name="alerts_cancel">キャンセル</string>
+    <string name="alerts_dialog_title">%s アラート</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s アラート</string>
+    <string name="alerts_current_price">現在 %s KRW</string>
+    <string name="alerts_current_price_cross">現在 %1$s %2$s</string>
+    <string name="alerts_current_price_label">現在のレート</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">レートの種類</string>
+    <string name="alerts_section_target">目標レート</string>
+    <string name="alerts_section_condition">通知条件</string>
+    <string name="alerts_section_repeat">頻度</string>
+    <string name="alerts_error_list">アラートを読み込めませんでした。</string>
+    <string name="alerts_error_create">アラートを登録できませんでした。</string>
+    <string name="alerts_error_update">変更を適用できませんでした。</string>
+    <string name="alerts_error_delete">アラートを削除できませんでした。</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">朝の為替ブリーフィング</string>
+    <string name="settings_briefing_desc">平日の朝に主要レートのまとめが届きます</string>
+    <string name="settings_swing">急変動アラート</string>
+    <string name="settings_swing_desc">主要通貨が大きく動いたときにお知らせします</string>
+    <string name="settings_feedback">フィードバック / 不具合報告</string>
+    <string name="settings_version">アプリのバージョン</string>
+    <string name="settings_theme">テーマ</string>
+    <string name="settings_theme_system">システム</string>
+    <string name="settings_theme_light">ライト</string>
+    <string name="settings_theme_dark">ダーク</string>
+    <string name="settings_feedback_send">フィードバックを送信</string>
+    <string name="settings_feedback_bug">不具合</string>
+    <string name="settings_feedback_feature">機能のリクエスト</string>
+    <string name="settings_feedback_etc">その他</string>
+    <string name="settings_feedback_placeholder">気になる点やご要望をお聞かせください</string>
+    <string name="settings_feedback_submit">送信</string>
+    <string name="settings_feedback_cancel">キャンセル</string>
+    <string name="settings_feedback_success">フィードバックありがとうございます！</string>
+    <string name="settings_feedback_error">送信できませんでした。しばらくしてからもう一度お試しください。</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">韓国ウォン</string>
+    <string name="calc_amount_label">%s の金額</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">アプリを終了しますか？</string>
+    <string name="exit_confirm">終了</string>
+    <string name="exit_review">レビュー</string>
+    <string name="exit_cancel">キャンセル</string>
+    <string name="exit_ad_cta">詳細を見る</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">アプリを開いてレートを読み込む</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">レート通知</string>
+    <string name="channel_alerts_desc">目標レート・急変動・ブリーフィングの通知</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">"（%1$d %2$s）"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — 目標 %5$s KRW（%6$s）に到達</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — 目標 %5$s %4$s（%6$s）に到達</string>
+    <string name="notif_swing_title">為替レート急変動</string>
+    <string name="notif_swing_body_up">%1$s が急騰 — %2$s KRW（前日比 %3$s%%）</string>
+    <string name="notif_swing_body_down">%1$s が急落 — %2$s KRW（前日比 %3$s%%）</string>
+</resources>

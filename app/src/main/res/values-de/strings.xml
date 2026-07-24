@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wechselkurs-Alarm</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Kurse</string>
+    <string name="tab_calculator">Rechner</string>
+    <string name="tab_alerts">Alarme</string>
+    <string name="tab_settings">Einstellungen</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">Stand: %s</string>
+    <string name="home_degree_count">Update %d</string>
+    <string name="home_add_currency">Währung hinzufügen</string>
+    <string name="home_offline_notice">Offline — zuletzt empfangene Kurse werden angezeigt</string>
+    <string name="home_error_load">Wechselkurse konnten nicht geladen werden. Bitte versuchen Sie es später erneut.</string>
+    <string name="home_currency_search">Währung suchen</string>
+    <string name="home_confirm">Fertig</string>
+    <string name="home_cancel">Abbrechen</string>
+    <string name="home_base_currency">Basiswährung</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Wechselkurs-Alarm ist ganz neu ✨</string>
+    <string name="onboarding_bullet_1">• Zielkurs-Alarme kommen in Echtzeit vom Server</string>
+    <string name="onboarding_bullet_2">• 4 Kursarten (Bargeld &amp; Überweisung) mit Vorzugskurs-Berechnung</string>
+    <string name="onboarding_bullet_3">• Timing einschätzen mit 52-Wochen-Spannen und Zeitraum-Charts</string>
+    <string name="onboarding_migration_notice">Ihre früheren Alarme wurden nicht in die neue Struktur übernommen. Bitte legen Sie sie im Tab „Alarme" neu an.</string>
+    <string name="onboarding_enable_briefing">Auch das Morgen-Briefing erhalten</string>
+    <string name="onboarding_start">Los geht\'s</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · pro %d</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Mittelkurs</string>
+    <string name="detail_cash_buy">Bargeld Kauf</string>
+    <string name="detail_cash_sell">Bargeld Verkauf</string>
+    <string name="detail_send">Überweisung senden</string>
+    <string name="detail_receive">Überweisung empfangen</string>
+    <string name="detail_spread_rate">Vorzugskurs</string>
+    <string name="detail_52w_band">52-Wochen-Spanne</string>
+    <string name="detail_create_alert">Alarm erstellen</string>
+    <string name="detail_back">Zurück</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Chart und Bankkurse unten basieren auf KRW-Notierungen.</string>
+    <string name="detail_chart_min">Tief %s</string>
+    <string name="detail_chart_max">Hoch %s</string>
+    <string name="detail_chart_empty">Chartdaten werden vorbereitet.</string>
+    <string name="detail_spread_buy">Kauf mit Vorzugskurs</string>
+    <string name="detail_spread_sell">Verkauf mit Vorzugskurs</string>
+    <string name="detail_52w_percentile">Obere %d%% des letzten Jahres</string>
+    <string name="detail_round_count">Update %d</string>
+    <string name="detail_alert_registered">Alarm eingerichtet.</string>
+    <string name="detail_alert_failed">Alarm konnte nicht eingerichtet werden. Bitte versuchen Sie es später erneut.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Noch keine Alarme.\nWir benachrichtigen Sie, sobald ein Kurs Ihr Ziel erreicht.</string>
+    <string name="alerts_add">Alarm hinzufügen</string>
+    <string name="alerts_direction_above">Über</string>
+    <string name="alerts_direction_below">Unter</string>
+    <string name="alerts_repeat_once">Einmalig</string>
+    <string name="alerts_repeat_repeat">Wiederholen</string>
+    <string name="alerts_save">Speichern</string>
+    <string name="alerts_delete">Löschen</string>
+    <string name="alerts_select_currency">Währung wählen</string>
+    <string name="alerts_cancel">Abbrechen</string>
+    <string name="alerts_dialog_title">%s-Alarm</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s-Alarm</string>
+    <string name="alerts_current_price">Aktuell %s KRW</string>
+    <string name="alerts_current_price_cross">Aktuell %1$s %2$s</string>
+    <string name="alerts_current_price_label">Aktueller Kurs</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Kursart</string>
+    <string name="alerts_section_target">Zielkurs</string>
+    <string name="alerts_section_condition">Benachrichtigen wenn</string>
+    <string name="alerts_section_repeat">Häufigkeit</string>
+    <string name="alerts_error_list">Alarme konnten nicht geladen werden.</string>
+    <string name="alerts_error_create">Alarm konnte nicht eingerichtet werden.</string>
+    <string name="alerts_error_update">Änderung konnte nicht übernommen werden.</string>
+    <string name="alerts_error_delete">Alarm konnte nicht gelöscht werden.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Morgendliches Kurs-Briefing</string>
+    <string name="settings_briefing_desc">Werktags morgens eine Zusammenfassung der wichtigsten Kurse erhalten</string>
+    <string name="settings_swing">Kurssprung-Alarme</string>
+    <string name="settings_swing_desc">Wir benachrichtigen Sie bei starken Bewegungen wichtiger Währungen</string>
+    <string name="settings_feedback">Feedback / Fehler melden</string>
+    <string name="settings_version">App-Version</string>
+    <string name="settings_theme">Design</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Hell</string>
+    <string name="settings_theme_dark">Dunkel</string>
+    <string name="settings_feedback_send">Feedback senden</string>
+    <string name="settings_feedback_bug">Fehler</string>
+    <string name="settings_feedback_feature">Funktionswunsch</string>
+    <string name="settings_feedback_etc">Sonstiges</string>
+    <string name="settings_feedback_placeholder">Was stört Sie oder was wünschen Sie sich?</string>
+    <string name="settings_feedback_submit">Senden</string>
+    <string name="settings_feedback_cancel">Abbrechen</string>
+    <string name="settings_feedback_success">Danke für Ihr Feedback!</string>
+    <string name="settings_feedback_error">Senden fehlgeschlagen. Bitte versuchen Sie es später erneut.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Südkoreanischer Won</string>
+    <string name="calc_amount_label">Betrag in %s</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">App beenden?</string>
+    <string name="exit_confirm">Beenden</string>
+    <string name="exit_review">Bewerten</string>
+    <string name="exit_cancel">Abbrechen</string>
+    <string name="exit_ad_cta">Mehr erfahren</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">App öffnen, um Kurse zu laden</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Kurs-Benachrichtigungen</string>
+    <string name="channel_alerts_desc">Zielkurs-, Kurssprung- und Briefing-Benachrichtigungen</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — Ihr Ziel von %5$s KRW erreicht (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — Ihr Ziel von %5$s %4$s erreicht (%6$s)</string>
+    <string name="notif_swing_title">Starke Kursbewegung</string>
+    <string name="notif_swing_body_up">%1$s steigt stark — %2$s KRW (%3$s%% ggü. gestern)</string>
+    <string name="notif_swing_body_down">%1$s fällt stark — %2$s KRW (%3$s%% ggü. gestern)</string>
+</resources>

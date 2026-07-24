@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Döviz Kuru Alarmı</string>
+
+    <!-- Tabs / screens -->
+    <string name="tab_home">Kurlar</string>
+    <string name="tab_calculator">Hesaplayıcı</string>
+    <string name="tab_alerts">Alarmlar</string>
+    <string name="tab_settings">Ayarlar</string>
+
+    <!-- Home -->
+    <string name="home_updated_at">%s itibarıyla</string>
+    <string name="home_degree_count">Güncelleme %d</string>
+    <string name="home_add_currency">Para birimi ekle</string>
+    <string name="home_offline_notice">Çevrimdışı — son alınan kurlar gösteriliyor</string>
+    <string name="home_error_load">Döviz kurları yüklenemedi. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="home_currency_search">Para birimi ara</string>
+    <string name="home_confirm">Tamam</string>
+    <string name="home_cancel">İptal</string>
+    <string name="home_base_currency">Baz para birimi</string>
+
+    <!-- Home onboarding (first launch on v2) -->
+    <string name="onboarding_title">Döviz Kuru Alarmı yepyeni ✨</string>
+    <string name="onboarding_bullet_1">• Hedef kur alarmları sunucudan gerçek zamanlı gelir</string>
+    <string name="onboarding_bullet_2">• Tercihli kur hesaplamalı 4 kur türü (nakit ve havale)</string>
+    <string name="onboarding_bullet_3">• 52 haftalık aralıklar ve dönem grafikleriyle zamanlamanızı belirleyin</string>
+    <string name="onboarding_migration_notice">Daha önce kurduğunuz alarmlar yeni yapıya taşınmadı. Lütfen Alarmlar sekmesinden yeniden ekleyin.</string>
+    <string name="onboarding_enable_briefing">Sabah özetini de gönder</string>
+    <string name="onboarding_start">Başla</string>
+
+    <!-- Units -->
+    <string name="unit_krw">KRW</string>
+    <string name="home_per_unit"> · %d başına</string>
+
+    <!-- Detail -->
+    <string name="detail_base_price">Baz kur</string>
+    <string name="detail_cash_buy">Nakit alış</string>
+    <string name="detail_cash_sell">Nakit satış</string>
+    <string name="detail_send">Havale gönderme</string>
+    <string name="detail_receive">Havale alma</string>
+    <string name="detail_spread_rate">Tercihli kur</string>
+    <string name="detail_52w_band">52 haftalık aralık</string>
+    <string name="detail_create_alert">Alarm oluştur</string>
+    <string name="detail_back">Geri</string>
+    <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
+    <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
+    <string name="detail_krw_section_notice">Aşağıdaki grafik ve banka kurları KRW kotasyonlarına dayanır.</string>
+    <string name="detail_chart_min">Düşük %s</string>
+    <string name="detail_chart_max">Yüksek %s</string>
+    <string name="detail_chart_empty">Grafik verileri hazırlanıyor.</string>
+    <string name="detail_spread_buy">Tercihli kurla al</string>
+    <string name="detail_spread_sell">Tercihli kurla sat</string>
+    <string name="detail_52w_percentile">Geçen yılın en yüksek %%%d\'lik dilimi</string>
+    <string name="detail_round_count">Güncelleme %d</string>
+    <string name="detail_alert_registered">Alarm kaydedildi.</string>
+    <string name="detail_alert_failed">Alarm kaydedilemedi. Lütfen daha sonra tekrar deneyin.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_empty">Henüz alarm yok.\nBir kur hedefinize ulaştığında size haber vereceğiz.</string>
+    <string name="alerts_add">Alarm ekle</string>
+    <string name="alerts_direction_above">Üzerinde</string>
+    <string name="alerts_direction_below">Altında</string>
+    <string name="alerts_repeat_once">Bir kez</string>
+    <string name="alerts_repeat_repeat">Tekrarla</string>
+    <string name="alerts_save">Kaydet</string>
+    <string name="alerts_delete">Sil</string>
+    <string name="alerts_select_currency">Para birimi seç</string>
+    <string name="alerts_cancel">İptal</string>
+    <string name="alerts_dialog_title">%s alarmı</string>
+    <string name="alerts_dialog_title_cross">%1$s/%2$s alarmı</string>
+    <string name="alerts_current_price">Şu an %s KRW</string>
+    <string name="alerts_current_price_cross">Şu an %1$s %2$s</string>
+    <string name="alerts_current_price_label">Güncel kur</string>
+    <string name="alerts_row_summary">%1$s KRW %2$s · %3$s</string>
+    <string name="alerts_row_summary_cross">%1$s %2$s %3$s · %4$s</string>
+    <string name="alerts_section_price_type">Kur türü</string>
+    <string name="alerts_section_target">Hedef kur</string>
+    <string name="alerts_section_condition">Bildirim koşulu</string>
+    <string name="alerts_section_repeat">Sıklık</string>
+    <string name="alerts_error_list">Alarmlarınız yüklenemedi.</string>
+    <string name="alerts_error_create">Alarm kaydedilemedi.</string>
+    <string name="alerts_error_update">Değişiklik uygulanamadı.</string>
+    <string name="alerts_error_delete">Alarm silinemedi.</string>
+
+    <!-- Settings -->
+    <string name="settings_briefing">Sabah kur özeti</string>
+    <string name="settings_briefing_desc">Hafta içi sabahları önemli kurların özetini alın</string>
+    <string name="settings_swing">Ani hareket uyarıları</string>
+    <string name="settings_swing_desc">Büyük para birimleri sert hareket ettiğinde sizi uyarırız</string>
+    <string name="settings_feedback">Geri bildirim / hata bildir</string>
+    <string name="settings_version">Uygulama sürümü</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_light">Açık</string>
+    <string name="settings_theme_dark">Koyu</string>
+    <string name="settings_feedback_send">Geri bildirim gönder</string>
+    <string name="settings_feedback_bug">Hata</string>
+    <string name="settings_feedback_feature">Özellik isteği</string>
+    <string name="settings_feedback_etc">Diğer</string>
+    <string name="settings_feedback_placeholder">Sizi rahatsız eden veya görmek istediğiniz şeyleri bize anlatın</string>
+    <string name="settings_feedback_submit">Gönder</string>
+    <string name="settings_feedback_cancel">İptal</string>
+    <string name="settings_feedback_success">Geri bildiriminiz için teşekkürler!</string>
+    <string name="settings_feedback_error">Gönderilemedi. Lütfen daha sonra tekrar deneyin.</string>
+
+    <!-- Calculator -->
+    <string name="calc_krw_name">Güney Kore Wonu</string>
+    <string name="calc_amount_label">%s tutarı</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Uygulamadan çıkılsın mı?</string>
+    <string name="exit_confirm">Çık</string>
+    <string name="exit_review">Değerlendir</string>
+    <string name="exit_cancel">İptal</string>
+    <string name="exit_ad_cta">Daha fazla bilgi</string>
+
+    <!-- Widget -->
+    <string name="widget_empty">Kurları yüklemek için uygulamayı açın</string>
+
+    <!-- Notification channel -->
+    <string name="channel_alerts_name">Kur bildirimleri</string>
+    <string name="channel_alerts_desc">Hedef kur, ani hareket ve özet bildirimleri</string>
+
+    <!-- Local push composition (rendered in device language for data-only messages) -->
+    <string name="notif_alert_unit">" (%1$d %2$s)"</string>
+    <string name="notif_alert_body">%1$s%2$s %3$s %4$s KRW — %5$s KRW hedefinize ulaştı (%6$s)</string>
+    <string name="notif_alert_body_cross">%1$s%2$s %3$s %4$s — %5$s %4$s hedefinize ulaştı (%6$s)</string>
+    <string name="notif_swing_title">Ani kur hareketi</string>
+    <string name="notif_swing_body_up">%1$s hızla yükseliyor — %2$s KRW (düne göre %%%3$s)</string>
+    <string name="notif_swing_body_down">%1$s hızla düşüyor — %2$s KRW (düne göre %%%3$s)</string>
+</resources>
