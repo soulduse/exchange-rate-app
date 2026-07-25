@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dave.soul.exchange_app.core.util.formatPrice
+import com.dave.soul.exchange_app.core.util.formatRate
 
 /**
  * 의존성 없는 라인 차트 — 종가 시계열 + 그라데이션 음영 + x/y축 눈금.
@@ -94,7 +94,7 @@ fun RateChart(
                 strokeWidth = 1.5f,
                 pathEffect = gridDash,
             )
-            val text = textMeasurer.measure(formatPrice(value), axisStyle)
+            val text = textMeasurer.measure(formatRate(value), axisStyle)
             drawText(
                 text,
                 topLeft = Offset(size.width - text.size.width - 6f, gy - text.size.height - 3f),
@@ -159,7 +159,7 @@ fun RateChart(
 
         // 라벨: 가격 + 날짜. 터치 지점 반대편으로 플립해 화면 밖으로 안 나가게.
         val dateText = dates.getOrNull(index)?.let { " · ${shortDate(it)}" }.orEmpty()
-        val label = textMeasurer.measure(formatPrice(closes[index]) + dateText, labelStyle)
+        val label = textMeasurer.measure(formatRate(closes[index]) + dateText, labelStyle)
         val padH = 20f
         val padV = 12f
         val boxW = label.size.width + padH * 2

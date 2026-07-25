@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.dave.soul.exchange_app.ads.AdsManager
 import com.dave.soul.exchange_app.core.prefs.UserPrefs
+import com.dave.soul.exchange_app.core.util.localeCurrencyCode
 import com.dave.soul.exchange_app.push.DeviceRegistrar
 import com.dave.soul.exchange_app.ui.common.SplashGate
 import com.dave.soul.exchange_app.ui.nav.ExchangeNavRoot
@@ -68,6 +69,9 @@ class MainActivity : ComponentActivity() {
         adsManager.initialize(this)
         lifecycleScope.launch {
             launchCount = prefs.incrementLaunchCount()
+            if (launchCount == 1) {
+                prefs.seedBaseCurrencyForNewInstall(localeCurrencyCode())
+            }
             deviceRegistrar.ensureRegistered()
         }
     }

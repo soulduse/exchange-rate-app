@@ -1,6 +1,7 @@
 package com.dave.soul.exchange_app.core.rates
 
 import com.dave.soul.exchange_app.core.db.RateEntity
+import com.dave.soul.exchange_app.core.network.HistoryItemDto
 
 /**
  * 표시용 시세 1행 — 기준통화(base) 관점으로 환산된 값.
@@ -45,6 +46,47 @@ object CrossRates {
     }
 
     /**
+     * 크로스 스파크라인 — target·base 스파크를 끝점(최신) 기준으로 정렬해 zip.
+     * 두 시계열의 길이가 다르면 짧은 쪽만큼 최신 구간을 쓴다(서버가 같은 배치로
+     * 만들어 날짜 축이 같다는 전제). base 값이 0 이하인 포인트는 건너뛴다.
+     */
+    fun crossSpark(target: List<Double>, base: List<Double>, basePerUnit: Int): List<Double> {
+        if (target.isEmpty() || base.isEmpty()) return emptyList()
+        val n = minOf(target.size, base.size)
+        val t = target.takeLast(n)
+        val b = base.takeLast(n)
+        return t.zip(b).mapNotNull { (a, bv) ->
+            if (bv <= 0.0) null else a * basePerUnit / bv
+        }
+    }
+
+    /**
+     * 크로스 히스토리 — target·base 일별 종가를 날짜 키로 조인해 크로스 종가로 환산.
+     * 표시가와 동일 수식(`closeA × perUnit(B) / closeB`). 4종가는 KRW 고시 전용
+     * 개념이라 null 로 비운다. 한쪽에만 있는 날짜는 제외.
+     */
+    fun crossHistory(
+        target: List<HistoryItemDto>,
+        base: List<HistoryItemDto>,
+        basePerUnit: Int,
+    ): List<HistoryItemDto> {
+        if (target.isEmpty() || base.isEmpty()) return emptyList()
+        val baseByDate = base.associateBy({ it.date }, { it.close })
+        return target.mapNotNull { item ->
+            val baseClose = baseByDate[item.date] ?: return@mapNotNull null
+            if (baseClose <= 0.0) return@mapNotNull null
+            HistoryItemDto(
+                date = item.date,
+                close = item.close * basePerUnit / baseClose,
+                cashBuy = null,
+                cashSell = null,
+                send = null,
+                receive = null,
+            )
+        }
+    }
+
+    /**
      * 홈/위젯 표시 리스트 — base 관점으로 환산.
      *
      * base=KRW: 선택 통화 전부 고시가 그대로.
@@ -79,6 +121,7 @@ object CrossRates {
         }
 
         val baseRate = byCode.getValue(base)
+        val baseSpark = baseRate.sparkValues()
         val krwRow = DisplayRate(
             code = "KRW",
             name = krwName,
@@ -89,7 +132,10 @@ object CrossRates {
             change = null,
             // KRW/base 크로스 = KRW(등락 0%) 대 base — base 등락의 역방향
             changeRatio = crossChangeRatio(0.0, baseRate.changeRatio),
-            spark = emptyList(),
+            // 1 KRW = perUnit(B)/basePrice(B) — base 스파크의 역수 시계열
+            spark = baseSpark.mapNotNull { v ->
+                if (v <= 0.0) null else baseRate.perUnit / v
+            },
             isVirtualKrw = true,
         )
         val crossRows = selected.filter { it != base }.mapNotNull { code ->
@@ -103,7 +149,7 @@ object CrossRates {
                 value = displayValue(rate, baseKrwPerOne),
                 change = null,
                 changeRatio = crossChangeRatio(rate.changeRatio, baseRate.changeRatio),
-                spark = emptyList(),
+                spark = crossSpark(rate.sparkValues(), baseSpark, baseRate.perUnit),
             )
         }
         return listOf(krwRow) + crossRows

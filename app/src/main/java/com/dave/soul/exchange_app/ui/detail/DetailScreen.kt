@@ -113,18 +113,13 @@ fun DetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             PriceHeader(r, header)
-            if (header.isCross) {
-                // 차트/4종가/우대율/52주는 KRW 고시 기준 유지 — 크로스는 헤더가만
-                Text(
-                    stringResource(R.string.detail_krw_section_notice),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
             ChartCard(chart = chart, onRangeSelect = viewModel::loadHistory)
-            FourPricesCard(r)
-            SpreadCard(r, spreadRate, viewModel::setSpreadRate)
-            Band52wCard(r)
+            // 4종가·우대율·52주는 KRW 고시 전용 개념 — 크로스 축에서는 숨김
+            if (!header.isCross) {
+                FourPricesCard(r)
+                SpreadCard(r, spreadRate, viewModel::setSpreadRate)
+                Band52wCard(r)
+            }
             Button(
                 onClick = { showAlertDialog = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -243,12 +238,12 @@ private fun ChartCard(chart: ChartState, onRangeSelect: (String) -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        stringResource(R.string.detail_chart_min, formatPrice(closes.min())),
+                        stringResource(R.string.detail_chart_min, formatRate(closes.min())),
                         style = MaterialTheme.typography.labelSmall,
                         color = FallBlue,
                     )
                     Text(
-                        stringResource(R.string.detail_chart_max, formatPrice(closes.max())),
+                        stringResource(R.string.detail_chart_max, formatRate(closes.max())),
                         style = MaterialTheme.typography.labelSmall,
                         color = RiseRed,
                     )

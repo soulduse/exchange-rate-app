@@ -44,7 +44,6 @@
     <string name="detail_back">Geri</string>
     <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
     <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
-    <string name="detail_krw_section_notice">Aşağıdaki grafik ve banka kurları KRW kotasyonlarına dayanır.</string>
     <string name="detail_chart_min">Düşük %s</string>
     <string name="detail_chart_max">Yüksek %s</string>
     <string name="detail_chart_empty">Grafik verileri hazırlanıyor.</string>

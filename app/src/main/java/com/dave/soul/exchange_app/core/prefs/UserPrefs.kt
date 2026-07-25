@@ -97,6 +97,26 @@ class UserPrefs @Inject constructor(@ApplicationContext private val context: Con
         context.dataStore.edit { it[Keys.BASE_CURRENCY] = code }
     }
 
+    /**
+     * 신규 설치(첫 콜드 스타트)에서만 기기 로케일 통화를 기준통화로 시드 —
+     * 해외 사용자는 첫 화면부터 자국 통화 축으로 보게 한다. 업데이트 사용자는
+     * 축이 갑자기 바뀌는 혼란을 막기 위해 건드리지 않는다(호출부에서 launchCount 게이트).
+     * 서버 미보유 통화가 시드돼도 CrossRates.displayRates 의 KRW 폴백이 방어한다.
+     */
+    suspend fun seedBaseCurrencyForNewInstall(localeCurrency: String?) {
+        if (localeCurrency == null || localeCurrency == "KRW") return
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.BASE_CURRENCY] != null) return@edit
+            prefs[Keys.BASE_CURRENCY] = localeCurrency
+            // 홈 보드에 자국 통화 행이 보이도록 기본 선택 목록에도 추가
+            val current = (prefs[Keys.SELECTED_CODES] ?: DEFAULT_CODES)
+                .split(",").filter { it.isNotBlank() }
+            if (localeCurrency !in current) {
+                prefs[Keys.SELECTED_CODES] = (current + localeCurrency).joinToString(",")
+            }
+        }
+    }
+
     suspend fun setThemeMode(mode: String) {
         context.dataStore.edit { it[Keys.THEME_MODE] = mode }
     }

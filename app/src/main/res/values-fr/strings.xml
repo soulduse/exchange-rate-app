@@ -44,7 +44,6 @@
     <string name="detail_back">Retour</string>
     <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
     <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
-    <string name="detail_krw_section_notice">Le graphique et les taux bancaires ci-dessous sont basés sur les cotations en KRW.</string>
     <string name="detail_chart_min">Bas %s</string>
     <string name="detail_chart_max">Haut %s</string>
     <string name="detail_chart_empty">Préparation des données du graphique.</string>

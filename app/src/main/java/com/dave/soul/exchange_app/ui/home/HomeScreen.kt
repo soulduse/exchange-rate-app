@@ -166,8 +166,22 @@ fun HomeScreen(
                         )
                     }
                 } else {
-                    // 크로스 모드 — 히어로 없이 균일 행(KRW 가상 행은 상세 진입 없음)
-                    items(state.selected, key = { it.code }) { rate ->
+                    // 크로스 모드 — KRW 모드와 대칭으로 첫 실통화를 히어로로
+                    // (KRW 가상 행은 상세 진입이 없어 히어로 부적합, 일반 행 유지)
+                    val hero = state.selected.firstOrNull { !it.isVirtualKrw }
+                    hero?.let {
+                        item(key = "hero-${it.code}") {
+                            HeroCard(
+                                rate = it,
+                                baseCurrency = state.baseCurrency,
+                                onClick = { onCurrencyClick(it.code) },
+                            )
+                        }
+                    }
+                    items(
+                        state.selected.filter { it.code != hero?.code },
+                        key = { it.code },
+                    ) { rate ->
                         RateRow(
                             rate = rate,
                             baseCurrency = state.baseCurrency,
@@ -239,7 +253,7 @@ private fun Color.luminance(): Float =
 private fun unitLabel(baseCurrency: String): String =
     if (baseCurrency == "KRW") stringResource(R.string.unit_krw) else baseCurrency
 
-/** 대표 통화(목록 첫 번째) 히어로 카드 — KRW 기준 모드 전용. */
+/** 대표 통화(목록 첫 실통화) 히어로 카드 — 크로스 모드는 change 가 null(%만). */
 @Composable
 private fun HeroCard(rate: DisplayRate, baseCurrency: String, onClick: () -> Unit) {
     Card(
@@ -288,7 +302,7 @@ private fun HeroCard(rate: DisplayRate, baseCurrency: String, onClick: () -> Uni
                 if (rate.spark.size >= 2) {
                     Sparkline(
                         values = rate.spark,
-                        color = changeColor(rate.change),
+                        color = changeColor(rate.change ?: rate.changeRatio),
                         modifier = Modifier.size(width = 96.dp, height = 44.dp),
                     )
                 }
@@ -324,7 +338,7 @@ private fun RateRow(rate: DisplayRate, baseCurrency: String, onClick: (() -> Uni
             if (rate.spark.size >= 2) {
                 Sparkline(
                     values = rate.spark,
-                    color = changeColor(rate.change),
+                    color = changeColor(rate.change ?: rate.changeRatio),
                     modifier = Modifier.size(width = 64.dp, height = 28.dp),
                 )
                 Spacer(Modifier.width(14.dp))

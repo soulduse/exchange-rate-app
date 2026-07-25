@@ -44,7 +44,6 @@
     <string name="detail_back">Tilbake</string>
     <string name="detail_price_per_unit">KRW / %1$d%2$s</string>
     <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
-    <string name="detail_krw_section_notice">Grafen og bankkursene nedenfor er basert på KRW-noteringer.</string>
     <string name="detail_chart_min">Lav %s</string>
     <string name="detail_chart_max">Høy %s</string>
     <string name="detail_chart_empty">Forbereder grafdata.</string>

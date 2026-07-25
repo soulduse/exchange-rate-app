@@ -44,7 +44,6 @@
     <string name="detail_back">뒤로</string>
     <string name="detail_price_per_unit">원 / %1$d%2$s</string>
     <string name="detail_price_per_unit_cross">%1$s / %2$d%3$s</string>
-    <string name="detail_krw_section_notice">아래 차트·은행 고시 정보는 원화(KRW) 기준입니다.</string>
     <string name="detail_chart_min">최저 %s</string>
     <string name="detail_chart_max">최고 %s</string>
     <string name="detail_chart_empty">차트 데이터를 준비 중입니다.</string>

@@ -62,6 +62,10 @@ fun flagEmoji(countryCode: String): String {
 fun displayName(name: String, currencyCode: String): String =
     name.removeSuffix(currencyCode).trim().ifEmpty { name }
 
+/** 기기 로케일의 통화 코드 — 언어-only 로케일 등 산출 불가면 null. */
+fun localeCurrencyCode(): String? =
+    runCatching { Currency.getInstance(Locale.getDefault()).currencyCode }.getOrNull()
+
 /**
  * 통화 표시명 — 한국어 로케일은 서버 한국어명, 그 외 로케일은
  * java.util.Currency 로케일 통화명(전 언어 현지화) → 서버 영문명 → 한국어명 순 폴백.
