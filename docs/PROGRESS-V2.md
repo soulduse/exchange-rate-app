@@ -134,3 +134,11 @@
 - **릴리스(R8) QA 완료(7/25 오후, 실키 assembleRelease)**: 에뮬 클린 — ①de-DE 신규=EUR 시드+크로스 히어로/스파크+상세 크로스 차트 4자리 라벨(0,8805/0,8647/0,8488)+카드 숨김+알림 다이얼로그 USD/EUR 프리필 ②기준통화 드롭다운(현재 base 포함)·EUR→KRW 전환=절대등락/가상행 복원 ③계산기·알림 빈 상태·설정(버전 2.4.0 표기) 전 탭 정상 ④ko 신규=KRW 축+4종가 카드. S21 — vc20→vc22 실키 업그레이드(**versionCode=22 확증**) 후 KRW 홈·상세 회귀 정상, 크래시 로그 0. **⚠️QA 중 정정**: 오전의 "S21 회귀"는 debug 설치가 서명 불일치로 실패(tail -1이 에러 은폐)한 채 vc20 화면을 본 것 — 릴리스 재설치로 진짜 vc22 재검증 완료
 - **vc22 심사 제출 완료(7/25 14:0x, 사용자 승인 후)**: vc21 당일 승인 확인(활성 21/2.3.0, 177개국) → AAB 업로드(22/2.4.0)+노트 ko/en+전체 출시 저장 → 게시 개요 "검토를 위해 변경사항 1개 제출" → 확인 다이얼로그 전송 → 재검사 통과 → **"변경사항을 검토 중입니다" 확정**
 - **잔여**: vc22 심사 모니터링(최근 5연속 당일 승인 패턴), 서버 고시 정지 시간대 429 수정 실증(14:37 자동 체크)
+
+## M13-b — 서버 글로벌 FX 실증·수리 3라운드 완결 ✅ 2026-07-25 오후
+- **최종 상태: 58/58 전 통화 YAHOO 신선화 실증**(16:44 틱, NOK 합성 152.70 vs 마지막 고시 152.53 — 수식 정확성 실증). 커밋 체인: f78bfe7(순차 페이싱) → 12d3d6a(spark 배치) → 11cf1fb(CF Worker 프록시+flat 파서) → 28c2212(USD 크로스 2패스+negative cache)
+- **라운드①**: 순차 페이싱으로도 박스 IP 예산이 틱당 1~2요청(3틱에 USD·JPY·EUR 3통화만) — 우선순위 정렬은 정확히 동작
+- **라운드②**: spark 배치(20심볼/요청)로 전환했으나 **박스 IP 전면 429**(매 요청, 재시도 포함) — 로컬 IP도 동일(테스트로 페널티)
+- **라운드③**: 전용 CF Worker `yahoo-fx-proxy.developerkhy.workers.dev`(x-proxy-key 강제·/v8/finance/* 제한, 키=박스 .env YAHOO_FX_PROXY_KEY) 경유 → spark 200. **실응답은 문서와 다른 flat 맵**({"USDKRW=X":{close:[...],chartPreviousClose}}) — 파서 실측 재작성. 1차 틱에서 직접 KRW 페어 23통화만 존재 확인(잔여 청크 404)
+- **라운드④**: 직접 페어 없는 35통화(NOK·PLN·TRY·MXN 등 OECD 타깃 포함)는 **USDKRW 앵커 x {CCY}=X(USD/CCY) 합성 2패스**로 커버. 두 패스 모두 없는 통화만 6h negative cache(이번엔 0건 — 전 통화 USD 크로스 존재). 합성가 6자리 반올림
+- **⚠️GitHub Actions 결제 장애**: "recent account payments have failed or spending limit" — 워크플로 배포 불가(4s 즉사, 스텝 0). 우회=박스 SSH(141.164.46.23, id_ed25519) → git pull → docker build → `deploy-localimage.sh`(deploy.sh에서 GHCR pull만 스킵한 사본) 블루그린. **사용자 액션: GitHub Billing 확인 필요**
