@@ -142,3 +142,7 @@
 - **라운드③**: 전용 CF Worker `yahoo-fx-proxy.developerkhy.workers.dev`(x-proxy-key 강제·/v8/finance/* 제한, 키=박스 .env YAHOO_FX_PROXY_KEY) 경유 → spark 200. **실응답은 문서와 다른 flat 맵**({"USDKRW=X":{close:[...],chartPreviousClose}}) — 파서 실측 재작성. 1차 틱에서 직접 KRW 페어 23통화만 존재 확인(잔여 청크 404)
 - **라운드④**: 직접 페어 없는 35통화(NOK·PLN·TRY·MXN 등 OECD 타깃 포함)는 **USDKRW 앵커 x {CCY}=X(USD/CCY) 합성 2패스**로 커버. 두 패스 모두 없는 통화만 6h negative cache(이번엔 0건 — 전 통화 USD 크로스 존재). 합성가 6자리 반올림
 - **⚠️GitHub Actions 결제 장애**: "recent account payments have failed or spending limit" — 워크플로 배포 불가(4s 즉사, 스텝 0). 우회=박스 SSH(141.164.46.23, id_ed25519) → git pull → docker build → `deploy-localimage.sh`(deploy.sh에서 GHCR pull만 스킵한 사본) 블루그린. **사용자 액션: GitHub Billing 확인 필요**
+
+## M13 종결 — vc22 승인·게시 ✅ 2026-07-26 오후
+- 활성 최신 출시 버전 22 (2.4.0)·177개국 확인(제출 후 ~24h, 주말 심사). P5(글로벌 자국 통화 축) 전체 종결 — 로케일 시드·크로스 완성 라이브 + 서버 58통화 24시간 신선화 가동 중
+- 다음 트랙 후보: Google Ads 앱 캠페인(1군 TR·JP·DE권 제언), 동남아 언어 확장(th·vi·id), 브리핑 다언어화
